@@ -6,13 +6,10 @@
   $result = pg_query($query);
   
   if ($result) {
-    echo "<div>posted</div>";
+    echo "{\"success\":true}";
   } else {
-    echo "<div>Unable to post</div>";
-    echo "<div>Last error: ".pg_last_error()."</div>";
-    echo "<div>query: ".$query."</div>";
-    echo "<div>result: ".$result."</div>";
-    var_dump($result);
+    echo "{\"success\":false,";
+    echo "\"message\":\"Unable to save: ".pg_last_error()."\"}";
   }
   pg_free_result($result);
   pg_close($dbconn);

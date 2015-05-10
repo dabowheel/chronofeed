@@ -5,6 +5,7 @@
     <script src="scripts/load.js"></script>
     <script src="scripts/display_post.js"></script>
     <script src="scripts/edit_post.js"></script>
+    <script src="scripts/save.js"></script>
     <link rel="stylesheet" type="text/css" href="css/blog.css">
   </head>
   <body onload="displayPosts();">
