@@ -12,3 +12,6 @@
 	visibility:hidden;
 	height:50px;
 }
+.hiddenbutton {
+  visibility: hidden;
+}

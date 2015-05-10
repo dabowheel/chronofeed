@@ -18,9 +18,9 @@ function postList2HTML(list) {
 };
 
 function displayPost2HTML(post) {
-    var html = "<div><strong>" + post.title + "</strong><span class=\"listbutton\"><button onclick=\"editPost('" + post.id + "');\">Edit</button><button>Delete</button></span></div>";
+    var html = "<div><strong>" + post.title + "</strong><span class=\"listbutton\"><button onclick=\"editPost('" + post.id + "');\">Edit</button><button onclick=\"deletePost('" + post.id + "')\">Delete</button></span></div>";
     html += "<div>" + post.text + "</div>";
-    html += "<div>" + post.date + "</div>";
+    html += "<div>" + post.date + "<button class=\"hiddenbutton\">Button to float against</button></div>";
     return html;
 }
 
