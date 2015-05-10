@@ -1,0 +1,14 @@
+.postlist {
+	width:800px;
+}
+.post {
+	border-top-style:solid;
+	border-top-width:1px;
+}
+.listbutton {
+	float:right;
+}
+.fillerbutton {
+	visibility:hidden;
+	height:50px;
+}
