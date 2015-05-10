@@ -5,13 +5,22 @@
 	border-top-style:solid;
 	border-top-width:1px;
 }
+.newpost {
+  display: none;
+}
+.newpostedit {
+  display: inline;
+}
 .listbutton {
 	float:right;
 }
 .fillerbutton {
 	visibility:hidden;
-	height:50px;
+	height:35px;
 }
 .hiddenbutton {
   visibility: hidden;
+}
+.savebutton {
+  height: 30px;
 }

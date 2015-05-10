@@ -4,7 +4,11 @@
   $query = "select post_id,title,post,date from posts ORDER BY date DESC";
   $result = pg_query($query) or die("Query failed: " . pg_last_error());
   
-  echo "[";
+  echo <<<EOD
+  {
+    "postList": [
+EOD;
+
   $i = 0;
   while ($line = pg_fetch_array($result, NULL, PGSQL_ASSOC)) {
     if ($i > 0) {
@@ -18,7 +22,10 @@
     echo  "}";
     $i++;
   }
-  echo "]";
+
+  echo <<<EOD
+  ]}
+EOD;
 
   pg_free_result($result);
   pg_close($dbconn);

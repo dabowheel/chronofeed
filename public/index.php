@@ -2,15 +2,14 @@
 <html>
   <head>
     <script src="scripts/blog.js"></script>
-    <script src="scripts/load.js"></script>
-    <script src="scripts/display_post.js"></script>
-    <script src="scripts/edit_post.js"></script>
-    <script src="scripts/save.js"></script>
+    <script src="scripts/blog_ctl.js"></script>
+    <script src="scripts/blog_ws.js"></script>
+    <script src="scripts/util.js"></script>
     <link rel="stylesheet" type="text/css" href="css/blog.css">
   </head>
-  <body onload="displayPosts();">
+  <body onload="refreshBlog();">
     <h1>Blog</h1>
     <div id="message"></div>
-    <div id="posts"></div>
+    <div id="blog"></div>
   </body>
 </html>
