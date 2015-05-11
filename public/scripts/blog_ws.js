@@ -3,7 +3,8 @@ function loadBlogWeb(callback) {
   request.onreadystatechange = function() {
     if (request.readyState==4 && request.status==200) {
       var obj = JSON.parse(request.responseText);
-      var blog = new Blog(obj);
+      var blog = new Blog();
+      blog.loadObject(obj);
       console.log(request.responseText);
       console.log(blog);
       callback(blog);
