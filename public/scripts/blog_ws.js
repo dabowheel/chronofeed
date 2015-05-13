@@ -2,10 +2,10 @@ function loadBlogWeb(callback) {
   var request = new XMLHttpRequest();
   request.onreadystatechange = function() {
     if (request.readyState==4 && request.status==200) {
+      console.log(request.responseText);
       var obj = JSON.parse(request.responseText);
       var blog = new Blog();
       blog.loadObject(obj);
-      console.log(request.responseText);
       console.log(blog);
       callback(blog);
     }
@@ -13,23 +13,6 @@ function loadBlogWeb(callback) {
   request.open("GET","load_blog.php",true);
   request.send();
 }
-
-function loadPostWeb(id,callback) {
-  console.log("load post " + id);
-  var request = new XMLHttpRequest();
-  request.onreadystatechange = function() {
-    if (request.readyState==4 && request.status==200) {
-      console.log(request.responseText);
-      var status = JSON.parse(request.responseText);
-      console.log(request.responseText);
-      console.log(status);
-      callback(status);
-    }
-  };
-  request.open("GET","load_post.php?id=" + id,true);
-  request.send();
-}
-
 
 function savePostWeb(post,callback) {
   var request = new XMLHttpRequest();
