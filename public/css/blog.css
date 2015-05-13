@@ -58,3 +58,11 @@ button.active {
   background-color: #27496d;
   text-shadow: -1px 1px #193047;
 }
+
+.blogtitlebox {
+  margin-bottom:50px;
+}
+
+.blogtitle {
+  margin-right:20px;
+}

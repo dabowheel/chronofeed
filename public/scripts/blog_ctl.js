@@ -1,5 +1,9 @@
 function displayBlog2HTML(blog) {
-  var html = "<button onclick=\"addPost();\">Add</button>"
+  var html = "";
+
+  html += "<div class=\"blogtitlebox\"><big class=\"blogtitle\">" + "New Blog" + "</big><button onclick=\"editBlogTitle();\">Edit</button></div>";
+  html += "<div id=\"blogmessage\"><div>";
+  html += "<button onclick=\"addPost();\">Add Post</button>"
   html += "<div class=\"postlist\">";
 
   // new post
@@ -41,16 +45,12 @@ function editPost2HTML(post) {
   return html;
 }
 
-function getPost() {
-  return {
-    id: document.getElementById("postid").value,
-    title: document.getElementById("posttitle").value,
-    text: document.getElementById("posttext").value
-  };
+function editBlogTitle() {
+
 }
 
 function displayBlog(blog) {
-  document.getElementById("blog").innerHTML = displayBlog2HTML(blog);
+  document.getElementById("main").innerHTML = displayBlog2HTML(blog);
 }
 
 function refreshBlog() {
@@ -64,6 +64,14 @@ function addPost() {
     blog.editNew = true;
     displayBlog(blog);
   });
+}
+
+function getPost() {
+  return {
+    id: document.getElementById("postid").value,
+    title: document.getElementById("posttitle").value,
+    text: document.getElementById("posttext").value
+  };
 }
 
 function savePostChanges(id) {
@@ -98,4 +106,8 @@ function deletePost(id) {
       message(obj.error);
     }
   });
+}
+
+function message(str) {
+  document.getElementById("blogmessage").innerHTML = str;
 }

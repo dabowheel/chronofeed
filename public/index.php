@@ -8,8 +8,6 @@
     <link rel="stylesheet" type="text/css" href="css/blog.css">
   </head>
   <body onload="refreshBlog();">
-    <h1>Blog</h1>
-    <div id="message"></div>
-    <div id="blog"></div>
+    <div id="main"></div>
   </body>
 </html>
