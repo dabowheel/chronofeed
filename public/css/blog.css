@@ -3,7 +3,8 @@
 }
 .post {
 	border-top-style:solid;
-	border-top-width:1px;
+	border-top-width:2px;
+  border-top-color: #475E5E;
 }
 .newpost {
   display: none;
@@ -23,4 +24,37 @@
 }
 .savebutton {
   height: 30px;
+}
+
+button {
+  display: inline-block;
+  margin: 0 0px 0 0;
+  padding: 3px 9px;
+  font-size: 12px;
+  font-family: "Bitter",serif;
+  line-height: 1.8;
+  appearance: none;
+  box-shadow: none;
+  border-radius: 0;
+  color: #fff;
+  background-color: #6496c8;
+  text-shadow: -1px 1px #417cb8;
+  border: none;
+}
+
+button:focus {
+  background-color: #346392;
+  text-shadow: -1px 1px #27496d;
+}
+
+button:hover,
+button.hover {
+  background-color: #346392;
+  text-shadow: -1px 1px #27496d;
+}
+
+button:active,
+button.active {
+  background-color: #27496d;
+  text-shadow: -1px 1px #193047;
 }

@@ -72,7 +72,6 @@ function savePostChanges(id) {
   savePostWeb(post,function (status) {
     if (status.success) {
       refreshBlog();
-      message("Saved.");
     } else {
       refreshBlog();
       message(status.message);
@@ -95,7 +94,6 @@ function deletePost(id) {
   deletePostWeb(id,function (obj) {
     if (obj.success) {
       refreshBlog();
-      message("Deleted.");
     } else {
       message(obj.error);
     }
