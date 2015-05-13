@@ -1,5 +1,9 @@
 <?php
-  $dbconn = pg_connect("host=localhost dbname=blog user=postgres password=l|DeRtYK6x2n") or die("Could not connect: " . pg_last_error());
+  $dbopts = parse_url(getenv('DATABASE_URL'));
+  $dbname = ltrim($dbopts["path"],"/");
+  $password = ltrim($dbopts["pass"],":");
+  $connection = "host=$dbopts[host] dbname=$dbname user=$dbopts[user] password=$password";
+  $dbconn = pg_connect($connection);
 
   $query = "DELETE FROM posts WHERE post_id = '$_GET[id]'";
   $result = pg_query($query);
