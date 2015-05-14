@@ -4,10 +4,9 @@
     <script src="scripts/blog.js"></script>
     <script src="scripts/blog_ctl.js"></script>
     <script src="scripts/blog_ws.js"></script>
-    <script src="scripts/util.js"></script>
     <link rel="stylesheet" type="text/css" href="css/blog.css">
   </head>
-  <body onload="refreshBlog();">
+  <body onload="loadBlogFromServer();">
     <div id="main"></div>
   </body>
 </html>

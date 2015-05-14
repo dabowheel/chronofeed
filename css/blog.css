@@ -60,9 +60,10 @@ button.active {
 }
 
 .blogtitlebox {
-  margin-bottom:50px;
+  margin-bottom:30px;
 }
 
 .blogtitle {
   margin-right:20px;
+  font-size: 24px;
 }

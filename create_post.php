@@ -4,15 +4,20 @@
   $password = ltrim($dbopts["pass"],":");
   $connection = "host=$dbopts[host] dbname=$dbname user=$dbopts[user] password=$password";
   $dbconn = pg_connect($connection);
-
-  $id = pg_escape_string($_POST["id"]);
+  
   $title = pg_escape_string($_POST["title"]);
   $text = pg_escape_string($_POST["text"]);
-  $query = "UPDATE posts SET title = '$title', post = '$text' WHERE post_id = '$id'";
+  $query = "INSERT INTO posts(title,post,date) VALUES('".$title."','".$text."',Now()) RETURNING post_id";
   $result = pg_query($query);
   
   if ($result) {
-    echo "{\"success\":true}";
+    $line = pg_fetch_array($result, NULL, PGSQL_ASSOC);
+    echo <<<EOD
+    {
+      "success": true,
+      "postID": $line[post_id]
+    }";
+EOD;
   } else {
     echo "{\"success\":false,";
     echo "\"message\":\"Unable to save: ".pg_last_error()."\"}";
