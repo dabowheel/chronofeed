@@ -119,8 +119,10 @@ function editPost(id) {
   displayBlog(g_blog);
 }
 
-function deletePost(id) {
-  deletePostWeb(id,function (obj) {
+function deletePost(domID) {
+  post = g_blog.deletePost(domID);
+  displayBlog(g_blog);
+  deletePostWeb(post.postID,function (obj) {
     if (obj.success) {
       refreshBlog();
     } else {

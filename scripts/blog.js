@@ -89,12 +89,13 @@ Blog.prototype.updatePostID = function (domID,postID) {
     }
   }  
 }
-Blog.prototype.deletePost = function (id) {
+Blog.prototype.deletePost = function (domID) {
   for (var i = 0; i < this.postList.length; i++) {
     var post = this.postList[i];
-    if (post.id === id) {
+    if (post.domID === domID) {
       this.postList.splice(i,1);
-      break;
+      return post;
     }
   }
+  return null;
 };
