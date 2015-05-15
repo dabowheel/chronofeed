@@ -35,6 +35,20 @@ function savePostWeb(post,callback) {
   }
 }
 
+function saveBlogTitleWeb(title) {
+  var request = new XMLHttpRequest();
+  request.onreadystatechange = function() {
+    if (request.readyState==4 && request.status==200) {
+      console.log(request.responseText);
+      var status = JSON.parse(request.responseText);
+      callback(status);
+    }
+  };
+
+  request.open("GET","update_blog_title.php?blogID=1&title=" + encodeURIComponent(title),true);
+  request.send();
+}
+
 function deletePostWeb(id,callback) {
   var request = new XMLHttpRequest();
   request.onreadystatechange = function() {

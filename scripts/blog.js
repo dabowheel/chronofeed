@@ -53,6 +53,7 @@ function Blog(blogID,title) {
   this.postList = [];
   this.editNew = false;
   this.editID = "";
+  this.editBlogTitle = false;
   this.maxPostDOMID = 0;
 }
 Blog.prototype.getDOMID = function () {

@@ -3,10 +3,18 @@ var g_blog;
 function displayBlog2HTML(blog) {
   var html = "";
 
-  html += "<div class=\"blogtitlebox\"><strong class=\"blogtitle\">" + blog.title + "</strong><button onclick=\"editBlogTitle();\">Edit</button></div>";
+  html += "<div class=\"postlist\">";
+
+  // blog title
+  if (blog.editBlogTitle) {
+    html += "<div><input id=\"blogtitle\" type=\"text\" class=\"field\" value=\"" + blog.title + "\"/></div>";
+    html += "<div><span><button class=\"fillerbutton\">Here</button></span><span class=\"listbutton\"><button class=\"savebutton\" onclick=\"saveBlogTitleChange();\">Accept</button><button class=\"savebutton\" onclick=\"cancelBlogTitleChange()\">Cancel</button></span></div>";
+  } else {
+    html += "<div class=\"blogtitlebox\"><strong class=\"blogtitle\">" + blog.title + "</strong><button onclick=\"editBlogTitle();\">Edit</button></div>";    
+  }
+
   html += "<div id=\"blogmessage\"><div>";
   html += "<button onclick=\"addPost();\">Add Post</button>"
-  html += "<div class=\"postlist\">";
 
   // new post
   if (blog.editNew) {
@@ -62,7 +70,24 @@ function loadBlogFromServer() {
 }
 
 function editBlogTitle() {
+  g_blog.editBlogTitle = true;
+  displayBlog(g_blog);
+}
 
+function saveBlogTitleChange() {
+  g_blog.editTitle(getBlogTitle());
+  g_blog.editBlogTitle = false;
+  displayBlog(g_blog);
+  saveBlogTitleWeb(g_blog.title, function (status) {
+    if (!status) {
+      message(status.error);
+    }
+  });
+}
+
+function cancelBlogTitleChange() {
+  g_blog.editBlogTitle = false;
+  displayBlog(g_blog);
 }
 
 function addPost() {
@@ -78,6 +103,10 @@ function getPost() {
     text: document.getElementById("posttext").value,
     date: new Date(document.getElementById("postdate").value)
   };
+}
+
+function getBlogTitle() {
+  return document.getElementById("blogtitle").value
 }
 
 function savePostChanges(domID) {
