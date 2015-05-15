@@ -62,8 +62,8 @@ function displayBlog(blog) {
   document.getElementById("main").innerHTML = displayBlog2HTML(blog);
 }
 
-function loadBlogFromServer() {
-  loadBlogWeb(function (blog) {
+function loadBlogFromServer(blogID) {
+  loadBlogWeb(blogID, function (blog) {
     g_blog = blog;
     displayBlog(blog);
   });
@@ -115,7 +115,7 @@ function savePostChanges(domID) {
     g_blog.editID = "";
     g_blog.editPost(domID,post);
     displayBlog(g_blog);
-    savePostWeb(post,function (status) {
+    savePostWeb(g_blog.blogID,post,function (status) {
       if (!status.success) {
         message(status.message);
       }
@@ -124,7 +124,7 @@ function savePostChanges(domID) {
     g_blog.editNew = false;
     g_blog.addPost(post);
     displayBlog(g_blog);
-    savePostWeb(post,function (status) {
+    savePostWeb(g_blog.blogID,post,function (status) {
       if (status.success) {
         g_blog.updatePostID(domID,status.postID)
         displayBlog(g_blog);

@@ -1,4 +1,4 @@
-function loadBlogWeb(callback) {
+function loadBlogWeb(blogID,callback) {
   var request = new XMLHttpRequest();
   request.onreadystatechange = function() {
     if (request.readyState==4 && request.status==200) {
@@ -10,11 +10,11 @@ function loadBlogWeb(callback) {
       callback(blog);
     }
   };
-  request.open("GET","load_blog.php?blogID=1",true);
+  request.open("GET","load_blog.php?blogID=" + blogID,true);
   request.send();
 }
 
-function savePostWeb(post,callback) {
+function savePostWeb(blogID,post,callback) {
   var request = new XMLHttpRequest();
   request.onreadystatechange = function() {
     if (request.readyState==4 && request.status==200) {
@@ -31,7 +31,7 @@ function savePostWeb(post,callback) {
   } else {
     request.open("POST","create_post.php",true);
     request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    request.send("title=" + post.title + "&text=" + post.text);
+    request.send("blogID=" + blogID + "&title=" + post.title + "&text=" + post.text);
   }
 }
 

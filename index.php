@@ -6,7 +6,7 @@
     <script src="scripts/blog_ws.js"></script>
     <link rel="stylesheet" type="text/css" href="css/blog.css">
   </head>
-  <body onload="loadBlogFromServer();">
+  <body onload="loadBlogFromServer(1);">
     <div id="main"></div>
   </body>
 </html>

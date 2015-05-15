@@ -63,6 +63,7 @@ EOD;
   // send blog
   echo <<<EOD
   {
+    "blogID": "$_GET[blogID]",
     "title": "$title",
     "postList": [
 EOD;

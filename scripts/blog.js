@@ -63,8 +63,8 @@ Blog.prototype.appendObjectPost = function (post,domID) {
   this.postList[this.postList.length] = new Post(domID,post.postID,post.title,post.text,new Date(post.date));
 };
 Blog.prototype.loadObject = function (obj) {
-  if (obj.id) {
-    this.id = obj.id;
+  if (obj.blogID) {
+    this.blogID = obj.blogID;
   }
   if (obj.title) {
     this.title = obj.title;
