@@ -72,7 +72,7 @@ function addPost() {
 
 function getPost() {
   return {
-    id: document.getElementById("postdomid").value,
+    domID: document.getElementById("postdomid").value,
     postID: document.getElementById("postpostid").value,
     title: document.getElementById("posttitle").value,
     text: document.getElementById("posttext").value,
@@ -98,7 +98,7 @@ function savePostChanges(domID) {
     savePostWeb(post,function (status) {
       if (status.success) {
         g_blog.updatePostID(domID,status.postID)
-        g_blog.displayBlog(g_blog);
+        displayBlog(g_blog);
       } else {
         message(status.message);
       }
@@ -124,7 +124,6 @@ function deletePost(domID) {
   displayBlog(g_blog);
   deletePostWeb(post.postID,function (obj) {
     if (obj.success) {
-      refreshBlog();
     } else {
       message(obj.error);
     }

@@ -16,7 +16,7 @@
     {
       "success": true,
       "postID": $line[post_id]
-    }";
+    }
 EOD;
   } else {
     echo "{\"success\":false,";
