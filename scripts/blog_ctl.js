@@ -3,7 +3,7 @@ var g_blog;
 function displayBlog2HTML(blog) {
   var html = "";
 
-  html += "<div class=\"blogtitlebox\"><strong class=\"blogtitle\">" + "New Blog" + "</strong><button onclick=\"editBlogTitle();\">Edit</button></div>";
+  html += "<div class=\"blogtitlebox\"><strong class=\"blogtitle\">" + blog.title + "</strong><button onclick=\"editBlogTitle();\">Edit</button></div>";
   html += "<div id=\"blogmessage\"><div>";
   html += "<button onclick=\"addPost();\">Add Post</button>"
   html += "<div class=\"postlist\">";
@@ -50,10 +50,6 @@ function editPost2HTML(post) {
   return html;
 }
 
-function editBlogTitle() {
-
-}
-
 function displayBlog(blog) {
   document.getElementById("main").innerHTML = displayBlog2HTML(blog);
 }
@@ -63,6 +59,10 @@ function loadBlogFromServer() {
     g_blog = blog;
     displayBlog(blog);
   });
+}
+
+function editBlogTitle() {
+
 }
 
 function addPost() {

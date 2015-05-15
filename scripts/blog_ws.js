@@ -4,13 +4,13 @@ function loadBlogWeb(callback) {
     if (request.readyState==4 && request.status==200) {
       console.log(request.responseText);
       var obj = JSON.parse(request.responseText);
-      var blog = new Blog();
+      var blog = new Blog("","");
       blog.loadObject(obj);
       console.log(blog);
       callback(blog);
     }
   };
-  request.open("GET","load_blog.php",true);
+  request.open("GET","load_blog.php?blogID=1",true);
   request.send();
 }
 

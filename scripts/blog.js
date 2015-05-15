@@ -38,8 +38,18 @@ Post.prototype.loadObject = function (post) {
 };
 
 function Blog(blogID,title) {
-  this.blogID = blogID?blogID:"";
-  this.title = title?title:"";
+  if (typeof blogID == "string" || blogID instanceof String) {
+    this.blogID = blogID;
+  } else {
+    error("invalid blogID: " + blogID);
+  }
+
+  if (typeof title == "string" || title instanceof String) {
+    this.title = title;
+  } else {
+    error("invalid title: " + title);
+  }
+
   this.postList = [];
   this.editNew = false;
   this.editID = "";
