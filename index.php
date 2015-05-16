@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="scripts/blog.js"></script>
-    <script src="scripts/blog_ctl.js"></script>
-    <script src="scripts/blog_ws.js"></script>
+    <script data-main="scripts/main" src="scripts/require.js"></script>
     <link rel="stylesheet" type="text/css" href="css/blog.css">
   </head>
-  <body onload="loadBlogFromServer(1);">
+  <body>
     <div id="main"></div>
   </body>
 </html>

@@ -1,7 +1,7 @@
-.postlist {
+.postlist, .bloglist {
 	width:800px;
 }
-.post {
+.post,.bloginfo {
 	border-top-style:solid;
 	border-top-width:2px;
   border-top-color: #475E5E;

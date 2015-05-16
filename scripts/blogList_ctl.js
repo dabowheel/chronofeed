@@ -1,12 +1,12 @@
 function displayBlogList2HTML(blogList) {
-  var html = "<div id=\"blogmessage\"><div>";
-  html += "<button onclick=\"addPost();\">Add</button>"
+  var html = "<div id=\"bloglistmessage\"><div>";
+  html += "<button onclick=\"addBlog();\">Add</button>"
 
-  html += "<div class=\"postlist\">";
+  html += "<div class=\"blogList\">";
   for (var i = 0; i < blogList.list.length; i++) {
     var blog = blogList.list[i];
-    html += "<div class=\"post\">";
-    html += displayBlogInfo2HTML(post);
+    html += "<div class=\"blogInfo\">";
+    html += displayBlogInfo2HTML(blog);
     html += "</div>";
   }  
   html += "</div>"
@@ -14,9 +14,27 @@ function displayBlogList2HTML(blogList) {
   return html;
 };
 
-function displayBlogInfo2HTML(post) {
-  var html = "<div><strong>" + post.title + "</strong><span class=\"listbutton\"><button onclick=\"editBlogName('" + post.id + "');\">Edit</button><button onclick=\"deleteBlog('" + post.id + "')\">Delete</button></span></div>";
-  html += "<div>" + post.text + "</div>";
-  html += "<div>" + post.date + "<button class=\"hiddenbutton\">Button to float against</button></div>"; 
+function displayBlogInfo2HTML(blog) {
+  var html = "<div><strong>" + blog.title + "</strong><span class=\"listbutton\"><button onclick=\"editBlog('" + blog.domID + "');\">Edit</button><button onclick=\"deleteBlog('" + blog.domID + "')\">Delete</button></span></div>";
   return html;
+}
+
+function displayBlogList(blogList) {
+  document.getElementById("main").innerHTML = displayBlogList2HTML(blogList);
+}
+
+function loadBlogListFromServer() {
+  
+}
+
+function addBlog() {
+
+}
+
+function editBlog(domID) {
+
+}
+
+function deleteBlog(domID) {
+
 }
