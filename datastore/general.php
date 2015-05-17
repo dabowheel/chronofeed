@@ -18,7 +18,7 @@
     echo <<<EOD
     {
       "success": false,
-      "data":"$error"
+      "error":"$error"
     }
 EOD;
   }
@@ -29,7 +29,7 @@ EOD;
     echo <<<EOD
     {
       "success":false,
-      "data":"$error",
+      "error":"$error",
       "debug":"$query"
     }
 EOD;
@@ -42,18 +42,6 @@ EOD;
       "data":"Invalid blog ID: $blogID"
     }
 EOD;
-  }
-
-  function echoDataStart() {
-    echo <<<EOD
-{
-  "success":true,
-  "data":
-EOD;
-  }
-
-  function echoDataEnd() {
-    echo "}";
   }
 
 function getJSONObject() {

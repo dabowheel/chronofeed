@@ -63,14 +63,19 @@ function displayBlog(blog) {
 }
 
 function loadBlogFromServer(blogID) {
-  datastore("blog","load",blogID, function (obj) {
-    if (obj.success) {
+  req = {
+    type: "blog",
+    action: "load",
+    blogID: blogID
+  }
+  datastore(req, function (res) {
+    if (res.success) {
       var blog = new Blog("","");
-      blog.loadObject(obj.data);
+      blog.loadObject(res.blog);
       g_blog = blog;
       displayBlog(blog);
     } else {
-      error(obj.data);
+      error(res.data);
     }
   });
 }
@@ -84,9 +89,9 @@ function saveBlogTitleChange() {
   g_blog.editTitle(getBlogTitle());
   g_blog.editBlogTitle = false;
   displayBlog(g_blog);
-  datastore("blog","save",new BlogInfo(g_blog.blogID,g_blog.title), function (status) {
-    if (!status) {
-      error(status.data);
+  datastore("blog","save",new BlogInfo(g_blog.blogID,g_blog.title), function (res) {
+    if (!res.success) {
+      error(res.data);
     }
   });
 }
@@ -121,21 +126,21 @@ function savePostChanges(domID) {
     g_blog.editID = "";
     g_blog.editPost(domID,post);
     displayBlog(g_blog);
-    datastore("post","save",post,function (obj) {
-      if (!obj.success) {
-        message(obj.message);
+    datastore("post","save",post,function (res) {
+      if (!res.success) {
+        error(res.data);
       }
     });
   } else {
     g_blog.editNew = false;
     g_blog.addPost(post);
     displayBlog(g_blog);
-    datastore("post","create",post,function (obj) {
-      if (obj.success) {
-        g_blog.updatePostID(domID,obj.postID)
+    datastore("post","create",post,function (res) {
+      if (res.success) {
+        g_blog.updatePostID(domID,res.data)
         displayBlog(g_blog);
       } else {
-        message(obj.message);
+        error(res.data);
       }
     });
   }
@@ -156,10 +161,10 @@ function editPost(domID) {
 function deletePost(domID) {
   post = g_blog.deletePost(domID);
   displayBlog(g_blog);
-  datastore("post","delete",post.postID,function (obj) {
-    if (obj.success) {
+  datastore("post","delete",post.postID,function (res) {
+    if (res.success) {
     } else {
-      message(obj.error);
+      error(res.data);
     }
   });
 }

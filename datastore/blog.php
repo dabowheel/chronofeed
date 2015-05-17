@@ -31,12 +31,13 @@
       exit;
     }
     
-    echoDataStart();
     echo <<<EOD
 {
-  "blogID": "$_GET[blogID]",
-  "title": "$title",
-  "postList": [
+  "success": true,
+  "blog": {
+    "blogID": "$_GET[blogID]",
+    "title": "$title",
+    "postList": [
 EOD;
 
   $i = 0;
@@ -45,18 +46,17 @@ EOD;
       echo ",";
     }
     echo <<<EOD
-{
-  "postID":"$line[post_id]",
-  "title":"$line[title]",
-  "text":"$line[post]",
-  "date":"$line[date]"
-}
+      {
+        "postID":"$line[post_id]",
+        "title":"$line[title]",
+        "text":"$line[post]",
+        "date":"$line[date]"
+      }
 EOD;
     $i++;
   }
 
-  echo "]}";
-  echoDataEnd();
+  echo "]}}";
 
   pg_free_result($result);
   }

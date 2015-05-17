@@ -1,6 +1,5 @@
 <?php
   require_once("general.php");
-  require("blog.php");
 
   $dbconn = getConnection();
   if (!$dbconn) {
@@ -12,7 +11,13 @@
 
   if ($obj->type == "blog") {
     if ($obj->action == "load") {
-      echoBlog($dbconn,$obj->data);
+      require("blog.php");
+      echoBlog($dbconn,$obj->blogID);
+    }
+  } elseif ($obj->type == "post") {
+    require("post.php");
+    if ($obj->action == "create") {
+      echoPostID($dbconn,$obj->data);
     }
   }
 
