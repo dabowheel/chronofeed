@@ -5,6 +5,8 @@
     <link rel="stylesheet" type="text/css" href="css/blog.css">
   </head>
   <body>
-    <div id="main"></div>
+    <div id="main">
+      <div id="blogmessage"></div>
+    </div>
   </body>
 </html>

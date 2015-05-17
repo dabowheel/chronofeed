@@ -63,9 +63,15 @@ function displayBlog(blog) {
 }
 
 function loadBlogFromServer(blogID) {
-  loadBlogWeb(blogID, function (blog) {
-    g_blog = blog;
-    displayBlog(blog);
+  datastore("blog","load",blogID, function (obj) {
+    if (obj.success) {
+      var blog = new Blog("","");
+      blog.loadObject(obj.data);
+      g_blog = blog;
+      displayBlog(blog);
+    } else {
+      error(obj.data);
+    }
   });
 }
 
@@ -78,9 +84,9 @@ function saveBlogTitleChange() {
   g_blog.editTitle(getBlogTitle());
   g_blog.editBlogTitle = false;
   displayBlog(g_blog);
-  saveBlogTitleWeb(g_blog.title, function (status) {
+  datastore("blog","save",new BlogInfo(g_blog.blogID,g_blog.title), function (status) {
     if (!status) {
-      message(status.error);
+      error(status.data);
     }
   });
 }
@@ -115,50 +121,45 @@ function savePostChanges(domID) {
     g_blog.editID = "";
     g_blog.editPost(domID,post);
     displayBlog(g_blog);
-    savePostWeb(g_blog.blogID,post,function (status) {
-      if (!status.success) {
-        message(status.message);
+    datastore("post","save",post,function (obj) {
+      if (!obj.success) {
+        message(obj.message);
       }
     });
   } else {
     g_blog.editNew = false;
     g_blog.addPost(post);
     displayBlog(g_blog);
-    savePostWeb(g_blog.blogID,post,function (status) {
-      if (status.success) {
-        g_blog.updatePostID(domID,status.postID)
+    datastore("post","create",post,function (obj) {
+      if (obj.success) {
+        g_blog.updatePostID(domID,obj.postID)
         displayBlog(g_blog);
       } else {
-        message(status.message);
+        message(obj.message);
       }
     });
   }
-
 }
 
-function cancelPostChanges(id) {
+function cancelPostChanges(domID) {
   g_blog.editID = ""
   g_blog.editNew = false
   displayBlog(g_blog);
 }
 
-function editPost(id) {
-  g_blog.editID = id;
-  console.log("edit",id);  
+function editPost(domID) {
+  g_blog.editID = domID;
+  console.log("edit",domID);  
   displayBlog(g_blog);
 }
 
 function deletePost(domID) {
   post = g_blog.deletePost(domID);
   displayBlog(g_blog);
-  deletePostWeb(post.postID,function (obj) {
+  datastore("post","delete",post.postID,function (obj) {
     if (obj.success) {
     } else {
       message(obj.error);
     }
   });
-}
-
-function message(str) {
-  document.getElementById("blogmessage").innerHTML = str;
 }
