@@ -89,9 +89,14 @@ function saveBlogTitleChange() {
   g_blog.editTitle(getBlogTitle());
   g_blog.editBlogTitle = false;
   displayBlog(g_blog);
-  datastore("blog","save",new BlogInfo(g_blog.blogID,g_blog.title), function (res) {
+  req = {
+    "type": "blogInfo",
+    "action": "save",
+    "blogInfo": new BlogInfo(g_blog.blogID, g_blog.title)
+  }
+  datastore(req, function (res) {
     if (!res.success) {
-      error(res.data);
+      error(res.error);
     }
   });
 }

@@ -1,5 +1,5 @@
 <?php
-  require_once("general.php");
+  require("general.php");
 
   $dbconn = getConnection();
   if (!$dbconn) {
@@ -14,10 +14,10 @@
       require("blog.php");
       echoBlog($dbconn,$obj->blogID);
     }
-  } elseif ($obj->type == "post") {
-    require("post.php");
-    if ($obj->action == "create") {
-      echoPostID($dbconn,$obj->data);
+  } elseif ($obj->type == "blogInfo") {
+    if ($obj->action == "save") {
+      require("blogInfo.php");
+      echoUpdateBlogInfo($obj->blogInfo);
     }
   }
 

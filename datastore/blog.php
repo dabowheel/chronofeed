@@ -14,7 +14,7 @@
 
     $line = pg_fetch_array($result,NULL,PGSQL_ASSOC);
     if (!$line) {
-      echoInvalidBlogID($_GET["blogID"]);
+      echoInvalidBlogID($blogID);
       pg_close($dbconn);
       exit;
     }
@@ -26,7 +26,7 @@
     $query = "select post_id,title,post,date from posts WHERE blog_id = '$blogID' ORDER BY date DESC";
     $result = pg_query($query);
     if (!$result) {
-      echoQueryFailed($query);
+      echoQueryFailed();
       pg_close($dbconn);
       exit;
     }
@@ -35,7 +35,7 @@
 {
   "success": true,
   "blog": {
-    "blogID": "$_GET[blogID]",
+    "blogID": "$blogID",
     "title": "$title",
     "postList": [
 EOD;

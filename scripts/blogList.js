@@ -1,19 +1,3 @@
-function BlogInfo(blogID,title) {
-  if (typeof blogID == "string" || blogID instanceof String) {
-    this.blogID = blogID;
-  } else {
-    error("Invalid blogID: " + blogID);
-  }
-
-  if (typeof title == "string" || title instanceof String) {
-    this.title = title;
-  } else {
-    error("Invalid title: " + title);
-  }
-}
-BlogInfo.prototype.loadObject = function (obj) {
-  this.Blog(obj.blogID,obj.title);
-};
 function BlogList() {
   this.list = [];
 }

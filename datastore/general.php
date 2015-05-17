@@ -23,14 +23,12 @@
 EOD;
   }
 
-  function echoQueryFailed($query) {
+  function echoQueryFailed() {
     $error = "Query failed: ".encodeJSONString(pg_last_error());
-    $query = encodeJSONString($query);
     echo <<<EOD
     {
       "success":false,
-      "error":"$error",
-      "debug":"$query"
+      "error":"$error"
     }
 EOD;
   }
