@@ -6,7 +6,7 @@ function error(message) {
   console.error(message, "\n", getStack());
 }
 
-function Post(domID,postID,title,text,date) {
+function Post(domID,postID,title,text,date,blogID) {
   if (typeof domID == "string" || domID instanceof String) {
     this.domID = domID
   } else {
@@ -36,9 +36,15 @@ function Post(domID,postID,title,text,date) {
   } else {
     error("invalid date: " + date);
   }
+
+  if (typeof blogID == "string" || blogID instanceof String) {
+    this.blogID = blogID;
+  } else {
+    error("invalid blogID: " + blogID);
+  }
 };
 Post.prototype.loadObject = function (post) {
-  this.Post(post.domID, post.postID, post.title, post.text, post.date);
+  this.Post(post.domID, post.postID, post.title, post.text, post.date, post.blogID);
 };
 
 function Blog(blogID,title) {
@@ -64,7 +70,7 @@ Blog.prototype.getDOMID = function () {
   return (++this.maxPostDOMID).toString();
 }
 Blog.prototype.appendObjectPost = function (post,domID) {
-  this.postList[this.postList.length] = new Post(domID,post.postID,post.title,post.text,new Date(post.date));
+  this.postList[this.postList.length] = new Post(domID,post.postID,post.title,post.text,new Date(post.date),post.blogID);
 };
 Blog.prototype.loadObject = function (obj) {
   if (obj.blogID) {
@@ -103,7 +109,7 @@ Blog.prototype.updatePostID = function (domID,postID) {
       break;
     }
   }  
-}
+};
 Blog.prototype.deletePost = function (domID) {
   for (var i = 0; i < this.postList.length; i++) {
     var post = this.postList[i];
@@ -113,6 +119,14 @@ Blog.prototype.deletePost = function (domID) {
     }
   }
   return null;
+};
+Blog.prototype.getPost = function (domID) {
+  for (var i = 0; i < this.postList.length; i++) {
+    var post = this.postList[i];
+    if (post.domID == domID) {
+      return post;
+    }
+  }
 };
 
 function BlogInfo(blogID,title) {

@@ -18,7 +18,7 @@ function displayBlog2HTML(blog) {
 
   // new post
   if (blog.editNew) {
-    var post = new Post(blog.getDOMID(),"","","",new Date());
+    var post = new Post(blog.getDOMID(),"","","",new Date(),blog.blogID);
     html += "<div id=\"post\" class=\"post\">";
     html += editPost2HTML(post);
     html += "</div>";
@@ -51,6 +51,7 @@ function editPost2HTML(post) {
   html += "<input id=\"postdomid\" type=\"hidden\" value=\"" + post.domID + "\"/>";
   html += "<input id=\"postpostid\" type=\"hidden\" value=\"" + post.postID + "\"/>";
   html += "<input id=\"postdate\" type=\"hidden\" value=\"" + post.date.toISOString() + "\"/>";
+  html += "<input id=\"postblogid\" type=\"hidden\" value=\"" + post.blogID + "\"/>";  
   html += "<div><strong>Edit</strong></div>";
   html += "<div><input id=\"posttitle\" type=\"text\" style=\"width:100%;box-sizing:border-box;\" value=\"" + (post.title?post.title:"") + "\"/></div>";
   html += "<div><textarea id=\"posttext\" rows=\"5\" style=\"width:100%;box-sizing:border-box;\">"+ (post.text?post.text:"") + "</textarea></div>";
@@ -117,7 +118,8 @@ function getPost() {
     postID: document.getElementById("postpostid").value,
     title: document.getElementById("posttitle").value,
     text: document.getElementById("posttext").value,
-    date: new Date(document.getElementById("postdate").value)
+    date: new Date(document.getElementById("postdate").value),
+    blogID: document.getElementById("postblogid").value
   };
 }
 
@@ -131,21 +133,31 @@ function savePostChanges(domID) {
     g_blog.editID = "";
     g_blog.editPost(domID,post);
     displayBlog(g_blog);
-    datastore("post","save",post,function (res) {
+    req = {
+      type: "post",
+      action: "save",
+      post: post
+    }
+    datastore(req,function (res) {
       if (!res.success) {
-        error(res.data);
+        error(res.error);
       }
     });
   } else {
     g_blog.editNew = false;
     g_blog.addPost(post);
     displayBlog(g_blog);
-    datastore("post","create",post,function (res) {
+    req = {
+      type: "post",
+      action: "create",
+      post: post
+    }
+    datastore(req,function (res) {
       if (res.success) {
-        g_blog.updatePostID(domID,res.data)
+        g_blog.updatePostID(domID,res.postID)
         displayBlog(g_blog);
       } else {
-        error(res.data);
+        error(res.error);
       }
     });
   }
@@ -166,10 +178,15 @@ function editPost(domID) {
 function deletePost(domID) {
   post = g_blog.deletePost(domID);
   displayBlog(g_blog);
-  datastore("post","delete",post.postID,function (res) {
+  req = {
+    type: "post",
+    action: "delete",
+    postID: post.postID
+  }
+  datastore(req,function (res) {
     if (res.success) {
     } else {
-      error(res.data);
+      error(res.error);
     }
   });
 }

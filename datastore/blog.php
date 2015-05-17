@@ -50,7 +50,8 @@ EOD;
         "postID":"$line[post_id]",
         "title":"$line[title]",
         "text":"$line[post]",
-        "date":"$line[date]"
+        "date":"$line[date]",
+        "blogID":"$blogID"
       }
 EOD;
     $i++;
