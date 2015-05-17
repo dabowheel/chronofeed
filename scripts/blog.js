@@ -70,7 +70,7 @@ Blog.prototype.getDOMID = function () {
   return (++this.maxPostDOMID).toString();
 }
 Blog.prototype.appendObjectPost = function (post,domID) {
-  this.postList[this.postList.length] = new Post(domID,post.postID,post.title,post.text,new Date(post.date),post.blogID);
+  this.postList[this.postList.length] = new Post(domID,post.postID,post.title,post.text,new Date(Date(post.date)),post.blogID);
 };
 Blog.prototype.loadObject = function (obj) {
   if (obj.blogID) {
