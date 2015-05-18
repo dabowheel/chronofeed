@@ -52,4 +52,14 @@ BlogList.prototype.getNewTitle = function () {
       return title;
     }
   }
-}
+};
+BlogList.prototype.delete = function (domID) {
+  for (var i = 0; i < this.list.length; i++) {
+    if (this.list[i].domID == domID) {
+      var blogInfo = this.list[i];
+      this.list.splice(i,1);
+      return blogInfo;
+    }
+  }
+  return null;
+};

@@ -30,4 +30,22 @@
 EOD;
     pg_free_result($result);
   }
+
+  function echoDeleteBlogInfo($blogID) {
+    $query = "DELETE FROM blogs WHERE blog_id='$blogID'";
+    $result = pg_query($query);
+
+    if (!$result) {
+      echoQueryFailed();
+      return;
+    }
+
+    echo <<<EOD
+    {
+      "success": true
+    }
+EOD;
+
+    pg_free_result($result);
+  }
 ?>

@@ -74,5 +74,17 @@ function editBlog(domID) {
 }
 
 function deleteBlog(domID) {
-
+  console.log("delete",domID);
+  var blogInfo = g_blogList.delete(domID);
+  displayBlogList(g_blogList);
+  var req = {
+    type: "blogInfo",
+    action: "delete",
+    blogID: blogInfo.blogID
+  }
+  datastore(req,function(res) {
+    if (!res.success) {
+      error(res.error);
+    }
+  });
 }

@@ -22,6 +22,8 @@
       echoUpdateBlogInfo($obj->blogInfo);
     } elseif ($obj->action == "create") {
       echoCreateBlogInfo($obj->blogInfo);
+    } elseif ($obj->action == "delete") {
+      echoDeleteBlogInfo($obj->blogID);
     }
 
   } elseif ($obj->type == "post") {
@@ -37,7 +39,7 @@
 
   } elseif ($obj->type == "blogList") {
     require("blogList.php");
-    
+
     if ($obj->action == "load") {
       echoLoadBlogList($dbconn);
     }
