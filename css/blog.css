@@ -1,4 +1,4 @@
-.postlist, .bloglist {
+.postlist,.bloglist {
 	width:800px;
 }
 .post,.bloginfo {
@@ -70,4 +70,7 @@ button.active {
 .field {
   width:100%;
   box-sizing:border-box;
+}
+.toplink {
+  height:30px;
 }

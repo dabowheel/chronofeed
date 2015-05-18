@@ -1,11 +1,13 @@
+var g_blogList;
+
 function displayBlogList2HTML(blogList) {
   var html = "<div id=\"bloglistmessage\"><div>";
-  html += "<button onclick=\"addBlog();\">Add</button>"
+  html += "<button onclick=\"addBlog();\">Add Blog</button>"
 
-  html += "<div class=\"blogList\">";
+  html += "<div class=\"bloglist\">";
   for (var i = 0; i < blogList.list.length; i++) {
     var blog = blogList.list[i];
-    html += "<div class=\"blogInfo\">";
+    html += "<div class=\"bloginfo\">";
     html += displayBlogInfo2HTML(blog);
     html += "</div>";
   }  
@@ -14,8 +16,8 @@ function displayBlogList2HTML(blogList) {
   return html;
 };
 
-function displayBlogInfo2HTML(blog) {
-  var html = "<div><strong>" + blog.title + "</strong><span class=\"listbutton\"><button onclick=\"editBlog('" + blog.domID + "');\">Edit</button><button onclick=\"deleteBlog('" + blog.domID + "')\">Delete</button></span></div>";
+function displayBlogInfo2HTML(blogInfo) {
+  var html = "<div><strong>" + blogInfo.title + "</strong><button class=\"hiddenbutton\">button to float against</button><span class=\"listbutton\"><button onclick=\"editBlog('" + blogInfo.domID + "');\">Edit</button><button onclick=\"deleteBlog('" + blogInfo.domID + "')\">Delete</button></span></div>";
   return html;
 }
 
@@ -23,16 +25,52 @@ function displayBlogList(blogList) {
   document.getElementById("main").innerHTML = displayBlogList2HTML(blogList);
 }
 
+function initialLoad() {
+  if (g_blog) {
+    loadBlogFromServer(g_blog.blogID);
+  } else {
+    loadBlogListFromServer();
+  }
+}
+
 function loadBlogListFromServer() {
-  
+  req = {
+    type: "blogList",
+    action: "load"
+  }
+  datastore(req,function (res) {
+    if (res.success) {
+      var blogList = new BlogList();
+      blogList.loadObject(res.blogList);
+      g_blogList = blogList;
+      displayBlogList(g_blogList);
+    } else {
+      error(res.error);
+    }
+  });
 }
 
 function addBlog() {
-
+  var blogInfo = new BlogInfo(g_blogList.getDOMID(),"",g_blogList.getNewTitle());
+  g_blogList.add(blogInfo);
+  displayBlogList(g_blogList);
+  req = {
+    type: "blogInfo",
+    action: "create",
+    blogInfo: blogInfo
+  }
+  datastore(req,function (res) {
+    if (res.success) {
+      blogInfo.blogID = res.blogID;
+    } else {
+      error(res.error);
+    }
+  });
 }
 
 function editBlog(domID) {
-
+  var blogInfo = g_blogList.getBlogInfo(domID);
+  loadBlogFromServer(blogInfo.blogID);
 }
 
 function deleteBlog(domID) {

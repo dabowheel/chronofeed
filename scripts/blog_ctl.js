@@ -3,6 +3,7 @@ var g_blog;
 function displayBlog2HTML(blog) {
   var html = "";
 
+  html += "<div class=\"toplink\"><a href=\"\" onclick=\"blogListLink();\">Blog List</a></div>";
   html += "<div class=\"postlist\">";
 
   // blog title
@@ -63,6 +64,11 @@ function displayBlog(blog) {
   document.getElementById("main").innerHTML = displayBlog2HTML(blog);
 }
 
+function blogListLink() {
+  g_blog = null;
+  loadBlogListFromServer();
+};
+
 function loadBlogFromServer(blogID) {
   req = {
     type: "blog",
@@ -87,13 +93,18 @@ function editBlogTitle() {
 }
 
 function saveBlogTitleChange() {
+  var title = getBlogTitle();
+  if (title != g_blog.title && g_blogList.hasTitle(title)) {
+    alert("Another blog already has this title: " + title);
+    return
+  }
   g_blog.editTitle(getBlogTitle());
   g_blog.editBlogTitle = false;
   displayBlog(g_blog);
-  req = {
+  var req = {
     "type": "blogInfo",
     "action": "save",
-    "blogInfo": new BlogInfo(g_blog.blogID, g_blog.title)
+    "blogInfo": new BlogInfo(g_blog.blogID,g_blog.blogID, g_blog.title)
   }
   datastore(req, function (res) {
     if (!res.success) {

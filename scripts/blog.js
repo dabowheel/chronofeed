@@ -110,6 +110,19 @@ Blog.prototype.updatePostID = function (domID,postID) {
     }
   }  
 };
+Blog.prototype.updateBlogID = function(blogID) {
+  if (typeof blogID == string || blogID instanceof String) {
+    if (this.blogID == "") {
+      this.blogID = blogID;
+      for (var i = 0; i < this.postList.length; i++) {
+        this.postList[i].blogID = blogID;
+      }
+    }
+  } else {
+    error("Invalid blogID: " + blogID);
+  }
+
+}
 Blog.prototype.deletePost = function (domID) {
   for (var i = 0; i < this.postList.length; i++) {
     var post = this.postList[i];
@@ -128,8 +141,23 @@ Blog.prototype.getPost = function (domID) {
     }
   }
 };
+Blog.prototype.sort = function () {
+  this.postList.sort(function (a,b) {
+    if (a.title < b.title)
+      return -1
+    if (a.title > b.title)
+      return 1
+    return 0
+  });
+};
 
-function BlogInfo(blogID,title) {
+function BlogInfo(domID,blogID,title) {
+  if (typeof domID == "string" || domID instanceof String) {
+    this.domID = domID
+  } else {
+    error("Invalid domID: " + domID);
+  }
+
   if (typeof blogID == "string" || blogID instanceof String) {
     this.blogID = blogID;
   } else {
@@ -142,6 +170,3 @@ function BlogInfo(blogID,title) {
     error("Invalid title: " + title);
   }
 }
-BlogInfo.prototype.loadObject = function (obj) {
-  this.Blog(obj.blogID,obj.title);
-};
