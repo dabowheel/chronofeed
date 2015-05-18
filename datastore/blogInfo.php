@@ -32,7 +32,8 @@ EOD;
   }
 
   function echoDeleteBlogInfo($blogID) {
-    $query = "DELETE FROM blogs WHERE blog_id='$blogID'";
+    $query = "DELETE FROM posts WHERE blog_id='$blogID';";
+    $query .= "DELETE FROM blogs WHERE blog_id='$blogID'";
     $result = pg_query($query);
 
     if (!$result) {
