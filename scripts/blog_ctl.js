@@ -3,7 +3,7 @@ var g_blog;
 function displayBlog2HTML(blog) {
   var html = "";
 
-  html += "<div class=\"toplink\"><a href=\"\" onclick=\"blogListLink();\">Blog List</a></div>";
+  html += menu2HTML();
   html += "<div class=\"postlist\">";
 
   // blog title
@@ -63,11 +63,6 @@ function editPost2HTML(post) {
 function displayBlog(blog) {
   document.getElementById("main").innerHTML = displayBlog2HTML(blog);
 }
-
-function blogListLink() {
-  g_blog = null;
-  loadBlogListFromServer();
-};
 
 function loadBlogFromServer(blogID) {
   req = {

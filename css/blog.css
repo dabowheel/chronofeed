@@ -1,6 +1,26 @@
-.postlist,.bloglist {
-	width:800px;
+@media (min-width: 800px) {
+  .postlist,.bloglist,.menu {
+  	width:800px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .menuitem {
+  }
+
+  .menuitemhidden {
+    visibility: hidden;
+  }
 }
+
+.menu {
+  text-align: center;
+}
+
+.menulink {
+  margin-left:20px;
+}
+
 .post,.bloginfo {
 	border-top-style:solid;
 	border-top-width:2px;
@@ -73,4 +93,44 @@ button.active {
 }
 .toplink {
   height:30px;
+}
+.title {
+  font-size:24px;
+}
+.divcenter {
+  margin-left:auto;
+  margin-right:auto;
+  width:50%;
+  text-align: center;
+}
+.tablecenter {
+  margin-left:auto;
+  margin-right:auto;
+  text-align: center
+}
+.indexcenter {
+  margin-left:auto;
+  margin-right:auto;
+  width:50%;
+  text-align: center;
+}
+.center {
+  margin-left:auto;
+  margin-right:auto;
+}
+.textcenter {
+  text-align:center;
+}
+.signupbutton {
+  text-align:left;
+}
+.label {
+  text-align:right;
+}
+.field {
+  text-align:left;
+}
+
+.message {
+  display:none;
 }

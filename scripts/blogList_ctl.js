@@ -1,10 +1,13 @@
 var g_blogList;
 
 function displayBlogList2HTML(blogList) {
-  var html = "<div id=\"bloglistmessage\"><div>";
-  html += "<button onclick=\"addBlog();\">Add Blog</button>"
+  var html = "";
 
+  html += menu2HTML();
   html += "<div class=\"bloglist\">";
+  html += "<div id=\"bloglistmessage\"><div>";
+  html += "<button onclick=\"addBlog();\">Add Blog</button>";
+
   for (var i = 0; i < blogList.list.length; i++) {
     var blog = blogList.list[i];
     html += "<div class=\"bloginfo\">";
@@ -45,7 +48,11 @@ function loadBlogListFromServer() {
       g_blogList = blogList;
       displayBlogList(g_blogList);
     } else {
-      error(res.error);
+      if (res.endSession) {
+        window.location.assign("login.html");
+      } else {
+        error(res.error);
+      }
     }
   });
 }

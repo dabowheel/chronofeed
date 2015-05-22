@@ -1,10 +1,3 @@
-function getStack() {
-  return (new Error()).stack;
-}
-
-function error(message) {
-  console.error(message, "\n", getStack());
-}
 
 function Post(domID,postID,title,text,date,blogID) {
   if (typeof domID == "string" || domID instanceof String) {

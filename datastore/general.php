@@ -37,15 +37,37 @@ EOD;
     echo <<<EOD
     {
       "success":false,
-      "data":"Invalid blog ID: $blogID"
+      "error":"Invalid blog ID: $blogID"
     }
 EOD;
   }
 
-function getJSONObject() {
-  $json = file_get_contents('php://input');
-  $obj = json_decode($json);
-  return $obj;
-}
+  function getJSONObject() {
+    $json = file_get_contents('php://input');
+    $obj = json_decode($json);
+    return $obj;
+  }
+
+  function echoError($error) {
+    echo <<<EOD
+    {
+      "success":false,
+      "error":"$error"
+    }
+EOD;
+  }
+
+  function isLoggedIn() {
+    return isset($_SESSION["userID"]);
+  }
+
+  function echoEndSession() {
+    echo <<<EOD
+    {
+      "success": false,
+      "endSession": true
+    }
+EOD;
+  }
 
 ?>
