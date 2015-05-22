@@ -58,7 +58,7 @@ function loadBlogListFromServer() {
 }
 
 function addBlog() {
-  var blogInfo = new BlogInfo(g_blogList.getDOMID(),"",g_blogList.getNewTitle());
+  var blogInfo = new BlogInfo(g_blogList.getDOMID(),"",g_blogList.getNewTitle(),g_blogList.userID);
   g_blogList.add(blogInfo);
   displayBlogList(g_blogList);
   req = {

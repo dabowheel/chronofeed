@@ -19,7 +19,7 @@ function displayBlog2HTML(blog) {
 
   // new post
   if (blog.editNew) {
-    var post = new Post(blog.getDOMID(),"","","",new Date(),blog.blogID);
+    var post = new Post(blog.getDOMID(),"","","",new Date(),blog.blogID,blog.userID);
     html += "<div id=\"post\" class=\"post\">";
     html += editPost2HTML(post);
     html += "</div>";
@@ -52,7 +52,8 @@ function editPost2HTML(post) {
   html += "<input id=\"postdomid\" type=\"hidden\" value=\"" + post.domID + "\"/>";
   html += "<input id=\"postpostid\" type=\"hidden\" value=\"" + post.postID + "\"/>";
   html += "<input id=\"postdate\" type=\"hidden\" value=\"" + post.date.toISOString() + "\"/>";
-  html += "<input id=\"postblogid\" type=\"hidden\" value=\"" + post.blogID + "\"/>";  
+  html += "<input id=\"postblogid\" type=\"hidden\" value=\"" + post.blogID + "\"/>";
+  html += "<input id=\"postuserid\" type=\"hidden\" value=\"" + post.userID + "\"/>";  
   html += "<div><strong>Edit</strong></div>";
   html += "<div><input id=\"posttitle\" type=\"text\" style=\"width:100%;box-sizing:border-box;\" value=\"" + (post.title?post.title:"") + "\"/></div>";
   html += "<div><textarea id=\"posttext\" rows=\"5\" style=\"width:100%;box-sizing:border-box;\">"+ (post.text?post.text:"") + "</textarea></div>";
@@ -72,7 +73,7 @@ function loadBlogFromServer(blogID) {
   }
   datastore(req, function (res) {
     if (res.success) {
-      var blog = new Blog("","");
+      var blog = new Blog("","","");
       blog.loadObject(res.blog);
       g_blog = blog;
       displayBlog(blog);
@@ -99,7 +100,7 @@ function saveBlogTitleChange() {
   var req = {
     "type": "blogInfo",
     "action": "save",
-    "blogInfo": new BlogInfo(g_blog.blogID,g_blog.blogID, g_blog.title)
+    "blogInfo": new BlogInfo(g_blog.blogID,g_blog.blogID, g_blog.title,g_blog.userID)
   }
   datastore(req, function (res) {
     if (!res.success) {
@@ -125,7 +126,8 @@ function getPost() {
     title: document.getElementById("posttitle").value,
     text: document.getElementById("posttext").value,
     date: new Date(document.getElementById("postdate").value),
-    blogID: document.getElementById("postblogid").value
+    blogID: document.getElementById("postblogid").value,
+    userID: document.getElementById("postuserid").value
   };
 }
 

@@ -1,5 +1,5 @@
 
-function Post(domID,postID,title,text,date,blogID) {
+function Post(domID,postID,title,text,date,blogID,userID) {
   if (typeof domID == "string" || domID instanceof String) {
     this.domID = domID
   } else {
@@ -35,12 +35,19 @@ function Post(domID,postID,title,text,date,blogID) {
   } else {
     error("invalid blogID: " + blogID);
   }
+
+  if (typeof userID == "string" || userID instanceof String) {
+    this.userID = userID;
+  } else {
+    error("invalid userID: " + userID);
+  }
+
 };
 Post.prototype.loadObject = function (post) {
-  this.Post(post.domID, post.postID, post.title, post.text, post.date, post.blogID);
+  this.Post(post.domID, post.postID, post.title, post.text, post.date, post.blogID, post.userID);
 };
 
-function Blog(blogID,title) {
+function Blog(blogID,title,userID) {
   if (typeof blogID == "string" || blogID instanceof String) {
     this.blogID = blogID;
   } else {
@@ -53,6 +60,12 @@ function Blog(blogID,title) {
     error("invalid title: " + title);
   }
 
+  if (typeof userID == "string" || userID instanceof String) {
+    this.userID = userID;
+  } else {
+    error("invalid userID: " + userID);
+  }
+
   this.postList = [];
   this.editNew = false;
   this.editID = "";
@@ -63,7 +76,7 @@ Blog.prototype.getDOMID = function () {
   return (++this.maxPostDOMID).toString();
 }
 Blog.prototype.appendObjectPost = function (post,domID) {
-  this.postList[this.postList.length] = new Post(domID,post.postID,post.title,post.text,new Date(Date(post.date)),post.blogID);
+  this.postList[this.postList.length] = new Post(domID,post.postID,post.title,post.text,new Date(Date(post.date)),post.blogID,post.userID);
 };
 Blog.prototype.loadObject = function (obj) {
   if (obj.blogID) {
@@ -72,6 +85,11 @@ Blog.prototype.loadObject = function (obj) {
   if (obj.title) {
     this.title = obj.title;
   }
+
+  if (obj.userID) {
+    this.userID = obj.userID;
+  }
+
   if (obj && obj.postList && obj.postList.length) {
     for (var i = 0; i < obj.postList.length; i++) {
       this.appendObjectPost(obj.postList[i], this.getDOMID());
@@ -144,7 +162,7 @@ Blog.prototype.sort = function () {
   });
 };
 
-function BlogInfo(domID,blogID,title) {
+function BlogInfo(domID,blogID,title,userID) {
   if (typeof domID == "string" || domID instanceof String) {
     this.domID = domID
   } else {
@@ -161,5 +179,11 @@ function BlogInfo(domID,blogID,title) {
     this.title = title;
   } else {
     error("Invalid title: " + title);
+  }
+
+  if (typeof userID == "string" || userID instanceof String) {
+    this.userID = userID;
+  } else {
+    error("invalid userID: " + userID);
   }
 }

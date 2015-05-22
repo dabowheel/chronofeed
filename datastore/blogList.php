@@ -2,7 +2,7 @@
 
   function echoLoadBlogList($dbconn) {
     // get blog title
-    $query = "select blog_id,title FROM blogs ORDER BY title ASC";
+    $query = "select blog_id,title,user_id FROM blogs WHERE user_id = '$_SESSION[userID]' ORDER BY title ASC";
     $result = pg_query($query);
 
     if (!$result) {
@@ -14,6 +14,7 @@
     {
       "success": true,
       "blogList": {
+        "userID": "$_SESSION[userID]",
         "list": [
 EOD;
     $i = 0;
@@ -24,7 +25,8 @@ EOD;
       echo <<<EOD
         {
           "blogID": "$line[blog_id]",
-          "title": "$line[title]"
+          "title": "$line[title]",
+          "userID": "$line[user_id]"
         }
 EOD;
     }

@@ -19,7 +19,8 @@
     $blogID = pg_escape_string($post->blogID);
     $title = pg_escape_string($post->title);
     $text = pg_escape_string($post->text);
-    $query = "INSERT INTO posts(title,post,date,blog_id) VALUES('$title','$text',Now(),'$blogID') RETURNING post_id";
+    $userID = pg_escape_string($post->userID);
+    $query = "INSERT INTO posts(title,post,date,blog_id,user_id) VALUES('$title','$text',Now(),'$blogID','$userID') RETURNING post_id";
     $result = pg_query($query);
     
     if ($result) {

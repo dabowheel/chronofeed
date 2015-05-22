@@ -15,7 +15,8 @@
 
   function echoCreateBlogInfo($blogInfo) {
     $title = pg_escape_string($blogInfo->title);
-    $query = "INSERT INTO blogs(title) VALUES('$title') RETURNING blog_id";
+    $userID = pg_escape_string($blogInfo->userID);
+    $query = "INSERT INTO blogs(title,user_id) VALUES('$title','$userID') RETURNING blog_id";
     $result = pg_query($query);
     if (!$result) {
       echoQueryFailed();

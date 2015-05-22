@@ -23,7 +23,7 @@
     pg_free_result($result);
 
     // get posts
-    $query = "select post_id,title,post,date from posts WHERE blog_id = '$blogID' ORDER BY date DESC";
+    $query = "select post_id,title,post,date,user_id from posts WHERE blog_id = '$blogID' ORDER BY date DESC";
     $result = pg_query($query);
     if (!$result) {
       echoQueryFailed();
@@ -37,6 +37,7 @@
   "blog": {
     "blogID": "$blogID",
     "title": "$title",
+    "userID": "$_SESSION[userID]",
     "postList": [
 EOD;
 
@@ -51,7 +52,8 @@ EOD;
         "title":"$line[title]",
         "text":"$line[post]",
         "date":"$line[date]",
-        "blogID":"$blogID"
+        "blogID":"$blogID",
+        "userID":"$line[user_id]"
       }
 EOD;
     $i++;

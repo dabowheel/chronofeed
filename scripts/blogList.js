@@ -1,15 +1,20 @@
 function BlogList() {
   this.list = [];
   this.maxDOMID = 0;
+  this.userID = "";
 }
 BlogList.prototype.getDOMID = function () {
   return (++this.maxDOMID).toString();
 };
 BlogList.prototype.loadObject = function (obj) {
+  if (obj.userID) {
+    this.userID = obj.userID;
+  }
+  
   if (obj && obj.list && obj.list.length) {
     for (var i = 0; i < obj.list.length; i++) {
       var values = obj.list[i];
-      this.list[this.list.length] = new BlogInfo(this.getDOMID(),values.blogID,values.title);
+      this.list[this.list.length] = new BlogInfo(this.getDOMID(),values.blogID,values.title,values.userID);
     }
   }
 };
