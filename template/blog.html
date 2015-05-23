@@ -22,6 +22,7 @@
     <div><strong>Edit</strong></div>
     <div><input id="posttitle" type="text" style="width:100%;box-sizing:border-box;" value="{{title}}"/></div>
     <div><textarea id="posttext" rows="5" style="width:100%;box-sizing:border-box;">{{text}}</textarea></div>
+    <div><input id="postdateonly" type="date" value="{{dateOnly}}"/><input id="posttimeonly" type="time" value="{{timeOnly}}"/></div>
     <div><span><button class="fillerbutton">Here</button></span><span class="listbutton"><button class="savebutton" onclick="savePostChanges('{{domID}}');">Accept</button><button class="savebutton" onclick="cancelPostChanges('{{domID}}');">Cancel</button></span></div>
   {{!-- not editing post --}}
   {{else}}

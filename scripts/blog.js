@@ -1,4 +1,15 @@
-
+function getInputDateValue(d) {
+  return d.getFullYear() + "-" + ((d.getMonth()+1)<10?"0":"") + (d.getMonth()+1) + "-" + (d.getDate()<10?"0":"") + d.getDate();
+}
+function getInputTimeValue(d) {
+  return ((d.getHours()<10)?"0":"") + d.getHours() + ":" + ((d.getMinutes()<10)?"0":"") + d.getMinutes();
+}
+function toDateString(d) {
+  return d.toLocaleDateString() + " " + d.toLocaleTimeString(navigator.language,{hour:"2-digit",minute:"2-digit"});
+}
+function toDBDateString(d) {
+  return getInputDateValue(d) + " " + getInputTimeValue(d);
+}
 function Post(domID,postID,title,text,date,blogID,userID) {
   if (typeof domID == "string" || domID instanceof String) {
     this.domID = domID
@@ -26,7 +37,10 @@ function Post(domID,postID,title,text,date,blogID,userID) {
 
   if (date instanceof Date) {
     this.date = date;
-    this.dateString = this.date.toLocaleString();
+    this.dateString = toDateString(this.date);
+    this.dateOnly = getInputDateValue(this.date);
+    this.timeOnly = getInputTimeValue(this.date);
+    this.dbDateString = toDBDateString(this.date)
   } else {
     error("invalid date: " + date);
   }
@@ -76,7 +90,7 @@ Blog.prototype.getDOMID = function () {
   return (++this.maxPostDOMID).toString();
 }
 Blog.prototype.appendObjectPost = function (post,domID) {
-  this.postList[this.postList.length] = new Post(domID,post.postID,post.title,post.text,new Date(Date(post.date)),post.blogID,post.userID);
+  this.postList[this.postList.length] = new Post(domID,post.postID,post.title,post.text,new Date(post.date),post.blogID,post.userID);
 };
 Blog.prototype.loadObject = function (obj) {
   if (obj.blogID) {
@@ -120,10 +134,8 @@ Blog.prototype.stopEditingPost = function (domID) {
 };
 Blog.prototype.savePost = function (domID,post) {
   for (var i = 0; i < this.postList.length; i++) {
-    var p = this.postList[i];
-    if (p.domID === domID) {
-      p.title = post.title;
-      p.text = post.text;
+    if (this.postList[i].domID === domID) {
+      this.postList[i] = post;
       break;
     }
   }

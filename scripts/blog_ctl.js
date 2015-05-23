@@ -72,14 +72,19 @@ function addPost() {
 }
 
 function getPost() {
+  var dateOnly = document.getElementById("postdateonly").value
+  var timeOnly = document.getElementById("posttimeonly").value
+  var date = new Date(dateOnly + " " + timeOnly)
   return {
     domID: document.getElementById("postdomid").value,
     postID: document.getElementById("postpostid").value,
     title: document.getElementById("posttitle").value,
     text: document.getElementById("posttext").value,
-    date: new Date(document.getElementById("postdate").value),
+    date: date,
     blogID: document.getElementById("postblogid").value,
-    userID: document.getElementById("postuserid").value
+    userID: document.getElementById("postuserid").value,
+    dateOnly: dateOnly,
+    timeOnly: timeOnly
   };
 }
 
@@ -124,7 +129,13 @@ function savePostChanges(domID) {
 }
 
 function cancelPostChanges(domID) {
-  g_blog.deletePost(domID);
+  var values = getPost();
+  var post = g_blog.getPost(domID);
+  if (post.postID) {
+    g_blog.stopEditingPost(domID);
+  } else {
+    g_blog.deletePost(domID);
+  }
   displayBlog(g_blog);
 }
 

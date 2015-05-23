@@ -4,7 +4,8 @@
     $postID = pg_escape_string($post->postID);
     $title = pg_escape_string($post->title);
     $text = pg_escape_string($post->text);
-    $query = "UPDATE posts SET title = '$title', post = '$text' WHERE post_id = '$postID' AND blog_id = '$blogID'";
+    $date = pg_escape_string($post->dbDateString);
+    $query = "UPDATE posts SET title = '$title', post = '$text', date = '$date' WHERE post_id = '$postID' AND blog_id = '$blogID'";
     $result = pg_query($query);
     
     if ($result) {
@@ -19,8 +20,9 @@
     $blogID = pg_escape_string($post->blogID);
     $title = pg_escape_string($post->title);
     $text = pg_escape_string($post->text);
-    $userID = pg_escape_string($post->userID);
-    $query = "INSERT INTO posts(title,post,date,blog_id,user_id) VALUES('$title','$text',Now(),'$blogID','$userID') RETURNING post_id";
+    $date = pg_escape_string($post->dbDateString);
+    $userID = pg_escape_string($post->userID);    
+    $query = "INSERT INTO posts(title,post,date,blog_id,user_id) VALUES('$title','$text','$date','$blogID','$userID') RETURNING post_id";
     $result = pg_query($query);
     
     if ($result) {
