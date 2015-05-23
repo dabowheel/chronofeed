@@ -26,6 +26,7 @@ function Post(domID,postID,title,text,date,blogID,userID) {
 
   if (date instanceof Date) {
     this.date = date;
+    this.dateString = this.date.toLocaleString();
   } else {
     error("invalid date: " + date);
   }
@@ -41,7 +42,6 @@ function Post(domID,postID,title,text,date,blogID,userID) {
   } else {
     error("invalid userID: " + userID);
   }
-
 };
 Post.prototype.loadObject = function (post) {
   this.Post(post.domID, post.postID, post.title, post.text, post.date, post.blogID, post.userID);
@@ -102,7 +102,23 @@ Blog.prototype.editTitle = function(title) {
 Blog.prototype.addPost = function (post) {
   this.postList.unshift(post);
 };
-Blog.prototype.editPost = function (domID,post) {
+Blog.prototype.editPost = function (domID) {
+  for (var i = 0; i < this.postList.length; i++) {
+    if (this.postList[i].domID == domID) {
+      this.postList[i].edit = true;
+      break;
+    }
+  }
+};
+Blog.prototype.stopEditingPost = function (domID) {
+  for (var i = 0; i < this.postList.length; i++) {
+    if (this.postList[i].domID == domID) {
+      this.postList[i].edit = false;
+      break;
+    }
+  }
+};
+Blog.prototype.savePost = function (domID,post) {
   for (var i = 0; i < this.postList.length; i++) {
     var p = this.postList[i];
     if (p.domID === domID) {

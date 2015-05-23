@@ -1,68 +1,18 @@
 var g_blog;
 
-function displayBlog2HTML(blog) {
-  var html = "";
-
-  html += menu2HTML();
-  html += "<div class=\"postlist\">";
-
-  // blog title
-  if (blog.editBlogTitle) {
-    html += "<div><input id=\"blogtitle\" type=\"text\" class=\"field\" value=\"" + blog.title + "\"/></div>";
-    html += "<div><span><button class=\"fillerbutton\">Here</button></span><span class=\"listbutton\"><button class=\"savebutton\" onclick=\"saveBlogTitleChange();\">Accept</button><button class=\"savebutton\" onclick=\"cancelBlogTitleChange()\">Cancel</button></span></div>";
-  } else {
-    html += "<div class=\"blogtitlebox\"><strong class=\"blogtitle\">" + blog.title + "</strong><button onclick=\"editBlogTitle();\">Edit</button></div>";    
-  }
-
-  html += "<div id=\"blogmessage\"><div>";
-  html += "<button onclick=\"addPost();\">Add Post</button>"
-
-  // new post
-  if (blog.editNew) {
-    var post = new Post(blog.getDOMID(),"","","",new Date(),blog.blogID,blog.userID);
-    html += "<div id=\"post\" class=\"post\">";
-    html += editPost2HTML(post);
-    html += "</div>";
-  }
-
-  for (var i = 0; i < blog.postList.length; i++) {
-    var post = blog.postList[i];
-    html += "<div class=\"post\">";
-    if (post.domID === blog.editID) {
-      html += editPost2HTML(post);
-    } else {
-      html += displayPost2HTML(post);
-    }
-    html += "</div>";
-  }
-  
-  html += "</div>"
-  return html;
-};
-
-function displayPost2HTML(post) {
-  var html = "<div><strong>" + post.title + "</strong><span class=\"listbutton\"><button onclick=\"editPost('" + post.domID + "');\">Edit</button><button onclick=\"deletePost('" + post.domID + "')\">Delete</button></span></div>";
-  html += "<div>" + post.text + "</div>";
-  html += "<div>" + post.date.toLocaleDateString() + " " + post.date.toLocaleTimeString() + "<button class=\"hiddenbutton\">Button to float against</button></div>"; 
-  return html;
-}
-
-function editPost2HTML(post) {
-  var html  = "";
-  html += "<input id=\"postdomid\" type=\"hidden\" value=\"" + post.domID + "\"/>";
-  html += "<input id=\"postpostid\" type=\"hidden\" value=\"" + post.postID + "\"/>";
-  html += "<input id=\"postdate\" type=\"hidden\" value=\"" + post.date.toISOString() + "\"/>";
-  html += "<input id=\"postblogid\" type=\"hidden\" value=\"" + post.blogID + "\"/>";
-  html += "<input id=\"postuserid\" type=\"hidden\" value=\"" + post.userID + "\"/>";  
-  html += "<div><strong>Edit</strong></div>";
-  html += "<div><input id=\"posttitle\" type=\"text\" style=\"width:100%;box-sizing:border-box;\" value=\"" + (post.title?post.title:"") + "\"/></div>";
-  html += "<div><textarea id=\"posttext\" rows=\"5\" style=\"width:100%;box-sizing:border-box;\">"+ (post.text?post.text:"") + "</textarea></div>";
-  html += "<div><span><button class=\"fillerbutton\">Here</button></span><span class=\"listbutton\"><button class=\"savebutton\" onclick=\"savePostChanges('" + post.domID + "');\">Accept</button><button class=\"savebutton\" onclick=\"cancelPostChanges('" + post.domID + "')\">Cancel</button></span></div>";
-  return html;
+function displayBlog2HTML(blog,callback) {
+  getTemplateSource("blog",function(source) {
+    var template = Handlebars.compile(source);
+    console.log(blog);
+    var html = template(blog);
+    callback(html);
+  });
 }
 
 function displayBlog(blog) {
-  document.getElementById("main").innerHTML = displayBlog2HTML(blog);
+  displayBlog2HTML(blog,function (html) {
+    document.getElementById("main").innerHTML = html;
+  });
 }
 
 function loadBlogFromServer(blogID) {
@@ -70,7 +20,7 @@ function loadBlogFromServer(blogID) {
     type: "blog",
     action: "load",
     blogID: blogID
-  }
+  };
   datastore(req, function (res) {
     if (res.success) {
       var blog = new Blog("","","");
@@ -115,7 +65,9 @@ function cancelBlogTitleChange() {
 }
 
 function addPost() {
-  g_blog.editNew = true;
+  var domID = g_blog.getDOMID()
+  g_blog.addPost(new Post(domID,"","","",new Date(),g_blog.blogID,g_blog.userID));
+  g_blog.editPost(domID);
   displayBlog(g_blog);
 }
 
@@ -136,10 +88,11 @@ function getBlogTitle() {
 }
 
 function savePostChanges(domID) {
-  var post = getPost();
+  var values = getPost();
+  var post = new Post(values.domID,values.postID,values.title,values.text,values.date,values.blogID,values.userID);
+  g_blog.stopEditingPost(domID);
   if (post.postID) {
-    g_blog.editID = "";
-    g_blog.editPost(domID,post);
+    g_blog.savePost(domID,post);
     displayBlog(g_blog);
     req = {
       type: "post",
@@ -152,8 +105,7 @@ function savePostChanges(domID) {
       }
     });
   } else {
-    g_blog.editNew = false;
-    g_blog.addPost(post);
+    g_blog.savePost(domID,post);
     displayBlog(g_blog);
     req = {
       type: "post",
@@ -172,14 +124,12 @@ function savePostChanges(domID) {
 }
 
 function cancelPostChanges(domID) {
-  g_blog.editID = ""
-  g_blog.editNew = false
+  g_blog.deletePost(domID);
   displayBlog(g_blog);
 }
 
 function editPost(domID) {
-  g_blog.editID = domID;
-  console.log("edit",domID);  
+  g_blog.editPost(domID);
   displayBlog(g_blog);
 }
 
