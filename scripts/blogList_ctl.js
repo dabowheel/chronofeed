@@ -1,31 +1,18 @@
 var g_blogList;
 
-function displayBlogList2HTML(blogList) {
-  var html = "";
-
-  html += menu2HTML();
-  html += "<div class=\"bloglist\">";
-  html += "<div id=\"bloglistmessage\"><div>";
-  html += "<button onclick=\"addBlog();\">Add Blog</button>";
-
-  for (var i = 0; i < blogList.list.length; i++) {
-    var blog = blogList.list[i];
-    html += "<div class=\"bloginfo\">";
-    html += displayBlogInfo2HTML(blog);
-    html += "</div>";
-  }  
-  html += "</div>"
-
-  return html;
+function displayBlogList2HTML(blogList,callback) {
+  getTemplateSource("blogList", function (source) {
+    var template = Handlebars.compile(source);
+    var html = template(blogList);
+    callback(html);
+  });
 };
 
-function displayBlogInfo2HTML(blogInfo) {
-  var html = "<div><strong>" + blogInfo.title + "</strong><button class=\"hiddenbutton\">button to float against</button><span class=\"listbutton\"><button onclick=\"editBlog('" + blogInfo.domID + "');\">Edit</button><button onclick=\"deleteBlog('" + blogInfo.domID + "')\">Delete</button></span></div>";
-  return html;
-}
 
 function displayBlogList(blogList) {
-  document.getElementById("main").innerHTML = displayBlogList2HTML(blogList);
+  displayBlogList2HTML(blogList, function (html) {
+    document.getElementById("main").innerHTML = html;
+  });
 }
 
 function initialLoad() {
