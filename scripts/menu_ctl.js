@@ -1,12 +1,3 @@
-function menu2HTML()
-{
-  html = "";
-  html += "<div class=\"menu\">";
-  html += "<button onclick=\"blogListClick();\">Blog List</button>"
-  html += "<button onclick=\"logoutClick();\">Logout</button>";
-  html += "</div>";
-  return html;
-}
 
 function blogListClick() {
   g_blog = null;

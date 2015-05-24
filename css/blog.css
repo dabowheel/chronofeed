@@ -1,24 +1,16 @@
 @media (min-width: 800px) {
-  .postlist,.bloglist,.menu {
+  .postlist,.bloglist {
   	width:800px;
     margin-left:auto;
     margin-right:auto;
   }
-
-  .menuitem {
-  }
-
-  .menuitemhidden {
-    visibility: hidden;
-  }
 }
 
 .menu {
+  width:800px;
+  margin-left:auto;
+  margin-right:auto;
   text-align: center;
-}
-
-.menulink {
-  margin-left:20px;
 }
 
 .post,.bloginfo {

@@ -1,11 +1,24 @@
 var g_blog;
 
 function displayBlog2HTML(blog,callback) {
+  var menuHTML,blogHTML;
+
+  function getBoth() {
+    if (menuHTML && blogHTML) {
+      callback(menuHTML + blogHTML);
+    }
+  }
+
+  getTemplateSource("menu",function (source) {
+    menuHTML = source;
+    getBoth()
+  });
+
   getTemplateSource("blog",function(source) {
     var template = Handlebars.compile(source);
     console.log(blog);
-    var html = template(blog);
-    callback(html);
+    blogHTML = template(blog);
+    getBoth();
   });
 }
 

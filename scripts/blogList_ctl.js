@@ -1,10 +1,23 @@
 var g_blogList;
 
 function displayBlogList2HTML(blogList,callback) {
+  var menuHTML,blogListHTML;
+
+  function getBoth() {
+    if (menuHTML && blogListHTML) {
+      callback(menuHTML + blogListHTML);
+    }
+  }
+
+  getTemplateSource("menu", function (source) {
+    menuHTML = source;
+    getBoth()
+  });
+
   getTemplateSource("blogList", function (source) {
     var template = Handlebars.compile(source);
-    var html = template(blogList);
-    callback(html);
+    blogListHTML = template(blogList);
+    getBoth()
   });
 };
 
