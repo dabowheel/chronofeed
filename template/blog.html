@@ -27,7 +27,7 @@
   {{!-- not editing post --}}
   {{else}}
     <div><strong>{{title}}</strong><span class="listbutton"><button onclick="editPost('{{domID}}');">Edit</button><button onclick="deletePost('{{domID}}');">Delete</button></span></div>
-    <div>{{text}}</div>
+    <div>{{{encodeText text}}}</div>
     <div>{{dateString}}<button class="hiddenbutton">Button to float against</button></div>
   {{/if}}
   </div>

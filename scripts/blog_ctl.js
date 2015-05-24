@@ -3,6 +3,10 @@ var g_blog;
 function displayBlog2HTML(blog,callback) {
   var menuHTML,blogHTML;
 
+  Handlebars.registerHelper("encodeText", function (str) {
+    return str.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;").replace(/\n/g,"<br>");
+  });
+
   function getBoth() {
     if (menuHTML && blogHTML) {
       callback(menuHTML + blogHTML);

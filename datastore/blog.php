@@ -46,11 +46,12 @@ EOD;
     if ($i > 0) {
       echo ",";
     }
+    $text = encodeJSONString($line["post"]);
     echo <<<EOD
       {
         "postID":"$line[post_id]",
         "title":"$line[title]",
-        "text":"$line[post]",
+        "text":"$text",
         "date":"$line[date]",
         "blogID":"$blogID",
         "userID":"$line[user_id]"
