@@ -45,7 +45,7 @@ function loadBlogFromServer(blogID) {
       g_blog = blog;
       displayBlog(blog);
     } else {
-      error(res.data);
+      error(res.error);
     }
   });
 }
