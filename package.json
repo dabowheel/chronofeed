@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/dabowheel/blog",
   "dependencies": {
-    "grunt": "^0.4.5"
+    "express": "^4.12.4",
+    "grunt": "^0.4.5",
+    "pg": "^4.3.0"
   },
   "devDependencies": {
     "jasmine": "^2.3.1",
