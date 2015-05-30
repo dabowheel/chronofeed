@@ -1,29 +1,14 @@
 var g_blog;
 
 function displayBlog2HTML(blog,callback) {
-  var menuHTML,blogHTML;
-
   Handlebars.registerHelper("encodeText", function (str) {
     return str.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;").replace(/\n/g,"<br>");
   });
 
-  function getBoth() {
-    if (menuHTML && blogHTML) {
-      callback(menuHTML + blogHTML);
-    }
-  }
-
-  getTemplateSource("menu",function (source) {
-    menuHTML = source;
-    getBoth()
-  });
-
-  getTemplateSource("blog",function(source) {
-    var template = Handlebars.compile(source);
-    console.log(blog);
-    blogHTML = template(blog);
-    getBoth();
-  });
+  menuHTML = g_templateList["menu"];
+  var template = Handlebars.compile(g_templateList["blog"]);
+  var blogHTML = template(blog);
+  callback(menuHTML + blogHTML);
 }
 
 function displayBlog(blog) {
@@ -32,15 +17,15 @@ function displayBlog(blog) {
   });
 }
 
-function loadBlogFromServer(blogID) {
+function viewBlog(blogID) {
   req = {
     type: "blog",
-    action: "load",
+    action: "read",
     blogID: blogID
   };
   datastore(req, function (res) {
     if (res.success) {
-      var blog = new Blog("","","");
+      var blog = new Blog();
       blog.loadObject(res.blog);
       g_blog = blog;
       displayBlog(blog);

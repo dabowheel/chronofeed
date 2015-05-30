@@ -1,7 +1,8 @@
 
+
 function blogListClick() {
   g_blog = null;
-  loadBlogListFromServer();
+  viewBlogList();
 };
 
 function logoutClick() {

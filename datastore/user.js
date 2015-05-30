@@ -1,4 +1,5 @@
 var pg = require("pg");
+var util = require("./util");
 
 function user(inObject,callback) {
   console.log(inObject);
@@ -15,32 +16,20 @@ function user(inObject,callback) {
 function userLogin(user,callback) {
   pg.connect(process.env.DATABASE_URL, function (error,client,done) {
     if (error) {
-      callback({
-        success: false,
-        error: error,
-        stack: error.stack,
-        abc: "here"
-      });
+      util.sendError(error,callback);
       return
     }
 
     var str = "SELECT user_id FROM users WHERE (username = $1 OR email = $2) AND password = $3";
     var args = [user.username,user.username,user.password];
-    console.log(str);
-    console.log(args);
     q = client.query(str, args);
 
     q.on("error", function (error) {
-      callback({
-        success: false,
-        error: error,
-        stack: error.stack
-      });
+      util.sendError(error,callback);
     });
 
     var ret = null;
     q.on("row", function (row) {
-      console.log("in row");
       if (!ret) {
         ret = {
           success: true,

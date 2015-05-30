@@ -1,37 +1,29 @@
 var pg = require("pg");
+var util = require("./util");
 
 function blogList(inObject,callback) {
-  console.log(inObject);
   if (inObject.action == "read") {
-    blogListRead(inObject,callback);
+    blogListRead(inObject.userID,callback);
   } else {
-    callback({
-      success: false,
-      error: "Invalid blogList action: " + inObject.action
-    });
+    util.sendError("Invalid blogList action: " + inObject.action, callback);
   }
 }
 
-function blogListRead(inObject,callback) {
-  var userID = 1;
+function blogListRead(userID,callback) {
   pg.connect(process.env.DATABASE_URL, function (error,client,done) {
     if (error) {
-      callback({
-        success: false,
-        error: error,
-        stack: error.stack
-      });
+      util.sendError(error,callback);
       return;
     }
     var str = "select blog_id,title,user_id FROM blogs WHERE user_id = $1 ORDER BY title ASC";
-    q = client.query(str,[userID]);
+    var args = [userID];
+    console.log(str);
+    console.log(args);
+    q = client.query(str,args);
 
     q.on("error", function(error) {
       done();
-      callback({
-        success: false,
-        error: error
-      })
+      util.sendError(eror,callback);
     });
     
     var ret = {

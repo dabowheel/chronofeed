@@ -1,3 +1,31 @@
-requirejs(["scripts/util.js","scripts/blog.js","scripts/blog_ctl.js","scripts/datastore.js","scripts/blogList.js","scripts/blogList_ctl.js","scripts/login_ctl.js","scripts/menu_ctl.js","scripts/template.js"], function() {
-  initialLoad();
-});
+var g_templateList = [];
+
+function getStack() {
+  return (new Error()).stack;
+}
+
+function error(message) {
+  console.error(message, "\n", getStack());
+}
+
+function viewInitial() {
+  loadAssetsFromServer(function () {
+    console.log("loaded templates");
+    viewLogin();
+  })
+}
+
+function loadAssetsFromServer(callback) {
+  var promiseList = [];
+  var names = ["blog","blogList","login","menu","signup"];
+  for (i in names) {
+    console.log("load " + names[i]);
+    promiseList[promiseList.length] = getTemplateSource(names[i],g_templateList)
+  }
+
+  p = Promise.all(promiseList)
+  p.then(function (val) {
+    callback()
+  })
+
+}

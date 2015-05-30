@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script src="scripts/blog.js"></script>
+    <script src="scripts/blog_ctl.js"></script>
+    <script src="scripts/blogList.js"></script>
+    <script src="scripts/blogList_ctl.js"></script>
+    <script src="scripts/datastore.js"></script>
     <script src="scripts/handlebars-v3.0.3.js"></script>    
-    <script data-main="scripts/main" src="scripts/require.js"></script>
+    <script src="scripts/login_ctl.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/menu_ctl.js"></script>
+    <script src="scripts/sha256.js"></script>
+    <script src="scripts/template.js"></script>
     <link rel="stylesheet" type="text/css" href="css/blog.css">
   </head>
-  <body>
+  <body onload="viewInitial();">
     <div id="main">
       <div id="blogmessage"></div>
     </div>

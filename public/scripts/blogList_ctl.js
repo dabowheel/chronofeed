@@ -1,24 +1,10 @@
 var g_blogList;
 
 function displayBlogList2HTML(blogList,callback) {
-  var menuHTML,blogListHTML;
-
-  function getBoth() {
-    if (menuHTML && blogListHTML) {
-      callback(menuHTML + blogListHTML);
-    }
-  }
-
-  getTemplateSource("menu", function (source) {
-    menuHTML = source;
-    getBoth()
-  });
-
-  getTemplateSource("blogList", function (source) {
-    var template = Handlebars.compile(source);
-    blogListHTML = template(blogList);
-    getBoth()
-  });
+  var menuHTML = g_templateList["menu"];
+  var template = Handlebars.compile(g_templateList["blogList"]);
+  var blogListHTML = template(blogList);
+  callback(menuHTML + blogListHTML);
 };
 
 
@@ -28,18 +14,11 @@ function displayBlogList(blogList) {
   });
 }
 
-function initialLoad() {
-  if (g_blog) {
-    loadBlogFromServer(g_blog.blogID);
-  } else {
-    loadBlogListFromServer();
-  }
-}
-
-function loadBlogListFromServer() {
+function viewBlogList() {
   req = {
     type: "blogList",
-    action: "read"
+    action: "read",
+    userID: g_userID
   }
   datastore(req,function (res) {
     if (res.success) {
@@ -49,7 +28,7 @@ function loadBlogListFromServer() {
       displayBlogList(g_blogList);
     } else {
       if (res.endSession) {
-        window.location.assign("login.html");
+        viewLogin();
       } else {
         error(res.error);
       }
@@ -77,7 +56,7 @@ function addBlog() {
 
 function editBlog(domID) {
   var blogInfo = g_blogList.getBlogInfo(domID);
-  loadBlogFromServer(blogInfo.blogID);
+  viewBlog(blogInfo.blogID);
 }
 
 function deleteBlog(domID) {

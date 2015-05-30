@@ -10,6 +10,7 @@ function toDateString(d) {
 function toDBDateString(d) {
   return getInputDateValue(d) + " " + getInputTimeValue(d);
 }
+
 function Post(domID,postID,title,text,date,blogID,userID) {
   if (typeof domID == "string" || domID instanceof String) {
     this.domID = domID
@@ -17,7 +18,7 @@ function Post(domID,postID,title,text,date,blogID,userID) {
     error("invalid domID: " + domID);
   }
 
-  if (typeof postID == "string" || postID instanceof String) {
+  if (typeof postID == "number") {
     this.postID = postID;
   } else {
     error("invalid postID: " + postID);
@@ -45,13 +46,13 @@ function Post(domID,postID,title,text,date,blogID,userID) {
     error("invalid date: " + date);
   }
 
-  if (typeof blogID == "string" || blogID instanceof String) {
+  if (typeof blogID == "number") {
     this.blogID = blogID;
   } else {
     error("invalid blogID: " + blogID);
   }
 
-  if (typeof userID == "string" || userID instanceof String) {
+  if (typeof userID == "number") {
     this.userID = userID;
   } else {
     error("invalid userID: " + userID);
@@ -62,22 +63,28 @@ Post.prototype.loadObject = function (post) {
 };
 
 function Blog(blogID,title,userID) {
-  if (typeof blogID == "number") {
-    this.blogID = blogID;
-  } else {
-    error("invalid blogID: " + blogID);
+  if (blogID) {
+    if (typeof blogID == "number") {
+      this.blogID = blogID;
+    } else {
+      error("invalid blogID: " + blogID + " type: " + (typeof blogID));
+    }
   }
 
-  if (typeof title == "string" || title instanceof String) {
-    this.title = title;
-  } else {
-    error("invalid title: " + title);
+  if (title) {
+    if (typeof title == "string" || title instanceof String) {
+      this.title = title;
+    } else {
+      error("invalid title: " + title);
+    }
   }
 
-  if (typeof userID == "number") {
-    this.userID = userID;
-  } else {
-    error("invalid userID: " + userID);
+  if (userID) {
+    if (typeof userID == "number") {
+      this.userID = userID;
+    } else {
+      error("invalid userID: " + userID);
+    }
   }
 
   this.postList = [];
@@ -147,7 +154,7 @@ Blog.prototype.updatePostID = function (domID,postID) {
       p.postID = postID;
       break;
     }
-  }  
+  }
 };
 Blog.prototype.updateBlogID = function(blogID) {
   if (typeof blogID == string || blogID instanceof String) {

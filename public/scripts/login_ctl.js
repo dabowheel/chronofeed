@@ -1,3 +1,9 @@
+var g_userID;
+
+function viewLogin() {
+  document.getElementById("main").innerHTML = g_templateList["login"]
+}
+
 function getSetup() {
   return {
     username: document.getElementById("username").value,
@@ -29,7 +35,7 @@ function signup() {
   };
   datastore(req,function (res) {
     if (res.success) {
-      window.location.assign("blog.html");
+      viewBlogList();
     } else {
       error(res.error);
     }
@@ -46,7 +52,8 @@ function login() {
   datastore(req,function (res) {
     if (res.success) {
       if (res.login) {
-        window.location.assign("blog.html");
+        g_userID = res.userID;
+        viewBlogList();
       } else {
         message("Invalid username or password.");
       }
