@@ -3,6 +3,7 @@ var user = require("./user");
 var blogList = require("./blogList");
 var blog = require("./blog");
 var blogInfo = require("./blogInfo");
+var post = require("./post");
 
 function getObject(req,callback) {
   var body = "";
@@ -33,6 +34,8 @@ function routeRequest(inObject,pool,callback) {
       blog(connection, inObject, callback);
     } else if (inObject.type == "blogInfo") {
       blogInfo(connection, inObject, callback);
+    } else if (inObject.type == "post") {
+      post(connection, inObject, callback);
     } else {
       util.sendError("Invalid request type: " + inObject.type,callback);
     }

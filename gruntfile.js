@@ -1,5 +1,10 @@
 module.exports = function(grunt) {
-  grunt.registerTask("foo", function () {
-    console.log("My task %s has arguments %j", this.name, this.args);
+  grunt.loadNpmTasks("grunt-contrib-jshint");
+  grunt.initConfig({
+    jshint: {
+      all: ["gruntfile.js","index.js","public/scripts/**/*.js"]
+    }
   });
+
+  grunt.registerTask("default",["jshint"]);
 };

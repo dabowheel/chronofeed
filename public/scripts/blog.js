@@ -21,7 +21,7 @@ function Post(domID,postID,title,text,date,blogID,userID) {
   if (typeof postID == "number") {
     this.postID = postID;
   } else {
-    error("invalid postID: " + postID);
+    error("invalid postID: " + postID + " type: " + (typeof postID));
   }
 
   if (typeof title == "string" || title instanceof String) {
@@ -49,13 +49,13 @@ function Post(domID,postID,title,text,date,blogID,userID) {
   if (typeof blogID == "number") {
     this.blogID = blogID;
   } else {
-    error("invalid blogID: " + blogID);
+    error("invalid blogID: " + blogID + " type: " + (typeof blogID));
   }
 
   if (typeof userID == "number") {
     this.userID = userID;
   } else {
-    error("invalid userID: " + userID);
+    error("invalid userID: " + userID + " type: " + (typeof userID));
   }
 };
 Post.prototype.loadObject = function (post) {

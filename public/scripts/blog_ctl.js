@@ -68,7 +68,7 @@ function cancelBlogTitleChange() {
 
 function addPost() {
   var domID = g_blog.getDOMID()
-  g_blog.addPost(new Post(domID,"","","",new Date(),g_blog.blogID,g_blog.userID));
+  g_blog.addPost(new Post(domID,0,"","",new Date(),g_blog.blogID,g_blog.userID));
   g_blog.editPost(domID);
   displayBlog(g_blog);
 }
@@ -79,12 +79,12 @@ function getPost() {
   var date = new Date(dateOnly + " " + timeOnly)
   return {
     domID: document.getElementById("postdomid").value,
-    postID: document.getElementById("postpostid").value,
+    postID: Number(document.getElementById("postpostid").value),
     title: document.getElementById("posttitle").value,
     text: document.getElementById("posttext").value,
     date: date,
-    blogID: document.getElementById("postblogid").value,
-    userID: document.getElementById("postuserid").value,
+    blogID: Number(document.getElementById("postblogid").value),
+    userID: Number(document.getElementById("postuserid").value),
     dateOnly: dateOnly,
     timeOnly: timeOnly
   };
