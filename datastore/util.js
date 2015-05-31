@@ -19,4 +19,25 @@ function sendError(error,res) {
   }
 }
 
+var pg = require("pg");
+
+pgConnect = function(url,pool,callback) {
+  pg.connect(url,function (error,client,done) {
+    var connection = null;
+    if (!error) {
+      connection = {
+        client: client,
+        query: client.query.bind(client),
+      }
+      if (pool) {
+        connection.done = done;
+      } else {
+        connection.done = client.end.bind(client);
+      }
+    }
+    callback(error, connection);
+  })
+};
+
 exports.sendError = sendError
+exports.pgConnect = pgConnect

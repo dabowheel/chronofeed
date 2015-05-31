@@ -7,7 +7,7 @@
     $date = pg_escape_string($post->dbDateString);
     $query = "UPDATE posts SET title = '$title', post = '$text', date = '$date' WHERE post_id = '$postID' AND blog_id = '$blogID'";
     $result = pg_query($query);
-    
+
     if ($result) {
       echo "{\"success\":true}";
       pg_free_result($result);
@@ -21,10 +21,10 @@
     $title = pg_escape_string($post->title);
     $text = pg_escape_string($post->text);
     $date = pg_escape_string($post->dbDateString);
-    $userID = pg_escape_string($post->userID);    
+    $userID = pg_escape_string($post->userID);
     $query = "INSERT INTO posts(title,post,date,blog_id,user_id) VALUES('$title','$text','$date','$blogID','$userID') RETURNING post_id";
     $result = pg_query($query);
-    
+
     if ($result) {
       $line = pg_fetch_array($result, NULL, PGSQL_ASSOC);
       echo <<<EOD
@@ -43,7 +43,7 @@ EOD;
     $postID = pg_escape_string($postID);
     $query = "DELETE FROM posts WHERE post_id = '$postID'";
     $result = pg_query($query);
-    
+
     if ($result) {
       $line = pg_fetch_array($result, NULL, PGSQL_ASSOC);
       echo <<<EOD

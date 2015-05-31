@@ -37,7 +37,7 @@ function viewBlogList() {
 }
 
 function addBlog() {
-  var blogInfo = new BlogInfo(g_blogList.getDOMID(),"",g_blogList.getNewTitle(),g_blogList.userID);
+  var blogInfo = new BlogInfo(g_blogList.getDOMID(),0,g_blogList.getNewTitle(),g_blogList.userID);
   g_blogList.add(blogInfo);
   displayBlogList(g_blogList);
   req = {

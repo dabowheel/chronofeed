@@ -1,8 +1,8 @@
-var pg = require("pg");
 var util = require("./util");
-var user = require("./user")
-var blogList = require("./blogList")
+var user = require("./user");
+var blogList = require("./blogList");
 var blog = require("./blog");
+var blogInfo = require("./blogInfo");
 
 function getObject(req,callback) {
   var body = "";
@@ -18,16 +18,25 @@ function getObject(req,callback) {
   });
 }
 
-function routeRequest(inObject,callback) {
-  if (inObject.type == "user") {
-    user(inObject, callback);
-  } else if (inObject.type == "blog") {
-    blog(inObject, callback);
-  } else if (inObject.type == "blogList") {
-    blogList(inObject, callback);
-  } else {
-    util.sendError("Invalid request type: " + inObject.type,callback);
-  }
+function routeRequest(inObject,pool,callback) {
+  util.pgConnect(process.env.DATABASE_URL, pool, function (error, connection) {
+    if (error) {
+      util.sendError(error, callback);
+      return;
+    }
+
+    if (inObject.type == "user") {
+      user(connection, inObject, callback);
+    } else if (inObject.type == "blogList") {
+      blogList(connection, inObject, callback);
+    } else if (inObject.type == "blog") {
+      blog(connection, inObject, callback);
+    } else if (inObject.type == "blogInfo") {
+      blogInfo(connection, inObject, callback);
+    } else {
+      util.sendError("Invalid request type: " + inObject.type,callback);
+    }
+  });
 }
 
 function processRequest(req,res) {
@@ -37,10 +46,11 @@ function processRequest(req,res) {
       return;
     }
     console.log(inObject);
-    routeRequest(inObject, function (outObject) {
+    routeRequest(inObject, true, function (outObject) {
       res.send(JSON.stringify(outObject));
     });
   });
 }
 
-module.exports = processRequest;
+exports.processRequest = processRequest;
+exports.routeRequest = routeRequest;

@@ -1,10 +1,10 @@
 var fs = require("fs");
 var express = require('express');
 var app = express();
-var processRequest = require("./datastore/main");
+var datastore = require("./datastore/main");
 
 app.use(express.static('public'));
-app.post("/datastore/main/", processRequest);
+app.post("/datastore/main/", datastore.processRequest);
 
 
 var server = app.listen(80, function () {

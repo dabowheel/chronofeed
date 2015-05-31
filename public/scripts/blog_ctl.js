@@ -51,8 +51,8 @@ function saveBlogTitleChange() {
   displayBlog(g_blog);
   var req = {
     "type": "blogInfo",
-    "action": "save",
-    "blogInfo": new BlogInfo(g_blog.blogID,g_blog.blogID, g_blog.title,g_blog.userID)
+    "action": "update",
+    "blogInfo": new BlogInfo("",g_blog.blogID, g_blog.title,g_blog.userID)
   }
   datastore(req, function (res) {
     if (!res.success) {
@@ -103,7 +103,7 @@ function savePostChanges(domID) {
     displayBlog(g_blog);
     req = {
       type: "post",
-      action: "save",
+      action: "update",
       post: post
     }
     datastore(req,function (res) {
