@@ -1,9 +1,6 @@
 var util = require("./util");
-var user = require("./user");
-var blogList = require("./blogList");
-var blog = require("./blog");
-var blogInfo = require("./blogInfo");
-var post = require("./post");
+var request = require("./request");
+var sessionRequest = require("./sessionRequest");
 
 function getObject(req,callback) {
   var body = "";
@@ -19,27 +16,34 @@ function getObject(req,callback) {
   });
 }
 
-function routeRequest(inObject,pool,callback) {
-  util.pgConnect(process.env.DATABASE_URL, pool, function (error, connection) {
-    if (error) {
-      util.sendError(error, callback);
-      return;
-    }
+function dbRequest(session,inObject,pool,callback) {
+  var sessionFunc = sessionRequest(session,inObject,callback);
+  var nonSessionFunc = request(session,inObject,callback);
 
-    if (inObject.type == "user") {
-      user(connection, inObject, callback);
-    } else if (inObject.type == "blogList") {
-      blogList(connection, inObject, callback);
-    } else if (inObject.type == "blog") {
-      blog(connection, inObject, callback);
-    } else if (inObject.type == "blogInfo") {
-      blogInfo(connection, inObject, callback);
-    } else if (inObject.type == "post") {
-      post(connection, inObject, callback);
-    } else {
-      util.sendError("Invalid request type: " + inObject.type,callback);
-    }
-  });
+  var func;
+  if (nonSessionFunc) {
+    func = nonSessionFunc;
+  } else if (sessionFunc && session.userID) {
+    func = sessionFunc
+  } else if (sessionFunc) {
+    callback({
+      success: true,
+      endSession: true
+    });
+  } else {
+    sendError("Invalid request: " + inObject.type + " " + inObject.action);
+  }
+
+  if (func) {
+    util.pgConnect(process.env.DATABASE_URL, pool, function (error, db) {
+      if (error) {
+        util.sendError(error, callback);
+        return;
+      }
+
+      func(db);
+    });
+  }
 }
 
 function processRequest(req,res) {
@@ -49,11 +53,11 @@ function processRequest(req,res) {
       return;
     }
     console.log(inObject);
-    routeRequest(inObject, true, function (outObject) {
+    dbRequest(req.session,inObject, true, function (outObject) {
       res.send(JSON.stringify(outObject));
     });
   });
 }
 
 exports.processRequest = processRequest;
-exports.routeRequest = routeRequest;
+exports.dbRequest = dbRequest;

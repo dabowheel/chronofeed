@@ -11,7 +11,7 @@ function error(message) {
 function viewInitial() {
   loadAssetsFromServer(function () {
     console.log("loaded templates");
-    viewLogin();
+    viewBlogList();
   })
 }
 

@@ -1,9 +1,8 @@
 var main = require("../main");
-var user = require("../user");
 
 describe("user", function () {
   it("should login", function (done) {
-    req = {
+    var inObject = {
       type: "user",
       action: "login",
       user: {
@@ -11,8 +10,9 @@ describe("user", function () {
         password: process.env.STRUCTURED_NOTES_PASSWORD
       }
     }
-    main.routeRequest(req, false, function(res) {
-      expect(res.login).toEqual(true);
+    var session = {};
+    main.dbRequest(session, inObject, false, function(outObject) {
+      expect(outObject.login).toEqual(true);
       done();
     });
   });

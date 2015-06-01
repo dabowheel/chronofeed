@@ -1,13 +1,26 @@
-var pg = require("pg");
 var util = require("./util");
 
-function userSignup(connection,user,callback) {
+function request(session,inObject,callback) {
+  if (inObject.type == "user") {
+    if (inObject.action == "signup") {
+      return function (db) {
+        userSignup(db,session,inObject.user, callback);
+      };
+    } else if (inObject.action == "login") {
+      return function (db) {
+        userLogin(db,session,inObject.user, callback);
+      };
+    }
+  }
+}
+
+function userSignup(db,session,user,callback) {
   var str = "INSERT INTO users(username,email,password) VALUES($1,$2,$3) RETURNING user_id";
   var args = [user.username,user.email,user.password];
-  q = connection.query(str,args);
+  q = db.query(str,args);
 
   q.on("error", function (error) {
-    connection.done();
+    db.done();
     util.sendError(error,callback);
   })
 
@@ -17,7 +30,8 @@ function userSignup(connection,user,callback) {
   });
 
   q.on("end", function () {
-    connection.done()
+    db.done()
+    session.userID = userID;
     callback({
       success: true,
       userID: userID
@@ -25,19 +39,20 @@ function userSignup(connection,user,callback) {
   });
 }
 
-function userLogin(connection,user,callback) {
+function userLogin(db,session,user,callback) {
   var str = "SELECT user_id FROM users WHERE (username = $1 OR email = $2) AND password = $3";
   var args = [user.username,user.username,user.password];
-  q = connection.query(str, args);
+  q = db.query(str, args);
 
   q.on("error", function (error) {
-    connection.done();
+    db.done();
     util.sendError(error,callback);
   });
 
   var ret = null;
   q.on("row", function (row) {
     if (!ret) {
+      session.userID = row.user_id;
       ret = {
         success: true,
         login: true,
@@ -47,7 +62,7 @@ function userLogin(connection,user,callback) {
   });
 
   q.on("end", function () {
-    connection.done();
+    db.done();
     if (!ret) {
       ret = {
         success: true,
@@ -58,23 +73,4 @@ function userLogin(connection,user,callback) {
   });
 }
 
-function userLogout(connection,inObject,callback) {
-  callback()
-}
-
-function user(connection,inObject,callback) {
-  if (inObject.action == "signup") {
-    userSignup(connection,inObject.user, callback);
-  } else if (inObject.action == "login") {
-    userLogin(connection,inObject.user, callback);
-  } else if (inObject.action == "logout") {
-    userLogout(connection,inObject, callback);
-  } else {
-    callback({
-      success: false,
-      error: "Invalid user action: " + inObject.action
-    });
-  }
-}
-
-module.exports = user;
+module.exports = request;
