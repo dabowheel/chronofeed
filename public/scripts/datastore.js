@@ -3,13 +3,14 @@ function datastore(req,callback) {
   request.onreadystatechange = function() {
     if (request.readyState==4 && request.status==200) {
       console.log(request.responseText);
+      var res;
       try {
-        var res = JSON.parse(request.responseText);
+        res = JSON.parse(request.responseText);
       } catch(e) {
-        var res = {
+        res = {
           success: false,
           error: "JSON parse error: " + e
-        }
+        };
       }
       console.log(res);
       callback(res);
@@ -18,7 +19,7 @@ function datastore(req,callback) {
 
   request.open("POST","datastore/main/",true);
   request.setRequestHeader("Content-type","application/json");
-  reqText = JSON.stringify(req)
+  reqText = JSON.stringify(req);
   console.log(reqText);
   request.send(reqText);
 }

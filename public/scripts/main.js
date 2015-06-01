@@ -18,14 +18,13 @@ function viewInitial() {
 function loadAssetsFromServer(callback) {
   var promiseList = [];
   var names = ["blog","blogList","login","menu","signup"];
-  for (i in names) {
+  for (var i in names) {
     console.log("load " + names[i]);
-    promiseList[promiseList.length] = getTemplateSource(names[i],g_templateList)
+    promiseList[promiseList.length] = getTemplateSource(names[i],g_templateList);
   }
 
-  p = Promise.all(promiseList)
+  p = Promise.all(promiseList);
   p.then(function (val) {
-    callback()
-  })
-
+    callback();
+  });
 }

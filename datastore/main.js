@@ -24,7 +24,7 @@ function dbRequest(session,inObject,pool,callback) {
   if (nonSessionFunc) {
     func = nonSessionFunc;
   } else if (sessionFunc && session.userID) {
-    func = sessionFunc
+    func = sessionFunc;
   } else if (sessionFunc) {
     callback({
       success: false,

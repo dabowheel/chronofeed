@@ -3,7 +3,7 @@
 function blogListClick() {
   g_blog = null;
   viewBlogList();
-};
+}
 
 function logoutClick() {
   req = {

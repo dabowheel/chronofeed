@@ -1,12 +1,12 @@
 function sendError(error,res) {
   var ret = {
     success: false
-  }
+  };
 
   if (error) {
-    ret.error = error
+    ret.error = error;
     if (error.stack) {
-      ret.stack = error.stack
+      ret.stack = error.stack;
     }
   }
 
@@ -15,7 +15,7 @@ function sendError(error,res) {
   } else if (res.send) {
     res.send(JSON.stringify(ret));
   } else {
-    throw new Error("Invalid argument to sendError: " + res)
+    throw new Error("Invalid argument to sendError: " + res);
   }
 }
 
@@ -23,21 +23,21 @@ var pg = require("pg");
 
 pgConnect = function(url,pool,callback) {
   pg.connect(url,function (error,client,done) {
-    var connection = null;
+    var db = null;
     if (!error) {
-      connection = {
+      db = {
         client: client,
         query: client.query.bind(client),
-      }
+      };
       if (pool) {
-        connection.done = done;
+        db.done = done;
       } else {
-        connection.done = client.end.bind(client);
+        db.done = client.end.bind(client);
       }
     }
-    callback(error, connection);
-  })
+    callback(error, db);
+  });
 };
 
-exports.sendError = sendError
-exports.pgConnect = pgConnect
+exports.sendError = sendError;
+exports.pgConnect = pgConnect;

@@ -32,11 +32,11 @@ BlogList.prototype.add = function (blogInfo) {
 BlogList.prototype.sort = function () {
   this.list.sort(function (a,b) {
     if (a.title < b.title)
-      return -1
+      return -1;
     if (a.title > b.title)
-      return 1
-    return 0
-  })
+      return 1;
+    return 0;
+  });
 };
 BlogList.prototype.hasTitle = function (title) {
   for (var i = 0; i < this.list.length; i++) {
@@ -44,7 +44,7 @@ BlogList.prototype.hasTitle = function (title) {
       return true;
   }
   return false;
-}
+};
 BlogList.prototype.getNewTitle = function () {
   var title;
   for (var i = 1; true; i++) {

@@ -7,7 +7,7 @@ function sessionRequest(session,inObject,callback) {
       if (inObject.action == "logout") {
         return function (db) {
           userLogout(db,session,inObject,callback);
-        }
+        };
       }
       break;
 
@@ -23,7 +23,7 @@ function sessionRequest(session,inObject,callback) {
       if (inObject.action == "read") {
         return function (db) {
           blogRead(db,session,inObject,callback);
-        }
+        };
       }
       break;
 
@@ -31,15 +31,15 @@ function sessionRequest(session,inObject,callback) {
       if (inObject.action == "update") {
         return function (db) {
           blogInfoUpdate(db,session,inObject,callback);
-        }
+        };
       } else if (inObject.action == "create") {
         return function (db) {
           blogInfoCreate(db,session,inObject,callback);
-        }
+        };
       } else if (inObject.action == "delete") {
         return function (db) {
           blogInfoDelete(db,session,inObject,callback);
-        }
+        };
       }
       break;
 
@@ -47,15 +47,15 @@ function sessionRequest(session,inObject,callback) {
       if (inObject.action == "create") {
         return function (db) {
           postCreate(db,session,inObject,callback);
-        }
+        };
       } else if (inObject.action == "update") {
         return function (db) {
           postUpdate(db,session,inObject,callback);
-        }
+        };
       } else if (inObject.action == "delete") {
         return function (db) {
           postDelete(db,session,inObject,callback);
-        }
+        };
       }
       break;
 
@@ -67,7 +67,7 @@ function userLogout(db,session,inObject,callback) {
   callback({
     success: true,
     logout: true
-  })
+  });
 }
 
 function blogListRead(db,session,inObject,callback) {
@@ -112,11 +112,11 @@ function blogRead(db,session,inObject,callback) {
     util.sendError(error,callback);
   });
 
-  var title = ""
+  var title = "";
   var userID = "";
   q.on("row", function (row) {
     title = row.title;
-  })
+  });
 
   q.on("end", function () {
     var str = "select post_id,title,post,date,user_id from posts WHERE user_id = $1 AND blog_id = $2 ORDER BY date DESC";
@@ -136,7 +136,7 @@ function blogRead(db,session,inObject,callback) {
         userID: session.userID,
         postList: []
       }
-    }
+    };
 
     q.on("row", function (row) {
       ret.blog.postList[ret.blog.postList.length] = {
@@ -157,7 +157,7 @@ function blogRead(db,session,inObject,callback) {
 }
 
 function blogInfoUpdate(db, session, inObject, callback) {
-  var str = "UPDATE blogs SET title = $1 WHERE user_id = $2 AND blog_id = $3"
+  var str = "UPDATE blogs SET title = $1 WHERE user_id = $2 AND blog_id = $3";
   var args = [inObject.blogInfo.title,session.userID,inObject.blogInfo.blogID];
   var q = db.query(str,args);
 
@@ -217,7 +217,7 @@ function blogInfoDelete(db,session,inObject,callback) {
       db.done();
       util.sendError(error, callback);
       return;
-    })
+    });
 
     q.on("end", function() {
       db.done();
@@ -253,7 +253,7 @@ function postCreate(db,session,inObject,callback) {
 
   q.on("error", function (error) {
     db.done();
-    util.sendError(error,callback)
+    util.sendError(error,callback);
   });
 
   var postID;

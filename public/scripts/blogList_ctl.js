@@ -1,11 +1,11 @@
 var g_blogList;
 
 function displayBlogList2HTML(blogList,callback) {
-  var menuHTML = g_templateList["menu"];
-  var template = Handlebars.compile(g_templateList["blogList"]);
+  var menuHTML = g_templateList.menu;
+  var template = Handlebars.compile(g_templateList.blogList);
   var blogListHTML = template(blogList);
   callback(menuHTML + blogListHTML);
-};
+}
 
 
 function displayBlogList(blogList) {
@@ -19,7 +19,7 @@ function viewBlogList() {
     type: "blogList",
     action: "read",
     userID: g_userID
-  }
+  };
   datastore(req,function (res) {
     if (res.success) {
       var blogList = new BlogList();
@@ -44,7 +44,7 @@ function addBlog() {
     type: "blogInfo",
     action: "create",
     blogInfo: blogInfo
-  }
+  };
   datastore(req,function (res) {
     if (res.success) {
       blogInfo.blogID = res.blogID;
@@ -67,7 +67,7 @@ function deleteBlog(domID) {
     type: "blogInfo",
     action: "delete",
     blogID: blogInfo.blogID
-  }
+  };
   datastore(req,function(res) {
     if (!res.success) {
       error(res.error);

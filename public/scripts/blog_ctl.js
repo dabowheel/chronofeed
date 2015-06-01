@@ -5,8 +5,8 @@ function displayBlog2HTML(blog,callback) {
     return str.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;").replace(/\n/g,"<br>");
   });
 
-  menuHTML = g_templateList["menu"];
-  var template = Handlebars.compile(g_templateList["blog"]);
+  menuHTML = g_templateList.menu;
+  var template = Handlebars.compile(g_templateList.blog);
   var blogHTML = template(blog);
   callback(menuHTML + blogHTML);
 }
@@ -44,7 +44,7 @@ function saveBlogTitleChange() {
   var title = getBlogTitle();
   if (title != g_blog.title && g_blogList.hasTitle(title)) {
     alert("Another blog already has this title: " + title);
-    return
+    return;
   }
   g_blog.editTitle(getBlogTitle());
   g_blog.editBlogTitle = false;
@@ -53,7 +53,7 @@ function saveBlogTitleChange() {
     "type": "blogInfo",
     "action": "update",
     "blogInfo": new BlogInfo("",g_blog.blogID, g_blog.title,g_blog.userID)
-  }
+  };
   datastore(req, function (res) {
     if (!res.success) {
       error(res.error);
@@ -67,16 +67,16 @@ function cancelBlogTitleChange() {
 }
 
 function addPost() {
-  var domID = g_blog.getDOMID()
+  var domID = g_blog.getDOMID();
   g_blog.addPost(new Post(domID,0,"","",new Date(),g_blog.blogID,g_blog.userID));
   g_blog.editPost(domID);
   displayBlog(g_blog);
 }
 
 function getPost() {
-  var dateOnly = document.getElementById("postdateonly").value
-  var timeOnly = document.getElementById("posttimeonly").value
-  var date = new Date(dateOnly + " " + timeOnly)
+  var dateOnly = document.getElementById("postdateonly").value;
+  var timeOnly = document.getElementById("posttimeonly").value;
+  var date = new Date(dateOnly + " " + timeOnly);
   return {
     domID: document.getElementById("postdomid").value,
     postID: Number(document.getElementById("postpostid").value),
@@ -91,7 +91,7 @@ function getPost() {
 }
 
 function getBlogTitle() {
-  return document.getElementById("blogtitle").value
+  return document.getElementById("blogtitle").value;
 }
 
 function savePostChanges(domID) {
@@ -105,7 +105,7 @@ function savePostChanges(domID) {
       type: "post",
       action: "update",
       post: post
-    }
+    };
     datastore(req,function (res) {
       if (!res.success) {
         error(res.error);
@@ -118,10 +118,10 @@ function savePostChanges(domID) {
       type: "post",
       action: "create",
       post: post
-    }
+    };
     datastore(req,function (res) {
       if (res.success) {
-        g_blog.updatePostID(domID,res.postID)
+        g_blog.updatePostID(domID,res.postID);
         displayBlog(g_blog);
       } else {
         error(res.error);
@@ -153,7 +153,7 @@ function deletePost(domID) {
     type: "post",
     action: "delete",
     postID: post.postID
-  }
+  };
   datastore(req,function (res) {
     if (res.success) {
     } else {

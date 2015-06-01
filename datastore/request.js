@@ -22,7 +22,7 @@ function userSignup(db,session,user,callback) {
   q.on("error", function (error) {
     db.done();
     util.sendError(error,callback);
-  })
+  });
 
   var userID;
   q.on("row", function (row) {
@@ -30,7 +30,7 @@ function userSignup(db,session,user,callback) {
   });
 
   q.on("end", function () {
-    db.done()
+    db.done();
     session.userID = userID;
     callback({
       success: true,

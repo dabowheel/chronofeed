@@ -1,7 +1,7 @@
 var g_userID;
 
 function viewLogin() {
-  document.getElementById("main").innerHTML = g_templateList["login"]
+  document.getElementById("main").innerHTML = g_templateList.login;
 }
 
 function getSetup() {

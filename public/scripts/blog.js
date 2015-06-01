@@ -13,7 +13,7 @@ function toDBDateString(d) {
 
 function Post(domID,postID,title,text,date,blogID,userID) {
   if (typeof domID == "string" || domID instanceof String) {
-    this.domID = domID
+    this.domID = domID;
   } else {
     error("invalid domID: " + domID);
   }
@@ -41,7 +41,7 @@ function Post(domID,postID,title,text,date,blogID,userID) {
     this.dateString = toDateString(this.date);
     this.dateOnly = getInputDateValue(this.date);
     this.timeOnly = getInputTimeValue(this.date);
-    this.dbDateString = toDBDateString(this.date)
+    this.dbDateString = toDBDateString(this.date);
   } else {
     error("invalid date: " + date);
   }
@@ -57,7 +57,7 @@ function Post(domID,postID,title,text,date,blogID,userID) {
   } else {
     error("invalid userID: " + userID + " type: " + (typeof userID));
   }
-};
+}
 Post.prototype.loadObject = function (post) {
   this.Post(post.domID, post.postID, post.title, post.text, post.date, post.blogID, post.userID);
 };
@@ -95,7 +95,7 @@ function Blog(blogID,title,userID) {
 }
 Blog.prototype.getDOMID = function () {
   return (++this.maxPostDOMID).toString();
-}
+};
 Blog.prototype.appendObjectPost = function (post,domID) {
   this.postList[this.postList.length] = new Post(domID,post.postID,post.title,post.text,new Date(post.date),post.blogID,post.userID);
 };
@@ -158,7 +158,7 @@ Blog.prototype.updatePostID = function (domID,postID) {
 };
 Blog.prototype.updateBlogID = function(blogID) {
   if (typeof blogID == string || blogID instanceof String) {
-    if (this.blogID == "") {
+    if (!this.blogID) {
       this.blogID = blogID;
       for (var i = 0; i < this.postList.length; i++) {
         this.postList[i].blogID = blogID;
@@ -168,7 +168,7 @@ Blog.prototype.updateBlogID = function(blogID) {
     error("Invalid blogID: " + blogID);
   }
 
-}
+};
 Blog.prototype.deletePost = function (domID) {
   for (var i = 0; i < this.postList.length; i++) {
     var post = this.postList[i];
@@ -190,16 +190,16 @@ Blog.prototype.getPost = function (domID) {
 Blog.prototype.sort = function () {
   this.postList.sort(function (a,b) {
     if (a.title < b.title)
-      return -1
+      return -1;
     if (a.title > b.title)
-      return 1
-    return 0
+      return 1;
+    return 0;
   });
 };
 
 function BlogInfo(domID,blogID,title,userID) {
   if (typeof domID == "string" || domID instanceof String) {
-    this.domID = domID
+    this.domID = domID;
   } else {
     error("Invalid domID: " + domID);
   }
