@@ -172,9 +172,9 @@ function blogInfoUpdate(db, session, inObject, callback) {
   });
 }
 
-function blogInfoCreate(db,session,blogInfo,callback) {
+function blogInfoCreate(db,session,inObject,callback) {
   var str = "INSERT INTO blogs(title,user_id) VALUES($1,$2) RETURNING blog_id";
-  var args = [blogInfo.title,session.userID];
+  var args = [inObject.blogInfo.title,session.userID];
   var q = db.query(str,args);
 
   q.on("error", function (error) {

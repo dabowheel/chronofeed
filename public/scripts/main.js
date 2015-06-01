@@ -12,7 +12,7 @@ function viewInitial() {
   loadAssetsFromServer(function () {
     console.log("loaded templates");
     viewBlogList();
-  })
+  });
 }
 
 function loadAssetsFromServer(callback) {

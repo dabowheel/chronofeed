@@ -15,5 +15,5 @@ function logoutClick() {
       error(res.error);
     }
   });
-  window.location.assign("login.html");
+  viewLogin();
 }

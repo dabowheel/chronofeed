@@ -27,7 +27,7 @@ function dbRequest(session,inObject,pool,callback) {
     func = sessionFunc
   } else if (sessionFunc) {
     callback({
-      success: true,
+      success: false,
       endSession: true
     });
   } else {

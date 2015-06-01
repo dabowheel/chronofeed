@@ -10,7 +10,7 @@ BlogList.prototype.loadObject = function (obj) {
   if (obj.userID) {
     this.userID = obj.userID;
   }
-  
+
   if (obj && obj.list && obj.list.length) {
     for (var i = 0; i < obj.list.length; i++) {
       var values = obj.list[i];
@@ -47,8 +47,8 @@ BlogList.prototype.hasTitle = function (title) {
 }
 BlogList.prototype.getNewTitle = function () {
   var title;
-  for (var i = 0; true; i++) {
-    if (i == 0) {
+  for (var i = 1; true; i++) {
+    if (i == 1) {
       title = "New Blog";
     } else {
       title = "New Blog " + i.toString();
