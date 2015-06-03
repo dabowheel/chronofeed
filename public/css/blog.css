@@ -29,13 +29,12 @@
 }
 .fillerbutton {
 	visibility:hidden;
-	height:35px;
+	height:80px;
 }
 .hiddenbutton {
   visibility: hidden;
 }
 .savebutton {
-  height: 30px;
 }
 
 button {
@@ -77,11 +76,13 @@ button.active {
 
 .blogtitle {
   margin-right:20px;
-  font-size: 24px;
+  font-size: 32px;
 }
 .field {
   width:100%;
   box-sizing:border-box;
+  text-align: center;
+  padding: 0px;
 }
 .toplink {
   height:30px;
@@ -125,4 +126,80 @@ button.active {
 
 .message {
   display:none;
+}
+
+
+.loginbox {
+  width:200px;
+}
+
+.logininput {
+  width:100%;
+  left-margin:auto;
+  right-margin:auto;
+  display:block;
+}
+
+.loginbutton {
+  width:100%;
+  left-margin:auto;
+  right-margin:auto;
+  text-align:center;
+  display:block;
+}
+
+.signuplink {
+  margin-left:auto;
+  margin-right:auto;
+  width:100%;
+}
+
+.navbox {
+  margin-left:auto;
+  margin-right:auto;
+  width:400px;
+}
+.navlist {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navitem {
+  display:inline;
+  background-color:green;
+  padding-left:50px;
+  padding-right:50px;
+}
+
+.navitem:hover {
+  background-color:black;
+}
+.navlink {
+  text-decoration: none;
+  color: white;
+}
+
+h1 {
+  font-size:50px;
+}
+
+p {
+  font-size:32px;
+}
+
+ul {
+  font-size:32px;
+}
+
+input,textarea {
+  font-size:32px;
+}
+
+button {
+  font-size:32px;
+}
+
+body {
+  font-size:32px;
 }

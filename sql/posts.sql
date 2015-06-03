@@ -4,5 +4,7 @@ CREATE TABLE posts (
 	post text,
 	date timestamp,
   blog_id INTEGER,
-  FOREIGN KEY (blog_id) REFERENCES blogs (blog_id) MATCH FULL
+	user_id INTEGER,
+  FOREIGN KEY (blog_id) REFERENCES blogs (blog_id) MATCH FULL,
+	FOREIGN KEY (user_id) REFERENCES users (user_id) MATCH FULL
 );

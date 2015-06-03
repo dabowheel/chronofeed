@@ -6,7 +6,7 @@ var cookieParser = require("cookie-parser");
 var session = require("express-session");
 
 app.use(express.static('public'));
-app.use(cookieParser());
+app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,

@@ -4,14 +4,6 @@ function viewLogin() {
   document.getElementById("main").innerHTML = g_templateList.login;
 }
 
-function getSetup() {
-  return {
-    username: document.getElementById("username").value,
-    email: document.getElementById("emailaddress").value,
-    password: CryptoJS.SHA256(document.getElementById("password").value).toString()
-  };
-}
-
 function getLogin() {
   return {
     username: document.getElementById("username").value,
@@ -26,21 +18,6 @@ function message(str) {
   e.style.color = "red";
 }
 
-function signup() {
-  var values = getSetup();
-  var req = {
-    type: "user",
-    action: "signup",
-    user: values
-  };
-  datastore(req,function (res) {
-    if (res.success) {
-      viewBlogList();
-    } else {
-      error(res.error);
-    }
-  });
-}
 
 function login() {
   var values = getLogin();

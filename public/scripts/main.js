@@ -17,7 +17,7 @@ function viewInitial() {
 
 function loadAssetsFromServer(callback) {
   var promiseList = [];
-  var names = ["blog","blogList","login","menu","signup"];
+  var names = ["blog","blogList","login","menu"];
   for (var i in names) {
     console.log("load " + names[i]);
     promiseList[promiseList.length] = getTemplateSource(names[i],g_templateList);
