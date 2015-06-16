@@ -1,25 +1,31 @@
-function datastore(req,callback) {
+function datastore(method,path,obj,callback) {
   var request = new XMLHttpRequest();
   request.onreadystatechange = function() {
-    if (request.readyState==4 && request.status==200) {
-      console.log(request.responseText);
-      var res;
-      try {
-        res = JSON.parse(request.responseText);
-      } catch(e) {
-        res = {
-          success: false,
-          error: "JSON parse error: " + e
-        };
+    if (request.readyState==4) {
+      if (request.status==200) {
+        console.log(request.responseText);
+        var res;
+        try {
+          res = JSON.parse(request.responseText);
+        } catch(e) {
+          callback("JSON parse error: " + e);
+          return;
+        }
+        console.log(res);
+        callback(null,res);
+      } else {
+        callback(request.responseText)
       }
-      console.log(res);
-      callback(res);
     }
   };
 
-  request.open("POST","datastore/main/",true);
-  request.setRequestHeader("Content-type","application/json");
-  reqText = JSON.stringify(req);
-  console.log(reqText);
-  request.send(reqText);
+  request.open(method,path,true);
+  if (method == "GET") {
+    request.send();
+  } else {
+    request.setRequestHeader("Content-type","application/json");
+    body = JSON.stringify(obj);
+    console.log(body);
+    request.send(body);
+  }
 }

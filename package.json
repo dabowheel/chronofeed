@@ -23,6 +23,7 @@
     "express-handlebars": "^2.0.1",
     "express-session": "^1.11.2",
     "grunt": "^0.4.5",
+    "mongoose": "^4.0.5",
     "pg": "^4.3.0"
   },
   "devDependencies": {

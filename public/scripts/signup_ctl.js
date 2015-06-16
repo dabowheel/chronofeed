@@ -5,16 +5,11 @@ function clickSignup() {
     return;
   }
 
-  var req = {
-    type: "user",
-    action: "signup",
-    user: values
-  };
-  datastore(req,function (res) {
-    if (res.success) {
-      window.location.assign("blog.html");
+  datastore("POST","/datastore/user",values,function (err,res) {
+    if (err) {
+      error(err);
     } else {
-      error(res.error);
+      window.location.assign("blog.html");
     }
   });
 }

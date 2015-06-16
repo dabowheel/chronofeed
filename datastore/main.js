@@ -31,7 +31,7 @@ function dbRequest(session,inObject,pool,callback) {
       endSession: true
     });
   } else {
-    sendError("Invalid request: " + inObject.type + " " + inObject.action);
+    util.sendError("Invalid request: " + inObject.type + " " + inObject.action, callback);
   }
 
   if (func) {
