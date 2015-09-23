@@ -1,26 +1,18 @@
 var util = require("./util");
-var mongoose = require("mongoose");
-var Schema = mongoose.Schema;
-
-var userSchema = new Schema({
-  username: String,
-  email: String,
-  password: String
-});
-mongoose.model("user",userSchema);
 
 exports.create = function (req,res,next) {
   util.getJSONFromBody(req, function (error,obj) {
     console.log("create user",obj);
-    var User = mongoose.model("user");
-    var user = new User(obj);
 
-    user.save(function (error) {
+    var users = req.db.collection("users");
+    users.insert(obj,function (error, result) {
       if (error) {
         return next(error);
       } else {
-        req.session.userID = user._id;
-        res.json(user);
+        console.log("result",result);
+        var userID = result._id;
+        req.session.userID = userID;
+        res.json({userID:userID});
       }
     });
   });

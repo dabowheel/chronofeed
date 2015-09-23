@@ -19,7 +19,7 @@ function datastore(method,path,obj,callback) {
     }
   };
 
-  request.open(method,path,true);
+  request.open(method,"/datastore/" + path,true);
   if (method == "GET") {
     request.send();
   } else {

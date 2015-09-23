@@ -15,12 +15,11 @@ function displayBlogList(blogList) {
 }
 
 function viewBlogList() {
-  req = {
-    type: "blogList",
-    action: "read",
-    userID: g_userID
-  };
-  datastore(req,function (res) {
+  datastore("GET","blogList",null,function (err,res) {
+    if (err) {
+      error(err);
+      return;
+    }
     if (res.success) {
       var blogList = new BlogList();
       blogList.loadObject(res.blogList);
