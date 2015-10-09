@@ -5,7 +5,7 @@ function viewSignup() {
 function clickSignup() {
   var values = getSignupFormValues();
 
-  if (!validate(values, getPasswordPlain())) {
+  if (!validateSignupForm(values, getPasswordPlain())) {
     return;
   }
 
@@ -30,7 +30,7 @@ function getPasswordPlain() {
   return document.getElementById("inputPassword").value;
 }
 
-function validate(values,passwordPlain) {
+function validateSignupForm(values,passwordPlain) {
   var valid = true;
 
   if (values.username == "") {

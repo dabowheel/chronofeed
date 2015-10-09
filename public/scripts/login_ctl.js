@@ -4,38 +4,55 @@ function viewLogin() {
   document.getElementById("main").innerHTML = g_templateList.login;
 }
 
-function getLogin() {
+function getLoginFormValues() {
   return {
-    username: document.getElementById("username").value,
-    password: CryptoJS.SHA256(document.getElementById("password").value).toString()
+    username: document.getElementById("inputUsername").value,
+    password: CryptoJS.SHA256(document.getElementById("inputPassword").value).toString()
   };
 }
 
-function message(str) {
-  e = document.getElementById("message");
-  e.innerHTML = str;
-  e.style.display = "block";
-  e.style.color = "red";
+function getPasswordPlain() {
+  return document.getElementById("inputPassword").value;
 }
 
+function validateLoginForm(values,passwordPlain) {
+  var valid = true;
+
+  if (values.username == "") {
+    $("#inputUsernameFormGroup").addClass("has-error");
+    valid = false;
+  } else {
+    $("#inputUsernameFormGroup").removeClass("has-error");
+  }
+
+  if (passwordPlain == "") {
+    $("#inputPasswordFormGroup").addClass("has-error");
+    valid = false;
+  } else {
+    $("#inputPasswordFormGroup").removeClass("has-error");
+  }
+
+  return valid;
+}
 
 function login() {
-  var values = getLogin();
-  var req = {
-    type: "user",
-    action: "login",
-    user: values
-  };
-  datastore(req,function (res) {
+  var values = getLoginFormValues();
+  if (!validateLoginForm(values, getPasswordPlain())) {
+    return;
+  }
+
+  datastore("POST", "login", values, function (err,res) {
+    if (err) {
+      $("#placeForAlert").addClass("alert alert-warning");
+      $("#placeForAlert").html(err);
+      return;
+    }
     if (res.success) {
-      if (res.login) {
         g_userID = res.userID;
         viewBlogList();
-      } else {
-        message("Invalid username or password.");
-      }
     } else {
-      error(res.error);
+      $("#placeForAlert").addClass("alert alert-warning");
+      $("#placeForAlert").html("Invalid username or password.");
     }
   });
 }

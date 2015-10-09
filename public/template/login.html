@@ -1,7 +1,28 @@
-<h1 style="text-align:center;">Grackle Note Maker Login</h1>
-<div id="message" class="message divcenter"></div>
-<table class="tablecenter">
-  <tr><td><input id="username" type="text" placeholder="username"/></td></tr>
-  <tr><td><input id="password" type="password" placeholder="password" /></td></tr>
-  <tr><td><button style="text-align:center; width:100%" onclick="login();">Sign In</button></div></td></tr>
-</table>
+<div class="container">
+  <h1>Grackle Note Maker Login</h1>
+
+  <div class="row">
+    <div class="col-mid-3 col-lg-3">
+      <div class="form-group" id="inputUsernameFormGroup">
+        <label class="control-label" for="inputUsername">Username</label>
+        <input class="form-control" id="inputUsername" type="text" placeholder="Enter your username"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-mid-3 col-lg-3">
+      <div class="form-group" id="inputPasswordFormGroup">
+        <label class="control-label" for="inputPassword">Password</label>
+        <input class="form-control" id="inputPassword" type="password" />
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-mid-4 col-lg-4" id="placeForAlert">
+    </div>
+  </div>
+
+  <button class="btn btn-primary" type="button" onclick="login();">Login</button>
+</div>

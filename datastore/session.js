@@ -35,21 +35,24 @@ exports.login = function (req,res,next) {
     console.log("login",obj);
 
     var users = req.db.collection("users");
-    users.findOne({$and: [{$or: [{username:obj.username},{email:obj.username}]},{password:obj.password}]}, function (error,result) {
-      console.log("found");
+    users.findOne({$or: [{username:obj.username},{email:obj.username}]}, function (error,result) {
+      console.log("found one");
       if (error) {
         next(error);
         return;
       }
-      var userID;
+      var userID = "";
+      var success = false;
       console.log("result",result);
       if (result) {
         userID = result._id;
-      } else {
-        userID = "";
+        sucesss = obj.password == result.password;
       }
       req.session.userID = userID;
-      res.json({userID:userID});
+      res.json({
+        userID: userID,
+        success: success
+      });
     });
   });
 };
