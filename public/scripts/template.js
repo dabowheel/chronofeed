@@ -3,7 +3,6 @@ function getTemplateSource(name,saveList) {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
       if (request.readyState==4 && request.status==200) {
-        console.log(request.responseText);
         saveList[name] = request.responseText;
         resolve();
       }
