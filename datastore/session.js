@@ -1,5 +1,9 @@
 var util = require("./util");
 
+exports.session = function (req,res,next) {
+  res.json({userID:req.session.userID});
+};
+
 exports.signup = function (req,res,next) {
   util.getJSONFromBody(req, function (error,obj) {
     if (error) {

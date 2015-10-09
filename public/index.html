@@ -7,17 +7,24 @@
     <title>Note Taker CMS</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
   </head>
-  <body>
-    <div class="container">
-      <div class="jumbotron">
-        <h1>Note Taker CMS</h1>
-        <p>Note Taker CMS is a note content management system.</p>
-      </div>
-      <p>
-        <button class="btn btn-primary" onclick="window.location.assign('signup.html');">Create An Account</button> or <button class="btn btn-primary" onclick="window.location.assign('blog.html');">Login</button>
-      </p>
+  <body onload="loadAll();">
+    <div id="main">
+      <div id="blogmessage"></div>
     </div>
 
+    <script src="scripts/blog.js"></script>
+    <script src="scripts/blog_ctl.js"></script>
+    <script src="scripts/blogList.js"></script>
+    <script src="scripts/blogList_ctl.js"></script>
+    <script src="scripts/datastore.js"></script>
+    <script src="scripts/login_ctl.js"></script>
+    <script src="scripts/splash_ctl.js"></script>
+    <script src="scripts/signup_ctl.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/menu_ctl.js"></script>
+    <script src="scripts/template.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.3/handlebars.min.js"></script>
+    <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha256.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   </body>

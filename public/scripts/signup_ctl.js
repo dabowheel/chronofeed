@@ -1,3 +1,6 @@
+function viewSignup() {
+  document.getElementById("main").innerHTML = g_templateList.signup;
+}
 
 function clickSignup() {
   var values = getSignupFormValues();
