@@ -1,9 +1,15 @@
-<div class="bloglist">
-<div id="bloglistmessage"><div>
-<button onclick="addBlog();">Add Blog</button>
-{{#each list}}
-  <div class="bloginfo">
-    <div><strong>{{title}}</strong><button class="hiddenbutton">button to float against</button><span class="listbutton"><button onclick="editBlog('{{domID}}');">Edit</button><button onclick="deleteBlog('{{domID}}')">Delete</button></span></div>
-  </div>
-{{/each}}
+<div class="container">
+  <button class="btn btn-primary" onclick="addBlog();">Add Blog</button>
+  {{#each list}}
+    <div>
+      <div>
+        <strong>{{title}}</strong>
+        <button class="btn btn-primary" style="visibility:hidden">button to float against</button>
+        <span>
+          <button class="btn btn-primary" onclick="editBlog('{{domID}}');">Edit</button>
+          <button class="btn btn-primary" onclick="deleteBlog('{{domID}}')">Delete</button>
+        </span>
+      </div>
+    </div>
+  {{/each}}
 </div>
