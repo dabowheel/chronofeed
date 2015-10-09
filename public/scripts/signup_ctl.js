@@ -6,7 +6,7 @@ function clickSignup() {
     return;
   }
 
-  datastore("POST","/datastore/user",values,function (err,res) {
+  datastore("POST","signup",values,function (err,res) {
     if (err) {
       error(err);
     } else {
@@ -44,13 +44,18 @@ function validate(values,passwordPlain) {
     $("#inputEmailFormGroup").removeClass("has-error");
   }
 
-  if (passwordPlain.length < 8) {
+  if (passwordPlain == "") {
+    $("#inputPasswordFormGroup").addClass("has-error");
+    valid = false;
+  } else if (passwordPlain.length < 8) {
     $("#inputPasswordFormGroup").addClass("has-error");
     $("#placeForAlert").addClass("alert alert-warning");
     $("#placeForAlert").html("Password length must be greater than 8 characters.");
     valid = false;
   } else {
     $("#inputPasswordFormGroup").removeClass("has-error");
+    $("#placeForAlert").removeClass("alert alert-warning");
+    $("#placeForAlert").html("");
   }
 
   return valid;

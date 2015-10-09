@@ -4,7 +4,6 @@ var app = express();
 var datastore = require("./datastore/main");
 var cookieParser = require("cookie-parser");
 var session = require("express-session");
-var datastore_user = require("./datastore/user");
 var datastore_session = require("./datastore/session");
 var datastore_blogList = require("./datastore/blogList");
 var mongodb = require("mongodb");
