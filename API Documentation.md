@@ -1,4 +1,4 @@
-#Datastore API
+#API Documentation
 
 ## Loading a Blog
 
