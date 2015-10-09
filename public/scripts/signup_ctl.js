@@ -1,7 +1,8 @@
-function clickSignup() {
-  var values = getSignup();
 
-  if (!validate(values)) {
+function clickSignup() {
+  var values = getSignupFormValues();
+
+  if (!validate(values, getPasswordPlain())) {
     return;
   }
 
@@ -14,31 +15,43 @@ function clickSignup() {
   });
 }
 
-function getSignup() {
+function getSignupFormValues() {
   return {
-    username: document.getElementById("username").value,
-    email: document.getElementById("emailaddress").value,
-    password: CryptoJS.SHA256(document.getElementById("password").value).toString(),
-    passwordLength: document.getElementById("password").value.length
+    username: document.getElementById("inputUsername").value,
+    email: document.getElementById("inputEmail").value,
+    password: CryptoJS.SHA256(getPasswordPlain()).toString(),
   };
 }
 
-function validate(values) {
-  if (!values.username) {
-    message("username is required");
-    return false;
-  } else if (!values.email) {
-    message("email address is required");
-    return false;
-  } else if (!values.passwordLength) {
-    message("password is required");
-    return false;
-  }
-  return true;
+function getPasswordPlain() {
+  return document.getElementById("inputPassword").value;
 }
 
-function message(str) {
-  var e = document.getElementById("message");
-  e.style.color = "red";
-  e.innerHTML = str;
+function validate(values,passwordPlain) {
+  var valid = true;
+
+  if (values.username == "") {
+    $("#inputUsernameFormGroup").addClass("has-error");
+    valid = false;
+  } else {
+    $("#inputUsernameFormGroup").removeClass("has-error");
+  }
+
+  if (values.email == "") {
+    $("#inputEmailFormGroup").addClass("has-error");
+    valid = false;
+  } else {
+    $("#inputEmailFormGroup").removeClass("has-error");
+  }
+
+  if (passwordPlain.length < 8) {
+    $("#inputPasswordFormGroup").addClass("has-error");
+    $("#placeForAlert").addClass("alert alert-warning");
+    $("#placeForAlert").html("Password length must be greater than 8 characters.");
+    valid = false;
+  } else {
+    $("#inputPasswordFormGroup").removeClass("has-error");
+  }
+
+  return valid;
 }
