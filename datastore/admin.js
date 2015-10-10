@@ -18,6 +18,28 @@ exports.create = function (req,res,next) {
   });
 };
 
+exports.userList = function (req,res,next) {
+  console.log("get user list");
+
+  var users = req.db.collection("users");
+  users.find(function (error, result) {
+    if (error) {
+      return next(error);
+    } else {
+      result.toArray(function (err,list) {
+        if (err) {
+          next(err);
+          return;
+        }
+
+        res.json({
+          list: list
+        });
+      });
+    }
+  });
+};
+
 exports.read = function (req,res,next) {
   console.log("read user", req.params);
   var User = mongoose.model("user");

@@ -6,6 +6,7 @@ var cookieParser = require("cookie-parser");
 var session = require("express-session");
 var datastore_session = require("./datastore/session");
 var datastore_blogList = require("./datastore/blogList");
+var datastore_admin = require("./datastore/admin");
 var mongodb = require("mongodb");
 var MongoClient = mongodb.MongoClient;
 
@@ -32,6 +33,8 @@ app.get("/datastore/session",datastore_session.session);
 app.post("/datastore/signup",datastore_session.signup);
 app.post("/datastore/login",datastore_session.login);
 app.post("/datastore/logout",datastore_session.logout);
+
+app.get("/datastore/admin/userList", datastore_admin.userList);
 
 app.get("/datastore/blogList",datastore_blogList.read);
 

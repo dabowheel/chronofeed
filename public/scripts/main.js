@@ -21,6 +21,8 @@ function viewInitial() {
     viewLogin();
   } else if (location.hash == "#signup") {
     viewSignup();
+  } else if (location.hash == "#admin") {
+    viewAdmin();
   } else {
     datastore("GET", "session", null, function (err,res) {
       if (err) {
@@ -44,7 +46,7 @@ window.onhashchange = function () {
 
 function loadAssetsFromServer(callback) {
   var promiseList = [];
-  var names = ["blog","blogList","login","menu","signup","splash"];
+  var names = ["admin","blog","blogList","login","menu","signup","splash"];
   for (var i in names) {
     console.log("load " + names[i]);
     promiseList[promiseList.length] = getTemplateSource(names[i],g_templateList);
