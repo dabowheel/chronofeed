@@ -1,16 +1,30 @@
 <div class="container">
   <div id="placeForAlert"></div>
-  <table>
-    <tr>
-      <th>username</th>
-      <th>email</th>
-    </tr>
-    {{#each list}}
-    <tr>
-      <td>{{username}}</td>
-      <td>{{email}}</td>
-      <td><button>Edit</button><button>Delete</button></td>
-    </tr>
-    {{/each}}
-  </table>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Is Admin?</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each list}}
+          <tr>
+            <td>{{username}}</td>
+            <td>{{email}}</td>
+            <td>
+              <input type="checkbox" id="inputIsAdmin">
+            </td>
+            <td>
+              <button type="button" class="btn btn-primary">Delete</button>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
