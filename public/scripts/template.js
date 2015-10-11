@@ -8,7 +8,7 @@ function getTemplateSource(name,saveList) {
       }
     };
 
-    request.open("GET","template/" + name + ".html",true);
+    request.open("GET","views/" + name + ".html",true);
     request.send();
   });
 }
