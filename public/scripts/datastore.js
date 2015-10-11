@@ -5,14 +5,18 @@ function datastore(method,path,obj,callback) {
       if (request.status==200) {
         console.log(request.responseText);
         var res;
-        try {
-          res = JSON.parse(request.responseText);
-        } catch(e) {
-          callback("JSON parse error: " + e);
-          return;
+        if (request.responseText == "") {
+          callback(null,null);
+        } else {
+          try {
+            res = JSON.parse(request.responseText);
+          } catch(e) {
+            callback("JSON parse error: " + e);
+            return;
+          }
+          console.log(res);
+          callback(null,res);
         }
-        console.log(res);
-        callback(null,res);
       } else {
         callback(request.responseText)
       }

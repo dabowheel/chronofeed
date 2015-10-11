@@ -35,6 +35,7 @@ app.post("/datastore/login",datastore_session.login);
 app.post("/datastore/logout",datastore_session.logout);
 
 app.get("/datastore/admin/userList", datastore_admin.userList);
+app.delete("/datastore/admin/deleteUser", datastore_admin.deleteUser);
 
 app.get("/datastore/blogList",datastore_blogList.read);
 
