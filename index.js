@@ -32,7 +32,7 @@ app.use("/datastore", function (req,res,next) {
 app.get("/datastore/session",datastore_session.session);
 app.post("/datastore/signup",datastore_session.signup);
 app.post("/datastore/login",datastore_session.login);
-app.post("/datastore/logout",datastore_session.logout);
+app.get("/datastore/logout",datastore_session.logout);
 
 app.get("/datastore/admin/userList", datastore_admin.userList);
 app.delete("/datastore/admin/deleteUser", datastore_admin.deleteUser);

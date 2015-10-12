@@ -3,6 +3,7 @@ function datastore(method,path,obj,callback) {
   request.onreadystatechange = function() {
     if (request.readyState==4) {
       if (request.status==200) {
+        console.log(method,path,obj)
         console.log(request.responseText);
         var res;
         if (request.responseText == "") {

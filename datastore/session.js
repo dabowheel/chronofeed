@@ -44,11 +44,16 @@ exports.login = function (req,res,next) {
       var userID = "";
       var success = false;
       console.log("result",result);
+      console.log("inputPassword",obj.password, typeof obj.password);
+      console.log("foundPassword",result.password, typeof result.password);
+      console.log("success",obj.password == result.password)
       if (result) {
         userID = result._id;
-        sucesss = obj.password == result.password;
+        success = obj.password == result.password;
       }
-      req.session.userID = userID;
+      if (success) {
+        req.session.userID = userID;
+      }
       res.json({
         userID: userID,
         success: success
@@ -59,13 +64,7 @@ exports.login = function (req,res,next) {
 
 exports.logout = function (req,res,next) {
   console.log("logout");
-  util.getJSONFromBody(req, function (error,obj) {
-    if (error) {
-      next(error);
-      return;
-    }
 
-    delete req.session.userID;
-    res.json({});
-  });
+  delete req.session.userID;
+  res.end();
 };

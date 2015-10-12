@@ -49,6 +49,8 @@ function login() {
     }
     if (res.success) {
         g_userID = res.userID;
+        // clear hash
+        history.pushState("", document.title, window.location.pathname + window.location.search);
         viewBlogList();
     } else {
       $("#placeForAlert").addClass("alert alert-warning");
