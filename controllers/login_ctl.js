@@ -1,7 +1,11 @@
+var views = require("../scripts/views");
+var datastore = require("../scripts/datastore");
+var blogList = require("./bloglist_ctl");
+
 var g_userID;
 
 function viewLogin() {
-  document.getElementById("main").innerHTML = g_templateList.login;
+  document.getElementById("main").innerHTML = views.list.login;
 }
 
 function getLoginFormValues() {
@@ -51,10 +55,15 @@ function login() {
         g_userID = res.userID;
         // clear hash
         history.pushState("", document.title, window.location.pathname + window.location.search);
-        viewBlogList();
+        blogList.viewBlogList();
     } else {
       $("#placeForAlert").addClass("alert alert-warning");
       $("#placeForAlert").html("Invalid username or password.");
     }
   });
+}
+
+exports.viewLogin = viewLogin;
+exports.setGlobals = function () {
+  global.login = login;
 }

@@ -1,9 +1,11 @@
-function getTemplateSource(name,saveList) {
+var list = [];
+
+function getTemplateSource(name) {
   return new Promise(function (resolve) {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
       if (request.readyState==4 && request.status==200) {
-        saveList[name] = request.responseText;
+        list[name] = request.responseText;
         resolve();
       }
     };
@@ -12,3 +14,6 @@ function getTemplateSource(name,saveList) {
     request.send();
   });
 }
+
+exports.getTemplateSource = getTemplateSource;
+exports.list = list;

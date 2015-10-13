@@ -1,5 +1,8 @@
+var views = require("../scripts/views");
+var datastore = require("../scripts/datastore");
+
 function viewSignup() {
-  document.getElementById("main").innerHTML = g_templateList.signup;
+  document.getElementById("main").innerHTML = views.list.signup;
 }
 
 function clickSignup() {
@@ -62,4 +65,9 @@ function validateSignupForm(values,passwordPlain) {
   }
 
   return valid;
+}
+
+exports.viewSignup = viewSignup;
+exports.setGlobals = function () {
+  global.clickSignup = clickSignup;
 }

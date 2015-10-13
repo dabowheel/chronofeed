@@ -1,3 +1,6 @@
+var blog = require("./blog");
+var BlogInfo = blog.BlogInfo;
+
 function BlogList() {
   this.list = [];
   this.maxDOMID = 0;
@@ -68,3 +71,5 @@ BlogList.prototype.delete = function (domID) {
   }
   return null;
 };
+
+exports.BlogList = BlogList;

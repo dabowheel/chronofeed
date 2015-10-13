@@ -1,3 +1,6 @@
+var views = require("../scripts/views");
+var datastore = require("../scripts/datastore");
+
 var g_blog;
 
 function displayBlog2HTML(blog,callback) {
@@ -5,13 +8,13 @@ function displayBlog2HTML(blog,callback) {
     return str.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;").replace(/\n/g,"<br>");
   });
 
-  menuHTML = g_templateList.menu;
-  var template = Handlebars.compile(g_templateList.blog);
+  menuHTML = views.menu;
+  var template = Handlebars.compile(views.blog);
   var blogHTML = template(blog);
   callback(menuHTML + blogHTML);
 }
 
-function displayBlog(blog) {
+function viewBlog(blog) {
   displayBlog2HTML(blog,function (html) {
     document.getElementById("main").innerHTML = html;
   });
@@ -161,3 +164,5 @@ function deletePost(domID) {
     }
   });
 }
+
+exports.viewBlog = viewBlog;

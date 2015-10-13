@@ -26,3 +26,5 @@ UserList.prototype.delete = function (id) {
     }
   }
 };
+
+exports.UserList = UserList;
