@@ -1,8 +1,10 @@
 var g_userList;
 
 function displayAdmin(adminList) {
+  var menuHTML = g_templateList.menu;
   var template = Handlebars.compile(g_templateList.admin);
-  document.getElementById("main").innerHTML = template(adminList);
+  var adminHTML = template(adminList);
+  document.getElementById("main").innerHTML = menuHTML + adminHTML;
 }
 
 function viewAdmin() {
