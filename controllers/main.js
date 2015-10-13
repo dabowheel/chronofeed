@@ -1,4 +1,11 @@
-var g_templateList = [];
+var login = require("./login_ctl.js");
+var signup = require("./signup_ctl.js");
+var admin = require("./admin_ctl.js");
+var splash = require("./splash_ctl.js");
+var blogList = require("./blogList_ctl.js");
+var views = require("../scripts/views");
+var datastore = require("../scripts/datastore");
+var menu = require("./menu_ctl");
 
 function getStack() {
   return (new Error()).stack;
@@ -16,22 +23,22 @@ function loadAll() {
 
 function viewInitial() {
   if (location.hash == "#login") {
-    viewLogin();
+    login.viewLogin();
   } else if (location.hash == "#signup") {
-    viewSignup();
+    signup.viewSignup();
   } else if (location.hash == "#admin") {
-    viewAdmin();
+    admin.viewAdmin();
   } else {
     datastore("GET", "session", null, function (err,res) {
       if (err) {
         error(err);
-        viewSplash();
+        splash.viewSplash();
         return;
       }
       if (res.userID) {
-        viewBlogList();
+        blogList.viewBlogList();
       } else {
-        viewSplash();
+        splash.viewSplash();
       }
     });
   }
@@ -46,7 +53,7 @@ function loadAssetsFromServer(callback) {
   var promiseList = [];
   var names = ["admin","blog","blogList","login","menu","signup","splash"];
   for (var i in names) {
-    promiseList[promiseList.length] = getTemplateSource(names[i],g_templateList);
+    promiseList[promiseList.length] = views.getTemplateSource(names[i]);
   }
 
   p = Promise.all(promiseList);
@@ -54,3 +61,8 @@ function loadAssetsFromServer(callback) {
     callback();
   });
 }
+
+global.loadAll = loadAll;
+login.setGlobals();
+menu.setGlobals();
+signup.setGlobals();

@@ -34,3 +34,5 @@ function datastore(method,path,obj,callback) {
     request.send(body);
   }
 }
+
+module.exports = datastore;

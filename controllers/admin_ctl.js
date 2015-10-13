@@ -1,8 +1,12 @@
+var views = require("../scripts/views");
+var datastore = require("../scripts/datastore");
+var modelAdmin = require("../model/admin");
+
 var g_userList;
 
 function displayAdmin(adminList) {
-  var menuHTML = g_templateList.menu;
-  var template = Handlebars.compile(g_templateList.admin);
+  var menuHTML = views.list.menu;
+  var template = Handlebars.compile(views.list.admin);
   var adminHTML = template(adminList);
   document.getElementById("main").innerHTML = menuHTML + adminHTML;
 }
@@ -15,7 +19,7 @@ function viewAdmin() {
       return;
     }
 
-    g_userList = new UserList();
+    g_userList = new modelAdmin.UserList();
     g_userList.loadObject(res);
     console.log("user list", g_userList);
     displayAdmin(g_userList);
@@ -40,3 +44,5 @@ function deleteUser(id) {
     displayAdmin(g_userList);
   });
 }
+
+exports.viewAdmin = viewAdmin;

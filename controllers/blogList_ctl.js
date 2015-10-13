@@ -1,8 +1,11 @@
+var views = require("../scripts/views");
+var datastore = require("../scripts/datastore");
+var BlogList = require("../model/blogList").BlogList;
 var g_blogList;
 
 function displayBlogList2HTML(blogList,callback) {
-  var menuHTML = g_templateList.menu;
-  var template = Handlebars.compile(g_templateList.blogList);
+  var menuHTML = views.list.menu;
+  var template = Handlebars.compile(views.list.blogList);
   var blogListHTML = template(blogList);
   callback(menuHTML + blogListHTML);
 }
@@ -73,3 +76,5 @@ function deleteBlog(domID) {
     }
   });
 }
+
+exports.viewBlogList = viewBlogList;

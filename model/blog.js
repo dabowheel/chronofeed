@@ -222,3 +222,6 @@ function BlogInfo(domID,blogID,title,userID) {
     error("invalid userID: " + userID);
   }
 }
+
+exports.Blog = Blog;
+exports.BlogInfo = BlogInfo;
