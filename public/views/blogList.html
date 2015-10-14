@@ -1,15 +1,20 @@
 <div class="container">
   <button class="btn btn-primary" onclick="addBlog();">Add Blog</button>
-  {{#each list}}
-    <div>
-      <div>
-        <strong>{{title}}</strong>
-        <button class="btn btn-primary" style="visibility:hidden">button to float against</button>
-        <span>
-          <button class="btn btn-primary" onclick="editBlog('{{domID}}');">Edit</button>
-          <button class="btn btn-primary" onclick="deleteBlog('{{domID}}')">Delete</button>
-        </span>
-      </div>
-    </div>
-  {{/each}}
+  <table class="table table-hover">
+    <tbody>
+      {{#each list}}
+      <tr>
+        <td>
+          <strong>{{title}}</strong>
+        </td>
+        <td>
+          <span style="float:right;">
+            <button class="btn btn-primary" onclick="editBlog('{{domID}}');">Edit</button>
+            <button class="btn btn-primary" onclick="deleteBlog('{{domID}}')">Delete</button>
+          </span>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
 </div>
