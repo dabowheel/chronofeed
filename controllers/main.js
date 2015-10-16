@@ -36,7 +36,7 @@ function viewInitial() {
         return;
       }
       if (res.userID) {
-        blogList.viewBlogList();
+        viewBlogList();
       } else {
         splash.viewSplash();
       }
@@ -66,3 +66,4 @@ global.loadAll = loadAll;
 login.setGlobals();
 menu.setGlobals();
 signup.setGlobals();
+admin.setGlobals();

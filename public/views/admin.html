@@ -7,7 +7,6 @@
           <tr>
             <th>Username</th>
             <th>Email</th>
-            <th>Is Admin?</th>
             <th></th>
           </tr>
         </thead>
@@ -16,9 +15,6 @@
           <tr>
             <td>{{username}}</td>
             <td>{{email}}</td>
-            <td>
-              <input type="checkbox" id="inputIsAdmin">
-            </td>
             <td>
               <button type="button" class="btn btn-primary" onclick="deleteUser('{{id}}');">Delete</button>
             </td>

@@ -1,11 +1,19 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
-var blogList = require("./bloglist_ctl");
+var blogList = require("./blogList_ctl");
 
 var g_userID;
 
 function viewLogin() {
   document.getElementById("main").innerHTML = views.list.login;
+  document.getElementById("inputUsername").focus()
+  function onKeyup (e) {
+    if (e.keyCode == 13) {
+      clickLogin();
+    }
+  }
+  document.getElementById("inputUsername").onkeyup = onKeyup;
+  document.getElementById("inputPassword").onkeyup = onKeyup;
 }
 
 function getLoginFormValues() {
@@ -39,7 +47,7 @@ function validateLoginForm(values,passwordPlain) {
   return valid;
 }
 
-function login() {
+function clickLogin() {
   var values = getLoginFormValues();
   if (!validateLoginForm(values, getPasswordPlain())) {
     return;
@@ -65,5 +73,5 @@ function login() {
 
 exports.viewLogin = viewLogin;
 exports.setGlobals = function () {
-  global.login = login;
+  global.clickLogin = clickLogin;
 }

@@ -1,4 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function (global){
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var modelAdmin = require("../model/admin");
@@ -47,8 +48,12 @@ function deleteUser(id) {
 }
 
 exports.viewAdmin = viewAdmin;
+exports.setGlobals = function () {
+  global.deleteUser = deleteUser;
+}
 
-},{"../model/admin":10,"../scripts/datastore":13,"../scripts/views":14}],2:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../model/admin":9,"../scripts/datastore":12,"../scripts/views":13}],2:[function(require,module,exports){
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var BlogList = require("../model/blogList").BlogList;
@@ -130,7 +135,7 @@ function deleteBlog(domID) {
 
 exports.viewBlogList = viewBlogList;
 
-},{"../model/blogList":12,"../scripts/datastore":13,"../scripts/views":14}],3:[function(require,module,exports){
+},{"../model/blogList":11,"../scripts/datastore":12,"../scripts/views":13}],3:[function(require,module,exports){
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 
@@ -300,18 +305,24 @@ function deletePost(domID) {
 
 exports.viewBlog = viewBlog;
 
-},{"../scripts/datastore":13,"../scripts/views":14}],4:[function(require,module,exports){
-arguments[4][2][0].apply(exports,arguments)
-},{"../model/blogList":12,"../scripts/datastore":13,"../scripts/views":14,"dup":2}],5:[function(require,module,exports){
+},{"../scripts/datastore":12,"../scripts/views":13}],4:[function(require,module,exports){
 (function (global){
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
-var blogList = require("./bloglist_ctl");
+var blogList = require("./blogList_ctl");
 
 var g_userID;
 
 function viewLogin() {
   document.getElementById("main").innerHTML = views.list.login;
+  document.getElementById("inputUsername").focus()
+  function onKeyup (e) {
+    if (e.keyCode == 13) {
+      clickLogin();
+    }
+  }
+  document.getElementById("inputUsername").onkeyup = onKeyup;
+  document.getElementById("inputPassword").onkeyup = onKeyup;
 }
 
 function getLoginFormValues() {
@@ -345,7 +356,7 @@ function validateLoginForm(values,passwordPlain) {
   return valid;
 }
 
-function login() {
+function clickLogin() {
   var values = getLoginFormValues();
   if (!validateLoginForm(values, getPasswordPlain())) {
     return;
@@ -371,11 +382,11 @@ function login() {
 
 exports.viewLogin = viewLogin;
 exports.setGlobals = function () {
-  global.login = login;
+  global.clickLogin = clickLogin;
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../scripts/datastore":13,"../scripts/views":14,"./bloglist_ctl":4}],6:[function(require,module,exports){
+},{"../scripts/datastore":12,"../scripts/views":13,"./blogList_ctl":2}],5:[function(require,module,exports){
 (function (global){
 var login = require("./login_ctl.js");
 var signup = require("./signup_ctl.js");
@@ -415,7 +426,7 @@ function viewInitial() {
         return;
       }
       if (res.userID) {
-        blogList.viewBlogList();
+        viewBlogList();
       } else {
         splash.viewSplash();
       }
@@ -445,9 +456,10 @@ global.loadAll = loadAll;
 login.setGlobals();
 menu.setGlobals();
 signup.setGlobals();
+admin.setGlobals();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../scripts/datastore":13,"../scripts/views":14,"./admin_ctl.js":1,"./blogList_ctl.js":2,"./login_ctl.js":5,"./menu_ctl":7,"./signup_ctl.js":8,"./splash_ctl.js":9}],7:[function(require,module,exports){
+},{"../scripts/datastore":12,"../scripts/views":13,"./admin_ctl.js":1,"./blogList_ctl.js":2,"./login_ctl.js":4,"./menu_ctl":6,"./signup_ctl.js":7,"./splash_ctl.js":8}],6:[function(require,module,exports){
 (function (global){
 var datastore = require("../scripts/datastore");
 var blogList = require("./blogList_ctl");
@@ -477,13 +489,23 @@ exports.setGlobals = function () {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../scripts/datastore":13,"./blogList_ctl":2,"./splash_ctl":9}],8:[function(require,module,exports){
+},{"../scripts/datastore":12,"./blogList_ctl":2,"./splash_ctl":8}],7:[function(require,module,exports){
 (function (global){
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
+var blogList = require("./blogList_ctl");
 
 function viewSignup() {
   document.getElementById("main").innerHTML = views.list.signup;
+  document.getElementById("inputUsername").focus();
+  function onKeyup(e) {
+    if (e.keyCode == 13) {
+      clickSignup();
+    }
+  }
+  for (var id of ["inputUsername", "inputEmail", "inputPassword"]) {
+    document.getElementById(id).onkeyup = onKeyup;
+  }
 }
 
 function clickSignup() {
@@ -495,9 +517,12 @@ function clickSignup() {
 
   datastore("POST","signup",values,function (err,res) {
     if (err) {
-      error(err);
+      $("#placeForAlert").removeClass("alert alert-warning");
+      $("#placeForAlert").html(err);
     } else {
-      window.location.assign("blog.html");
+      g_userID = res.userID;
+      history.pushState("", document.title, window.location.pathname + window.location.search);
+      blogList.viewBlogList();
     }
   });
 }
@@ -554,7 +579,7 @@ exports.setGlobals = function () {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../scripts/datastore":13,"../scripts/views":14}],9:[function(require,module,exports){
+},{"../scripts/datastore":12,"../scripts/views":13,"./blogList_ctl":2}],8:[function(require,module,exports){
 var views = require("../scripts/views");
 
 function viewSplash() {
@@ -563,7 +588,7 @@ function viewSplash() {
 
 exports.viewSplash = viewSplash;
 
-},{"../scripts/views":14}],10:[function(require,module,exports){
+},{"../scripts/views":13}],9:[function(require,module,exports){
 
 function User(id,username,email,isAdmin) {
   this.id = id;
@@ -595,7 +620,7 @@ UserList.prototype.delete = function (id) {
 
 exports.UserList = UserList;
 
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 function getInputDateValue(d) {
   return d.getFullYear() + "-" + ((d.getMonth()+1)<10?"0":"") + (d.getMonth()+1) + "-" + (d.getDate()<10?"0":"") + d.getDate();
 }
@@ -824,7 +849,7 @@ function BlogInfo(domID,blogID,title,userID) {
 exports.Blog = Blog;
 exports.BlogInfo = BlogInfo;
 
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var blog = require("./blog");
 var BlogInfo = blog.BlogInfo;
 
@@ -901,7 +926,7 @@ BlogList.prototype.delete = function (domID) {
 
 exports.BlogList = BlogList;
 
-},{"./blog":11}],13:[function(require,module,exports){
+},{"./blog":10}],12:[function(require,module,exports){
 function datastore(method,path,obj,callback) {
   var request = new XMLHttpRequest();
   request.onreadystatechange = function() {
@@ -941,7 +966,7 @@ function datastore(method,path,obj,callback) {
 
 module.exports = datastore;
 
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var list = [];
 
 function getTemplateSource(name) {
@@ -962,4 +987,4 @@ function getTemplateSource(name) {
 exports.getTemplateSource = getTemplateSource;
 exports.list = list;
 
-},{}]},{},[1,3,2,5,6,7,8,9,10,11,12,13,14]);
+},{}]},{},[1,3,2,4,5,6,7,8,9,10,11,12,13]);
