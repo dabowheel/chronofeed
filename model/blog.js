@@ -1,91 +1,8 @@
-function getInputDateValue(d) {
-  return d.getFullYear() + "-" + ((d.getMonth()+1)<10?"0":"") + (d.getMonth()+1) + "-" + (d.getDate()<10?"0":"") + d.getDate();
-}
-function getInputTimeValue(d) {
-  return ((d.getHours()<10)?"0":"") + d.getHours() + ":" + ((d.getMinutes()<10)?"0":"") + d.getMinutes();
-}
-function toDateString(d) {
-  return d.toLocaleDateString() + " " + d.toLocaleTimeString(navigator.language,{hour:"2-digit",minute:"2-digit"});
-}
-function toDBDateString(d) {
-  return getInputDateValue(d) + " " + getInputTimeValue(d);
-}
+var modelPost = require("./post");
 
-function Post(domID,postID,title,text,date,blogID,userID) {
-  if (typeof domID == "string" || domID instanceof String) {
-    this.domID = domID;
-  } else {
-    error("invalid domID: " + domID);
-  }
-
-  if (typeof postID == "number") {
-    this.postID = postID;
-  } else {
-    error("invalid postID: " + postID + " type: " + (typeof postID));
-  }
-
-  if (typeof title == "string" || title instanceof String) {
-    this.title = title;
-  } else {
-    error("invalid title: " + title);
-  }
-
-  if (typeof text == "string" || text instanceof String) {
-    this.text = text;
-  } else {
-    error("invalid text: " + text);
-  }
-
-  if (date instanceof Date) {
-    this.date = date;
-    this.dateString = toDateString(this.date);
-    this.dateOnly = getInputDateValue(this.date);
-    this.timeOnly = getInputTimeValue(this.date);
-    this.dbDateString = toDBDateString(this.date);
-  } else {
-    error("invalid date: " + date);
-  }
-
-  if (typeof blogID == "number") {
-    this.blogID = blogID;
-  } else {
-    error("invalid blogID: " + blogID + " type: " + (typeof blogID));
-  }
-
-  if (typeof userID == "number") {
-    this.userID = userID;
-  } else {
-    error("invalid userID: " + userID + " type: " + (typeof userID));
-  }
-}
-Post.prototype.loadObject = function (post) {
-  this.Post(post.domID, post.postID, post.title, post.text, post.date, post.blogID, post.userID);
-};
-
-function Blog(blogID,title,userID) {
-  if (blogID) {
-    if (typeof blogID == "number") {
-      this.blogID = blogID;
-    } else {
-      error("invalid blogID: " + blogID + " type: " + (typeof blogID));
-    }
-  }
-
-  if (title) {
-    if (typeof title == "string" || title instanceof String) {
-      this.title = title;
-    } else {
-      error("invalid title: " + title);
-    }
-  }
-
-  if (userID) {
-    if (typeof userID == "number") {
-      this.userID = userID;
-    } else {
-      error("invalid userID: " + userID);
-    }
-  }
+function Blog(_id,title) {
+  this._id = _id;
+  this.title = title;
 
   this.postList = [];
   this.editNew = false;
@@ -96,24 +13,18 @@ function Blog(blogID,title,userID) {
 Blog.prototype.getDOMID = function () {
   return (++this.maxPostDOMID).toString();
 };
-Blog.prototype.appendObjectPost = function (post,domID) {
-  this.postList[this.postList.length] = new Post(domID,post.postID,post.title,post.text,new Date(post.date),post.blogID,post.userID);
+Blog.prototype.appendObjectPost = function (obj) {
+  var post = new modelPost.Post();
+  post.loadObject(obj);
+  this.postList[this.postList.length] = post;
 };
 Blog.prototype.loadObject = function (obj) {
-  if (obj.blogID) {
-    this.blogID = obj.blogID;
-  }
-  if (obj.title) {
-    this.title = obj.title;
-  }
-
-  if (obj.userID) {
-    this.userID = obj.userID;
-  }
+  this._id = obj._id;
+  this.title = obj.title;
 
   if (obj && obj.postList && obj.postList.length) {
-    for (var i = 0; i < obj.postList.length; i++) {
-      this.appendObjectPost(obj.postList[i], this.getDOMID());
+    for (post of obj.postList) {
+      this.appendObjectPost(post);
     }
   }
 };
@@ -207,6 +118,10 @@ BlogInfo.prototype.exportObject = function () {
     _id: this._id,
     title: this.title
   };
+}
+BlogInfo.prototype.loadObject = function (obj) {
+  this._id = obj._id
+  this.title = obj.title;
 }
 
 exports.Blog = Blog;

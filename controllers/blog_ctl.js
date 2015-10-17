@@ -1,7 +1,6 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
-
-var g_blog;
+var modelData = require("../model/data");
 
 function displayBlog2HTML(blog,callback) {
   Handlebars.registerHelper("encodeText", function (str) {
@@ -20,21 +19,18 @@ function viewBlog(blog) {
   });
 }
 
-function viewBlog(blogID) {
-  req = {
-    type: "blog",
-    action: "read",
-    blogID: blogID
-  };
-  datastore(req, function (res) {
-    if (res.success) {
-      var blog = new Blog();
-      blog.loadObject(res.blog);
-      g_blog = blog;
-      displayBlog(blog);
-    } else {
-      error(res.error);
+function viewBlog(_id) {
+  datastore("GET", "readBlog", {_id:_id}, function (err,res) {
+    if (err) {
+      $("#placeForAlert").addClass("alert alert-warning");
+      $("#placeForAlert").html(err);
+      return;
     }
+
+    modelData.blog = new Blog();
+    modelData.blog.loadObject(res.blog);
+    g_blog = blog;
+    displayBlog(blog);
   });
 }
 

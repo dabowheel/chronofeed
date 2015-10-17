@@ -1,4 +1,4 @@
-describe("BlogInfo", function () {
+xdescribe("BlogInfo", function () {
   beforeEach(function () {
     error = jasmine.createSpy("error");
   });

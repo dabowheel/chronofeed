@@ -1,6 +1,7 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var BlogList = require("../model/blogList").BlogList;
+var ctlBlog = require("./blog_ctl");
 var modelBlog = require("../model/blog");
 var BlogInfo = modelBlog.BlogInfo;
 var modelData = require("../model/data");
@@ -59,7 +60,7 @@ function addBlog() {
 
 function editBlog(domID) {
   var blogInfo = modelData.blogList.getBlogInfo(domID);
-  blogList.viewBlog(blogInfo.blogID);
+  ctlBlog.viewBlog(blogInfo._id);
 }
 
 function deleteBlog(domID) {

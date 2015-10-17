@@ -1,6 +1,7 @@
 var util = require("./util");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
+var modelBlog = require("../model/blog");
 
 exports.readBlogList = function (req,res,next) {
   console.log("blogList read");
@@ -70,6 +71,44 @@ exports.deleteBlog = function (req,res,next) {
       } else {
         next("blog not deleted because the blog was not found");
       }
+    });
+  });
+};
+
+exports.readBlog = function (req,res,next) {
+  console.log("read blog");
+  util.getJSONFromBody(req, function (err,obj) {
+    if (err) {
+      return next(err);
+    }
+
+    var blogs = req.db.collection("blogs");
+    blogs.findOne({_id:new ObjectID(obj._id)}, function (err,res2) {
+      if (err) {
+        return next(err);
+      }
+
+      if (!res2) {
+        return next("could not find blog");
+      }
+
+      console.log("res2",res2);
+      var blog = new modelBlog.Blog(res2._id, res2.title);
+
+      var posts = req.db.collection("posts");
+      posts.find({blogID:blog._id}, function (err,res3) {
+        res3.toArray(function (err, list) {
+          if (err) {
+            return next(err);
+          }
+
+          for (obj of list) {
+            var post = new modelBlog.Post(obj._id, obj.title, obj.text, obj.date, obj.blogID);
+            blog.addPost(post);
+          }
+          res.json(blog.exportObject);
+        });
+      });
     });
   });
 };

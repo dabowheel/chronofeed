@@ -1,7 +1,10 @@
 {
-  "spec_dir": "datastore/spec",
+  "spec_dir": "",
   "spec_files": [
-    "**/*[sS]pec.js"
+    "model/spec/*-spec.js",
+    "datastore/spec/*-spec.js",
+    "controllers/spec/*-spec.js",
+    "scripts/spec/*-spec.js"
   ],
   "helpers": [
     "helpers/**/*.js"

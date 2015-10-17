@@ -1,6 +1,6 @@
 var main = require("../main");
 
-describe("blogList", function() {
+xdescribe("blogList", function() {
   it("should return list of blogs", function(done) {
     var inObject = {
       type: "blogList",
