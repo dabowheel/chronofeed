@@ -197,30 +197,16 @@ Blog.prototype.sort = function () {
   });
 };
 
-function BlogInfo(domID,blogID,title,userID) {
-  if (typeof domID == "string" || domID instanceof String) {
-    this.domID = domID;
-  } else {
-    error("Invalid domID: " + domID);
-  }
-
-  if (typeof blogID == "number") {
-    this.blogID = blogID;
-  } else {
-    error("Invalid blogID: " + blogID);
-  }
-
-  if (typeof title == "string" || title instanceof String) {
-    this.title = title;
-  } else {
-    error("Invalid title: " + title);
-  }
-
-  if (typeof userID == "number") {
-    this.userID = userID;
-  } else {
-    error("invalid userID: " + userID);
-  }
+function BlogInfo(_id,title,domID) {
+  this._id = _id;
+  this.title = title;
+  this.domID = domID;
+}
+BlogInfo.prototype.exportObject = function () {
+  return {
+    _id: this._id,
+    title: this.title
+  };
 }
 
 exports.Blog = Blog;

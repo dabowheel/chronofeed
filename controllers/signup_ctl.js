@@ -5,13 +5,13 @@ var blogList = require("./blogList_ctl");
 function viewSignup() {
   document.getElementById("main").innerHTML = views.list.signup;
   document.getElementById("inputUsername").focus();
-  function onKeyup(e) {
+  function onKeypress(e) {
     if (e.keyCode == 13) {
       clickSignup();
     }
   }
   for (var id of ["inputUsername", "inputEmail", "inputPassword"]) {
-    document.getElementById(id).onkeyup = onKeyup;
+    document.getElementById(id).onkeypress = onKeypress;
   }
 }
 
@@ -24,7 +24,7 @@ function clickSignup() {
 
   datastore("POST","signup",values,function (err,res) {
     if (err) {
-      $("#placeForAlert").removeClass("alert alert-warning");
+      $("#placeForAlert").addClass("alert alert-warning");
       $("#placeForAlert").html(err);
     } else {
       g_userID = res.userID;

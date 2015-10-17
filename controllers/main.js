@@ -67,3 +67,4 @@ login.setGlobals();
 menu.setGlobals();
 signup.setGlobals();
 admin.setGlobals();
+blogList.setGlobals();

@@ -10,14 +10,10 @@ BlogList.prototype.getDOMID = function () {
   return (++this.maxDOMID).toString();
 };
 BlogList.prototype.loadObject = function (obj) {
-  if (obj.userID) {
-    this.userID = obj.userID;
-  }
-
   if (obj && obj.list && obj.list.length) {
     for (var i = 0; i < obj.list.length; i++) {
       var values = obj.list[i];
-      this.list[this.list.length] = new BlogInfo(this.getDOMID(),values.blogID,values.title,values.userID);
+      this.list[this.list.length] = new BlogInfo(values._id, values.title, this.getDOMID());
     }
   }
 };

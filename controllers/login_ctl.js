@@ -6,14 +6,14 @@ var g_userID;
 
 function viewLogin() {
   document.getElementById("main").innerHTML = views.list.login;
-  document.getElementById("inputUsername").focus()
-  function onKeyup (e) {
+  function onKeypress (e) {
     if (e.keyCode == 13) {
       clickLogin();
     }
   }
-  document.getElementById("inputUsername").onkeyup = onKeyup;
-  document.getElementById("inputPassword").onkeyup = onKeyup;
+  document.getElementById("inputUsername").onkeypress = onKeypress;
+  document.getElementById("inputPassword").onkeypress = onKeypress;
+  document.getElementById("inputUsername").focus();
 }
 
 function getLoginFormValues() {

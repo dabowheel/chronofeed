@@ -5,8 +5,8 @@ var datastore = require("./datastore/main");
 var cookieParser = require("cookie-parser");
 var session = require("express-session");
 var datastore_session = require("./datastore/session");
-var datastore_blogList = require("./datastore/blogList");
 var datastore_admin = require("./datastore/admin");
+var datastore_blogs = require("./datastore/blogs");
 var mongodb = require("mongodb");
 var MongoClient = mongodb.MongoClient;
 
@@ -37,7 +37,9 @@ app.get("/datastore/logout",datastore_session.logout);
 app.get("/datastore/admin/userList", datastore_admin.userList);
 app.delete("/datastore/admin/deleteUser", datastore_admin.deleteUser);
 
-app.get("/datastore/blogList",datastore_blogList.read);
+app.get("/datastore/readBlogList", datastore_blogs.readBlogList);
+app.post("/datastore/createBlog", datastore_blogs.createBlog);
+app.delete("/datastore/deleteBlog", datastore_blogs.deleteBlog);
 
 app.use(function(req,res,next) {
   res.status(404).send("Not Found.");

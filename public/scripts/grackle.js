@@ -53,11 +53,15 @@ exports.setGlobals = function () {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../model/admin":9,"../scripts/datastore":12,"../scripts/views":13}],2:[function(require,module,exports){
+},{"../model/admin":9,"../scripts/datastore":13,"../scripts/views":14}],2:[function(require,module,exports){
+(function (global){
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var BlogList = require("../model/blogList").BlogList;
-var g_blogList;
+var modelBlog = require("../model/blog");
+var BlogInfo = modelBlog.BlogInfo;
+var modelData = require("../model/data");
+var blogList = require("./blogList_ctl");
 
 function displayBlogList2HTML(blogList,callback) {
   var menuHTML = views.list.menu;
@@ -66,7 +70,6 @@ function displayBlogList2HTML(blogList,callback) {
   callback(menuHTML + blogListHTML);
 }
 
-
 function displayBlogList(blogList) {
   displayBlogList2HTML(blogList, function (html) {
     document.getElementById("main").innerHTML = html;
@@ -74,68 +77,70 @@ function displayBlogList(blogList) {
 }
 
 function viewBlogList() {
-  datastore("GET","blogList",null,function (err,res) {
+  datastore("GET","readBlogList",null,function (err,res) {
     if (err) {
-      error(err);
+      $("#placeForAlert").addClass("alert alert-warning");
+      $("#placeForAlert").html(err);
       return;
     }
     if (res.success) {
-      var blogList = new BlogList();
-      blogList.loadObject(res.blogList);
-      g_blogList = blogList;
-      displayBlogList(g_blogList);
+      modelData.blogList = new BlogList();
+      modelData.blogList.loadObject(res.blogList);
+      modelData.blogList.sort();
+      displayBlogList(modelData.blogList);
     } else {
       if (res.endSession) {
         viewLogin();
       } else {
-        error(res.error);
+        $("#placeForAlert").addClass("alert alert-warning");
+        $("#placeForAlert").html(err);
       }
     }
   });
 }
 
 function addBlog() {
-  var blogInfo = new BlogInfo(g_blogList.getDOMID(),0,g_blogList.getNewTitle(),g_blogList.userID);
-  g_blogList.add(blogInfo);
-  displayBlogList(g_blogList);
-  req = {
-    type: "blogInfo",
-    action: "create",
-    blogInfo: blogInfo
-  };
-  datastore(req,function (res) {
-    if (res.success) {
-      blogInfo.blogID = res.blogID;
-    } else {
-      error(res.error);
+  var blogInfo = new BlogInfo(0, modelData.blogList.getNewTitle(), modelData.blogList.getDOMID());
+  modelData.blogList.add(blogInfo);
+  displayBlogList(modelData.blogList);
+  datastore("POST", "createBlog", blogInfo.exportObject(), function (err,res) {
+    if (err) {
+      $("#placeForAlert").addClass("alert alert-warning");
+      $("#placeForAlert").html(err);
+      return;
     }
+
+    blogInfo._id = res._id;
   });
 }
 
 function editBlog(domID) {
-  var blogInfo = g_blogList.getBlogInfo(domID);
-  viewBlog(blogInfo.blogID);
+  var blogInfo = modelData.blogList.getBlogInfo(domID);
+  blogList.viewBlog(blogInfo.blogID);
 }
 
 function deleteBlog(domID) {
   console.log("delete",domID);
-  var blogInfo = g_blogList.delete(domID);
-  displayBlogList(g_blogList);
-  var req = {
-    type: "blogInfo",
-    action: "delete",
-    blogID: blogInfo.blogID
-  };
-  datastore(req,function(res) {
-    if (!res.success) {
-      error(res.error);
+  var blogInfo = modelData.blogList.delete(domID);
+  displayBlogList(modelData.blogList);
+  datastore("DELETE", "deleteBlog", blogInfo.exportObject(), function(err,res) {
+    if (err) {
+      $("#placeForAlert").addClass("alert alert-warning");
+      $("#placeForAlert").html(err);
+      return;
     }
   });
 }
 
 exports.viewBlogList = viewBlogList;
+exports.setGlobals = function () {
+  global.addBlog = addBlog;
+  global.editBlog = editBlog;
+  global.deleteBlog = deleteBlog;
+}
 
-},{"../model/blogList":11,"../scripts/datastore":12,"../scripts/views":13}],3:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../model/blog":10,"../model/blogList":11,"../model/data":12,"../scripts/datastore":13,"../scripts/views":14,"./blogList_ctl":2}],3:[function(require,module,exports){
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 
@@ -305,7 +310,7 @@ function deletePost(domID) {
 
 exports.viewBlog = viewBlog;
 
-},{"../scripts/datastore":12,"../scripts/views":13}],4:[function(require,module,exports){
+},{"../scripts/datastore":13,"../scripts/views":14}],4:[function(require,module,exports){
 (function (global){
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
@@ -315,14 +320,14 @@ var g_userID;
 
 function viewLogin() {
   document.getElementById("main").innerHTML = views.list.login;
-  document.getElementById("inputUsername").focus()
-  function onKeyup (e) {
+  function onKeypress (e) {
     if (e.keyCode == 13) {
       clickLogin();
     }
   }
-  document.getElementById("inputUsername").onkeyup = onKeyup;
-  document.getElementById("inputPassword").onkeyup = onKeyup;
+  document.getElementById("inputUsername").onkeypress = onKeypress;
+  document.getElementById("inputPassword").onkeypress = onKeypress;
+  document.getElementById("inputUsername").focus();
 }
 
 function getLoginFormValues() {
@@ -386,7 +391,7 @@ exports.setGlobals = function () {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../scripts/datastore":12,"../scripts/views":13,"./blogList_ctl":2}],5:[function(require,module,exports){
+},{"../scripts/datastore":13,"../scripts/views":14,"./blogList_ctl":2}],5:[function(require,module,exports){
 (function (global){
 var login = require("./login_ctl.js");
 var signup = require("./signup_ctl.js");
@@ -457,9 +462,10 @@ login.setGlobals();
 menu.setGlobals();
 signup.setGlobals();
 admin.setGlobals();
+blogList.setGlobals();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../scripts/datastore":12,"../scripts/views":13,"./admin_ctl.js":1,"./blogList_ctl.js":2,"./login_ctl.js":4,"./menu_ctl":6,"./signup_ctl.js":7,"./splash_ctl.js":8}],6:[function(require,module,exports){
+},{"../scripts/datastore":13,"../scripts/views":14,"./admin_ctl.js":1,"./blogList_ctl.js":2,"./login_ctl.js":4,"./menu_ctl":6,"./signup_ctl.js":7,"./splash_ctl.js":8}],6:[function(require,module,exports){
 (function (global){
 var datastore = require("../scripts/datastore");
 var blogList = require("./blogList_ctl");
@@ -489,7 +495,7 @@ exports.setGlobals = function () {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../scripts/datastore":12,"./blogList_ctl":2,"./splash_ctl":8}],7:[function(require,module,exports){
+},{"../scripts/datastore":13,"./blogList_ctl":2,"./splash_ctl":8}],7:[function(require,module,exports){
 (function (global){
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
@@ -498,13 +504,13 @@ var blogList = require("./blogList_ctl");
 function viewSignup() {
   document.getElementById("main").innerHTML = views.list.signup;
   document.getElementById("inputUsername").focus();
-  function onKeyup(e) {
+  function onKeypress(e) {
     if (e.keyCode == 13) {
       clickSignup();
     }
   }
   for (var id of ["inputUsername", "inputEmail", "inputPassword"]) {
-    document.getElementById(id).onkeyup = onKeyup;
+    document.getElementById(id).onkeypress = onKeypress;
   }
 }
 
@@ -517,7 +523,7 @@ function clickSignup() {
 
   datastore("POST","signup",values,function (err,res) {
     if (err) {
-      $("#placeForAlert").removeClass("alert alert-warning");
+      $("#placeForAlert").addClass("alert alert-warning");
       $("#placeForAlert").html(err);
     } else {
       g_userID = res.userID;
@@ -579,7 +585,7 @@ exports.setGlobals = function () {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../scripts/datastore":12,"../scripts/views":13,"./blogList_ctl":2}],8:[function(require,module,exports){
+},{"../scripts/datastore":13,"../scripts/views":14,"./blogList_ctl":2}],8:[function(require,module,exports){
 var views = require("../scripts/views");
 
 function viewSplash() {
@@ -588,7 +594,7 @@ function viewSplash() {
 
 exports.viewSplash = viewSplash;
 
-},{"../scripts/views":13}],9:[function(require,module,exports){
+},{"../scripts/views":14}],9:[function(require,module,exports){
 
 function User(id,username,email,isAdmin) {
   this.id = id;
@@ -820,30 +826,16 @@ Blog.prototype.sort = function () {
   });
 };
 
-function BlogInfo(domID,blogID,title,userID) {
-  if (typeof domID == "string" || domID instanceof String) {
-    this.domID = domID;
-  } else {
-    error("Invalid domID: " + domID);
-  }
-
-  if (typeof blogID == "number") {
-    this.blogID = blogID;
-  } else {
-    error("Invalid blogID: " + blogID);
-  }
-
-  if (typeof title == "string" || title instanceof String) {
-    this.title = title;
-  } else {
-    error("Invalid title: " + title);
-  }
-
-  if (typeof userID == "number") {
-    this.userID = userID;
-  } else {
-    error("invalid userID: " + userID);
-  }
+function BlogInfo(_id,title,domID) {
+  this._id = _id;
+  this.title = title;
+  this.domID = domID;
+}
+BlogInfo.prototype.exportObject = function () {
+  return {
+    _id: this._id,
+    title: this.title
+  };
 }
 
 exports.Blog = Blog;
@@ -862,14 +854,10 @@ BlogList.prototype.getDOMID = function () {
   return (++this.maxDOMID).toString();
 };
 BlogList.prototype.loadObject = function (obj) {
-  if (obj.userID) {
-    this.userID = obj.userID;
-  }
-
   if (obj && obj.list && obj.list.length) {
     for (var i = 0; i < obj.list.length; i++) {
       var values = obj.list[i];
-      this.list[this.list.length] = new BlogInfo(this.getDOMID(),values.blogID,values.title,values.userID);
+      this.list[this.list.length] = new BlogInfo(values._id, values.title, this.getDOMID());
     }
   }
 };
@@ -927,6 +915,11 @@ BlogList.prototype.delete = function (domID) {
 exports.BlogList = BlogList;
 
 },{"./blog":10}],12:[function(require,module,exports){
+var blogList;
+
+exports.blogList = blogList;
+
+},{}],13:[function(require,module,exports){
 function datastore(method,path,obj,callback) {
   var request = new XMLHttpRequest();
   request.onreadystatechange = function() {
@@ -966,7 +959,7 @@ function datastore(method,path,obj,callback) {
 
 module.exports = datastore;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 var list = [];
 
 function getTemplateSource(name) {
@@ -987,4 +980,4 @@ function getTemplateSource(name) {
 exports.getTemplateSource = getTemplateSource;
 exports.list = list;
 
-},{}]},{},[1,3,2,4,5,6,7,8,9,10,11,12,13]);
+},{}]},{},[1,3,2,4,5,6,7,8,9,10,11,12,13,14]);

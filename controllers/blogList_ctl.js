@@ -1,7 +1,10 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var BlogList = require("../model/blogList").BlogList;
-var g_blogList;
+var modelBlog = require("../model/blog");
+var BlogInfo = modelBlog.BlogInfo;
+var modelData = require("../model/data");
+var blogList = require("./blogList_ctl");
 
 function displayBlogList2HTML(blogList,callback) {
   var menuHTML = views.list.menu;
@@ -10,7 +13,6 @@ function displayBlogList2HTML(blogList,callback) {
   callback(menuHTML + blogListHTML);
 }
 
-
 function displayBlogList(blogList) {
   displayBlogList2HTML(blogList, function (html) {
     document.getElementById("main").innerHTML = html;
@@ -18,63 +20,64 @@ function displayBlogList(blogList) {
 }
 
 function viewBlogList() {
-  datastore("GET","blogList",null,function (err,res) {
+  datastore("GET","readBlogList",null,function (err,res) {
     if (err) {
-      error(err);
+      $("#placeForAlert").addClass("alert alert-warning");
+      $("#placeForAlert").html(err);
       return;
     }
     if (res.success) {
-      var blogList = new BlogList();
-      blogList.loadObject(res.blogList);
-      g_blogList = blogList;
-      displayBlogList(g_blogList);
+      modelData.blogList = new BlogList();
+      modelData.blogList.loadObject(res.blogList);
+      modelData.blogList.sort();
+      displayBlogList(modelData.blogList);
     } else {
       if (res.endSession) {
         viewLogin();
       } else {
-        error(res.error);
+        $("#placeForAlert").addClass("alert alert-warning");
+        $("#placeForAlert").html(err);
       }
     }
   });
 }
 
 function addBlog() {
-  var blogInfo = new BlogInfo(g_blogList.getDOMID(),0,g_blogList.getNewTitle(),g_blogList.userID);
-  g_blogList.add(blogInfo);
-  displayBlogList(g_blogList);
-  req = {
-    type: "blogInfo",
-    action: "create",
-    blogInfo: blogInfo
-  };
-  datastore(req,function (res) {
-    if (res.success) {
-      blogInfo.blogID = res.blogID;
-    } else {
-      error(res.error);
+  var blogInfo = new BlogInfo(0, modelData.blogList.getNewTitle(), modelData.blogList.getDOMID());
+  modelData.blogList.add(blogInfo);
+  displayBlogList(modelData.blogList);
+  datastore("POST", "createBlog", blogInfo.exportObject(), function (err,res) {
+    if (err) {
+      $("#placeForAlert").addClass("alert alert-warning");
+      $("#placeForAlert").html(err);
+      return;
     }
+
+    blogInfo._id = res._id;
   });
 }
 
 function editBlog(domID) {
-  var blogInfo = g_blogList.getBlogInfo(domID);
-  viewBlog(blogInfo.blogID);
+  var blogInfo = modelData.blogList.getBlogInfo(domID);
+  blogList.viewBlog(blogInfo.blogID);
 }
 
 function deleteBlog(domID) {
   console.log("delete",domID);
-  var blogInfo = g_blogList.delete(domID);
-  displayBlogList(g_blogList);
-  var req = {
-    type: "blogInfo",
-    action: "delete",
-    blogID: blogInfo.blogID
-  };
-  datastore(req,function(res) {
-    if (!res.success) {
-      error(res.error);
+  var blogInfo = modelData.blogList.delete(domID);
+  displayBlogList(modelData.blogList);
+  datastore("DELETE", "deleteBlog", blogInfo.exportObject(), function(err,res) {
+    if (err) {
+      $("#placeForAlert").addClass("alert alert-warning");
+      $("#placeForAlert").html(err);
+      return;
     }
   });
 }
 
 exports.viewBlogList = viewBlogList;
+exports.setGlobals = function () {
+  global.addBlog = addBlog;
+  global.editBlog = editBlog;
+  global.deleteBlog = deleteBlog;
+}
