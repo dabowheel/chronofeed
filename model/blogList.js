@@ -1,10 +1,8 @@
-var blog = require("./blog");
-var BlogInfo = blog.BlogInfo;
+var modelBlog = require("./blog");
 
 function BlogList() {
   this.list = [];
   this.maxDOMID = 0;
-  this.userID = "";
 }
 BlogList.prototype.getDOMID = function () {
   return (++this.maxDOMID).toString();
@@ -13,7 +11,7 @@ BlogList.prototype.loadObject = function (obj) {
   if (obj && obj.list && obj.list.length) {
     for (var i = 0; i < obj.list.length; i++) {
       var values = obj.list[i];
-      this.list[this.list.length] = new BlogInfo(values._id, values.title, this.getDOMID());
+      this.list[this.list.length] = new modelBlog.BlogInfo(values._id, values.title, this.getDOMID());
     }
   }
 };
