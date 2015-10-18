@@ -1,8 +1,7 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
-var modelAdmin = require("../model/admin");
-
-var g_userList;
+var modelUserList = require("../model/userList");
+var modelData = require("../model/data");
 
 function displayAdmin(adminList) {
   var menuHTML = views.list.menu;
@@ -19,10 +18,10 @@ function viewAdmin() {
       return;
     }
 
-    g_userList = new modelAdmin.UserList();
-    g_userList.loadObject(res);
-    console.log("user list", g_userList);
-    displayAdmin(g_userList);
+    modelData.userList = new modelUserList.UserList();
+    modelData.userList.loadObject(res);
+    console.log("user list", modelData.userList);
+    displayAdmin(modelData.userList);
   });
 }
 
@@ -37,11 +36,11 @@ function deleteUser(id) {
       return;
     }
 
-    console.log("global",g_userList);
+    console.log("global",modelData.userList);
     console.log("delete user",id);
-    g_userList.delete(id);
-    console.log("global",g_userList);
-    displayAdmin(g_userList);
+    modelData.userList.delete(id);
+    console.log("global",modelData.userList);
+    displayAdmin(modelData.userList);
   });
 }
 
