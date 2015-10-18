@@ -13,7 +13,7 @@ function displayBlog2HTML(blog,callback) {
   callback(menuHTML + blogHTML);
 }
 
-function viewBlog(blog) {
+function displayBlog(blog) {
   displayBlog2HTML(blog,function (html) {
     document.getElementById("main").innerHTML = html;
   });
@@ -29,14 +29,13 @@ function viewBlog(_id) {
 
     modelData.blog = new Blog();
     modelData.blog.loadObject(res.blog);
-    g_blog = blog;
-    displayBlog(blog);
+    displayBlog(modelData.blog);
   });
 }
 
 function editBlogTitle() {
-  g_blog.editBlogTitle = true;
-  displayBlog(g_blog);
+  modelData.blog.editBlogTitle = true;
+  displayBlog(modelData.blog);
 }
 
 function saveBlogTitleChange() {
@@ -120,7 +119,7 @@ function savePostChanges(domID) {
     };
     datastore(req,function (res) {
       if (res.success) {
-        g_blog.updatePostID(domID,res.postID);
+        post._id = res._id;
         displayBlog(g_blog);
       } else {
         error(res.error);

@@ -157,7 +157,7 @@ function displayBlog2HTML(blog,callback) {
   callback(menuHTML + blogHTML);
 }
 
-function viewBlog(blog) {
+function displayBlog(blog) {
   displayBlog2HTML(blog,function (html) {
     document.getElementById("main").innerHTML = html;
   });
@@ -173,14 +173,13 @@ function viewBlog(_id) {
 
     modelData.blog = new Blog();
     modelData.blog.loadObject(res.blog);
-    g_blog = blog;
-    displayBlog(blog);
+    displayBlog(modelData.blog);
   });
 }
 
 function editBlogTitle() {
-  g_blog.editBlogTitle = true;
-  displayBlog(g_blog);
+  modelData.blog.editBlogTitle = true;
+  displayBlog(modelData.blog);
 }
 
 function saveBlogTitleChange() {
@@ -264,7 +263,7 @@ function savePostChanges(domID) {
     };
     datastore(req,function (res) {
       if (res.success) {
-        g_blog.updatePostID(domID,res.postID);
+        post._id = res._id;
         displayBlog(g_blog);
       } else {
         error(res.error);
@@ -684,28 +683,6 @@ Blog.prototype.savePost = function (domID,post) {
     }
   }
 };
-Blog.prototype.updatePostID = function (domID,postID) {
-  for (var i = 0; i < this.postList.length; i++) {
-    var p = this.postList[i];
-    if (p.domID === domID) {
-      p.postID = postID;
-      break;
-    }
-  }
-};
-Blog.prototype.updateBlogID = function(blogID) {
-  if (typeof blogID == string || blogID instanceof String) {
-    if (!this.blogID) {
-      this.blogID = blogID;
-      for (var i = 0; i < this.postList.length; i++) {
-        this.postList[i].blogID = blogID;
-      }
-    }
-  } else {
-    error("Invalid blogID: " + blogID);
-  }
-
-};
 Blog.prototype.deletePost = function (domID) {
   for (var i = 0; i < this.postList.length; i++) {
     var post = this.postList[i];
@@ -724,13 +701,21 @@ Blog.prototype.getPost = function (domID) {
     }
   }
 };
-Blog.prototype.sort = function () {
+Blog.prototype.sort = function (reverse) {
   this.postList.sort(function (a,b) {
-    if (a.title < b.title)
-      return -1;
-    if (a.title > b.title)
-      return 1;
-    return 0;
+    if (reverse) {
+      if (a.date < b.date)
+        return 1;
+      if (a.date > b.date)
+        return -1;
+      return 0;
+    } else {
+      if (a.date < b.date)
+        return -1;
+      if (a.date > b.date)
+        return 1;
+      return 0;
+    }
   });
 };
 

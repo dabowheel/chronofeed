@@ -58,28 +58,6 @@ Blog.prototype.savePost = function (domID,post) {
     }
   }
 };
-Blog.prototype.updatePostID = function (domID,postID) {
-  for (var i = 0; i < this.postList.length; i++) {
-    var p = this.postList[i];
-    if (p.domID === domID) {
-      p.postID = postID;
-      break;
-    }
-  }
-};
-Blog.prototype.updateBlogID = function(blogID) {
-  if (typeof blogID == string || blogID instanceof String) {
-    if (!this.blogID) {
-      this.blogID = blogID;
-      for (var i = 0; i < this.postList.length; i++) {
-        this.postList[i].blogID = blogID;
-      }
-    }
-  } else {
-    error("Invalid blogID: " + blogID);
-  }
-
-};
 Blog.prototype.deletePost = function (domID) {
   for (var i = 0; i < this.postList.length; i++) {
     var post = this.postList[i];
@@ -98,13 +76,21 @@ Blog.prototype.getPost = function (domID) {
     }
   }
 };
-Blog.prototype.sort = function () {
+Blog.prototype.sort = function (reverse) {
   this.postList.sort(function (a,b) {
-    if (a.title < b.title)
-      return -1;
-    if (a.title > b.title)
-      return 1;
-    return 0;
+    if (reverse) {
+      if (a.date < b.date)
+        return 1;
+      if (a.date > b.date)
+        return -1;
+      return 0;
+    } else {
+      if (a.date < b.date)
+        return -1;
+      if (a.date > b.date)
+        return 1;
+      return 0;
+    }
   });
 };
 
