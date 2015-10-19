@@ -6,13 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "build": "browserify controllers/*.js model/*.js scripts/*.js -o public/scripts/grackle.js"
+    "build": "grunt && jasmine",
+    "wc": "git ls-files | grep .js | xargs wc -l"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/dabowheel/grackle.git"
   },
-  "author": "",
+  "author": "Miguel Provencio",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/dabowheel/grackle/issues"
