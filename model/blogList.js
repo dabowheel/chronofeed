@@ -23,7 +23,7 @@ BlogList.prototype.getBlogInfo = function (domID) {
   }
 };
 BlogList.prototype.add = function (blogInfo) {
-  this.list.unshift(blogInfo);
+  this.list.push(blogInfo);
   this.sort();
 };
 BlogList.prototype.sort = function () {
