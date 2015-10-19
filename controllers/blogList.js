@@ -81,4 +81,4 @@ exports.setGlobals = function () {
   global.addBlog = addBlog;
   global.editBlog = editBlog;
   global.deleteBlog = deleteBlog;
-}
+};

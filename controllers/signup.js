@@ -49,21 +49,21 @@ function getPasswordPlain() {
 function validateSignupForm(values,passwordPlain) {
   var valid = true;
 
-  if (values.username == "") {
+  if (values.username === "") {
     $("#inputUsernameFormGroup").addClass("has-error");
     valid = false;
   } else {
     $("#inputUsernameFormGroup").removeClass("has-error");
   }
 
-  if (values.email == "") {
+  if (values.email === "") {
     $("#inputEmailFormGroup").addClass("has-error");
     valid = false;
   } else {
     $("#inputEmailFormGroup").removeClass("has-error");
   }
 
-  if (passwordPlain == "") {
+  if (passwordPlain === "") {
     $("#inputPasswordFormGroup").addClass("has-error");
     valid = false;
   } else if (passwordPlain.length < 8) {
@@ -83,4 +83,4 @@ function validateSignupForm(values,passwordPlain) {
 exports.viewSignup = viewSignup;
 exports.setGlobals = function () {
   global.clickSignup = clickSignup;
-}
+};

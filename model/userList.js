@@ -10,7 +10,7 @@ User.prototype.exportObject = function () {
     username: this.username,
     email: this.email
   };
-}
+};
 User.prototype.loadObject = function (obj) {
   this._id = obj._id;
   this.username = obj.username;
@@ -38,7 +38,7 @@ UserList.prototype.exportObject = function () {
     ret.list.push(user.exportObject());
   }
   return ret;
-}
+};
 UserList.prototype.delete = function (_id) {
   for (var i = 0; i < this.list.length; i++) {
     if (this.list[i]._id == _id) {

@@ -47,4 +47,4 @@ function deleteUser(id) {
 exports.viewAdmin = viewAdmin;
 exports.setGlobals = function () {
   global.deleteUser = deleteUser;
-}
+};

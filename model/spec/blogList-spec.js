@@ -39,4 +39,4 @@ describe("blog list", function () {
     expect(blogList.list[0]._id).toEqual("id2");
     expect(blogList.list[1]._id).toEqual("id1");
   });
-})
+});

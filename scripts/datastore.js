@@ -3,10 +3,10 @@ function datastore(method,path,obj,callback) {
   request.onreadystatechange = function() {
     if (request.readyState==4) {
       if (request.status==200) {
-        console.log(method,path,obj)
+        console.log(method,path,obj);
         console.log(request.responseText);
         var res;
-        if (request.responseText == "") {
+        if (request.responseText === "") {
           callback(null,null);
         } else {
           try {
@@ -19,7 +19,7 @@ function datastore(method,path,obj,callback) {
           callback(null,res);
         }
       } else {
-        callback(request.responseText)
+        callback(request.responseText);
       }
     }
   };

@@ -45,7 +45,7 @@ function viewInitial() {
 }
 
 window.onhashchange = function () {
-  console.log("hash change")
+  console.log("hash change");
   viewInitial();
 };
 

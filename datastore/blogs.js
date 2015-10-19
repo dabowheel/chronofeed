@@ -20,7 +20,7 @@ exports.readBlogList = function (req,res,next) {
 
       var blogList = {
         list: list
-      }
+      };
       res.json({
         success: true,
         blogList: blogList
@@ -62,7 +62,7 @@ exports.deleteBlog = function (req,res,next) {
     console.log("obj",obj);
     blogs.deleteOne({_id:new ObjectID(obj._id)}, function (err, res2) {
       if (err) {
-        return next(err)
+        return next(err);
       }
 
       console.log("res2",res2);

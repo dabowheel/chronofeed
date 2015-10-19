@@ -31,7 +31,7 @@ Post.prototype.load = function (_id,title,text,date,blogID,domID) {
   }
   this.blogID = blogID;
   this.domID = domID;
-}
+};
 Post.prototype.loadObject = function (post) {
   this.load(post._id, post.title, post.text, new Date(post.date), post.blogID, post.domID);
 };

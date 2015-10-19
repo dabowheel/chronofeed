@@ -23,7 +23,7 @@ Blog.prototype.loadObject = function (obj) {
   this.title = obj.title;
 
   if (obj && obj.postList && obj.postList.length) {
-    for (post of obj.postList) {
+    for (var post of obj.postList) {
       this.appendObjectPost(post);
     }
   }
@@ -104,11 +104,11 @@ BlogInfo.prototype.exportObject = function () {
     _id: this._id,
     title: this.title
   };
-}
+};
 BlogInfo.prototype.loadObject = function (obj) {
-  this._id = obj._id
+  this._id = obj._id;
   this.title = obj.title;
-}
+};
 
 exports.Blog = Blog;
 exports.BlogInfo = BlogInfo;

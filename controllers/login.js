@@ -30,14 +30,14 @@ function getPasswordPlain() {
 function validateLoginForm(values,passwordPlain) {
   var valid = true;
 
-  if (values.username == "") {
+  if (values.username === "") {
     $("#inputUsernameFormGroup").addClass("has-error");
     valid = false;
   } else {
     $("#inputUsernameFormGroup").removeClass("has-error");
   }
 
-  if (passwordPlain == "") {
+  if (passwordPlain === "") {
     $("#inputPasswordFormGroup").addClass("has-error");
     valid = false;
   } else {
@@ -74,4 +74,4 @@ function clickLogin() {
 exports.viewLogin = viewLogin;
 exports.setGlobals = function () {
   global.clickLogin = clickLogin;
-}
+};

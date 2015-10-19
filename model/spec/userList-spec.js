@@ -58,7 +58,7 @@ describe("user list", function () {
     expect(user._id).toEqual("id");
     expect(user.username).toEqual("username");
     expect(user.email).toEqual("email");
-    var user = userList.list[1];
+    user = userList.list[1];
     expect(user._id).toEqual("id2");
     expect(user.username).toEqual("username2");
     expect(user.email).toEqual("email2");
@@ -71,7 +71,7 @@ describe("user list", function () {
     expect(user._id).toEqual("id");
     expect(user.username).toEqual("username");
     expect(user.email).toEqual("email");
-    var user = userList.list[1];
+    user = userList.list[1];
     expect(user._id).toEqual("id2");
     expect(user.username).toEqual("username2");
     expect(user.email).toEqual("email2");

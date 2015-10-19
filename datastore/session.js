@@ -47,7 +47,7 @@ exports.login = function (req,res,next) {
         console.log("result",result);
         console.log("inputPassword",obj.password, typeof obj.password);
         console.log("foundPassword",result.password, typeof result.password);
-        console.log("success",obj.password == result.password)
+        console.log("success",obj.password == result.password);
         userID = result._id;
         success = obj.password == result.password;
       }

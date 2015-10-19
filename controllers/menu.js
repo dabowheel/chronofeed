@@ -21,6 +21,6 @@ function clickLogout() {
 }
 
 exports.setGlobals = function () {
-  global.clickBlogList = clickBlogList
+  global.clickBlogList = clickBlogList;
   global.clickLogout = clickLogout;
-}
+};

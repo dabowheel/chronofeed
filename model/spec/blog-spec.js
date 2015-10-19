@@ -27,7 +27,7 @@ describe("Blog", function () {
   it("should be created", function () {
     var blog = new modelBlog.Blog(obj._id, obj.title);
     var post = obj.postList[0];
-    blog.addPost(new modelPost.Post(post._id, post.title, post.text, new Date(post.date), post.blogID, post.domID))
+    blog.addPost(new modelPost.Post(post._id, post.title, post.text, new Date(post.date), post.blogID, post.domID));
 
     expect(blog._id).toEqual(obj._id);
     expect(blog.title).toEqual(obj.title);
@@ -61,7 +61,7 @@ describe("Blog", function () {
     var blog = new modelBlog.Blog();
     blog.loadObject(obj);
     blog.editPost("domid");
-    blog.stopEditingPost("domid")
+    blog.stopEditingPost("domid");
     expect(blog.postList[0].edit).toEqual(false);
   });
 
