@@ -1,11 +1,11 @@
-var ctlLogin = require("./login_ctl.js");
-var ctlSignup = require("./signup_ctl.js");
-var ctlAdmin = require("./admin_ctl.js");
-var ctlSplash = require("./splash_ctl.js");
-var ctlBlogList = require("./blogList_ctl.js");
+var ctlLogin = require("./login.js");
+var ctlSignup = require("./signup.js");
+var ctlAdmin = require("./admin.js");
+var ctlSplash = require("./splash.js");
+var ctlBlogList = require("./blogList.js");
+var ctlMenu = require("./menu");
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
-var ctlMenu = require("./menu_ctl");
 
 function getStack() {
   return (new Error()).stack;

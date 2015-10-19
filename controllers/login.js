@@ -1,6 +1,6 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
-var blogList = require("./blogList_ctl");
+var ctlBlogList = require("./blogList");
 
 var g_userID;
 
@@ -63,7 +63,7 @@ function clickLogin() {
         g_userID = res.userID;
         // clear hash
         history.pushState("", document.title, window.location.pathname + window.location.search);
-        blogList.viewBlogList();
+        ctlBlogList.viewBlogList();
     } else {
       $("#placeForAlert").addClass("alert alert-warning");
       $("#placeForAlert").html("Invalid username or password.");

@@ -1,10 +1,10 @@
 var datastore = require("../scripts/datastore");
-var blogList = require("./blogList_ctl");
-var splash = require("./splash_ctl");
+var ctlBlogList = require("./blogList");
+var ctlSplash = require("./splash");
 
 function clickBlogList() {
   history.pushState("", document.title, window.location.pathname + window.location.search);
-  blogList.viewBlogList();
+  ctlBlogList.viewBlogList();
 }
 
 function clickLogout() {
@@ -16,7 +16,7 @@ function clickLogout() {
     }
 
     history.pushState("", document.title, window.location.pathname + window.location.search);
-    splash.viewSplash();
+    ctlSplash.viewSplash();
   });
 }
 

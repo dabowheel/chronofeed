@@ -1,11 +1,11 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
-var BlogList = require("../model/blogList").BlogList;
-var ctlBlog = require("./blog_ctl");
+var modelBlogList = require("../model/blogList");
 var modelBlog = require("../model/blog");
-var BlogInfo = modelBlog.BlogInfo;
 var modelData = require("../model/data");
-var blogList = require("./blogList_ctl");
+var ctlBlogList = require("./blogList");
+var ctlBlog = require("./blog");
+var ctlLogin = require("./login");
 
 function displayBlogList2HTML(blogList,callback) {
   var menuHTML = views.list.menu;
@@ -28,13 +28,13 @@ function viewBlogList() {
       return;
     }
     if (res.success) {
-      modelData.blogList = new BlogList();
+      modelData.blogList = new modelBlogList.BlogList();
       modelData.blogList.loadObject(res.blogList);
       modelData.blogList.sort();
       displayBlogList(modelData.blogList);
     } else {
       if (res.endSession) {
-        viewLogin();
+        ctlLogin.viewLogin();
       } else {
         $("#placeForAlert").addClass("alert alert-warning");
         $("#placeForAlert").html(err);

@@ -1,6 +1,6 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
-var blogList = require("./blogList_ctl");
+var ctlBlogList = require("./blogList");
 
 function viewSignup() {
   document.getElementById("main").innerHTML = views.list.signup;
@@ -29,7 +29,7 @@ function clickSignup() {
     } else {
       g_userID = res.userID;
       history.pushState("", document.title, window.location.pathname + window.location.search);
-      blogList.viewBlogList();
+      ctlBlogList.viewBlogList();
     }
   });
 }
