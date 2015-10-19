@@ -1,11 +1,11 @@
-var login = require("./login_ctl.js");
-var signup = require("./signup_ctl.js");
-var admin = require("./admin_ctl.js");
-var splash = require("./splash_ctl.js");
-var blogList = require("./blogList_ctl.js");
+var ctlLogin = require("./login_ctl.js");
+var ctlSignup = require("./signup_ctl.js");
+var ctlAdmin = require("./admin_ctl.js");
+var ctlSplash = require("./splash_ctl.js");
+var ctlBlogList = require("./blogList_ctl.js");
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
-var menu = require("./menu_ctl");
+var ctlMenu = require("./menu_ctl");
 
 function getStack() {
   return (new Error()).stack;
@@ -23,22 +23,22 @@ function loadAll() {
 
 function viewInitial() {
   if (location.hash == "#login") {
-    login.viewLogin();
+    ctlLogin.viewLogin();
   } else if (location.hash == "#signup") {
-    signup.viewSignup();
+    ctlSignup.viewSignup();
   } else if (location.hash == "#admin") {
-    admin.viewAdmin();
+    ctlAdmin.viewAdmin();
   } else {
     datastore("GET", "session", null, function (err,res) {
       if (err) {
         error(err);
-        splash.viewSplash();
+        ctlSplash.viewSplash();
         return;
       }
       if (res.userID) {
-        viewBlogList();
+        ctlBlogList.viewBlogList();
       } else {
-        splash.viewSplash();
+        ctlSplash.viewSplash();
       }
     });
   }
@@ -63,8 +63,8 @@ function loadAssetsFromServer(callback) {
 }
 
 global.loadAll = loadAll;
-login.setGlobals();
-menu.setGlobals();
-signup.setGlobals();
-admin.setGlobals();
-blogList.setGlobals();
+ctlLogin.setGlobals();
+ctlMenu.setGlobals();
+ctlSignup.setGlobals();
+ctlAdmin.setGlobals();
+ctlBlogList.setGlobals();
