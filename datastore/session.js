@@ -55,7 +55,7 @@ exports.login = function (req,res,next) {
         req.session.userID = userID;
       }
       res.json({
-        userID: userID,
+        username: result.username,
         success: success
       });
     });

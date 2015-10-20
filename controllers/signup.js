@@ -27,7 +27,6 @@ function clickSignup() {
       $("#placeForAlert").addClass("alert alert-warning");
       $("#placeForAlert").html(err);
     } else {
-      g_userID = res.userID;
       history.pushState("", document.title, window.location.pathname + window.location.search);
       ctlBlogList.viewBlogList();
     }

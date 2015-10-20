@@ -1,8 +1,7 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var ctlBlogList = require("./blogList");
-
-var g_userID;
+var modelData = require("../model/data");
 
 function viewLogin() {
   document.getElementById("main").innerHTML = views.list.login;
@@ -60,10 +59,9 @@ function clickLogin() {
       return;
     }
     if (res.success) {
-        g_userID = res.userID;
-        // clear hash
-        history.pushState("", document.title, window.location.pathname + window.location.search);
-        ctlBlogList.viewBlogList();
+      modelData.username = res.username;
+      history.pushState("", document.title, window.location.pathname + window.location.search);
+      ctlBlogList.viewBlogList();
     } else {
       $("#placeForAlert").addClass("alert alert-warning");
       $("#placeForAlert").html("Invalid username or password.");

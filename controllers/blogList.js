@@ -8,8 +8,10 @@ var ctlBlog = require("./blog");
 var ctlLogin = require("./login");
 
 function displayBlogList2HTML(blogList,callback) {
-  var menuHTML = views.list.menu;
-  var template = Handlebars.compile(views.list.blogList);
+  var template;
+  template = Handlebars.compile(views.list.menu);
+  var menuHTML = template({username:modelData.username});
+  template = Handlebars.compile(views.list.blogList);
   var blogListHTML = template(blogList);
   callback(menuHTML + blogListHTML);
 }
