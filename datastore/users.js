@@ -47,3 +47,22 @@ exports.deleteUser = function (req,res,next) {
     });
   });
 };
+
+exports.getProfile = function (req,res,next) {
+  if (!req.session.userID) {
+    return next("user is not logged in");
+  }
+
+  var users = req.db.collection("users");
+  users.findOne({_id:new ObjectID(req.session.userID)}, function (err, doc) {
+    if (err) {
+      return next(err);
+    }
+
+    if (!doc) {
+      return next("user not found");
+    }
+
+    res.json(doc);
+  });
+};

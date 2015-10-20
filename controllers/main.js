@@ -4,6 +4,7 @@ var ctlAdmin = require("./admin.js");
 var ctlSplash = require("./splash.js");
 var ctlBlogList = require("./blogList.js");
 var ctlMenu = require("./menu");
+var ctlProfile = require("./profile");
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 
@@ -28,6 +29,8 @@ function viewInitial() {
     ctlSignup.viewSignup();
   } else if (location.hash == "#admin") {
     ctlAdmin.viewAdmin();
+  } else if (location.hash == "#profile") {
+    ctlProfile.viewProfile();
   } else {
     datastore("GET", "session", null, function (err,res) {
       if (err) {
@@ -51,9 +54,10 @@ window.onhashchange = function () {
 
 function loadAssetsFromServer(callback) {
   var promiseList = [];
-  var names = ["admin","blog","blogList","login","menu","signup","splash"];
-  for (var i in names) {
-    promiseList[promiseList.length] = views.getTemplateSource(names[i]);
+  var names = ["admin","blog","blogList","login","menu","profile","signup","splash"];
+  for (var name of names) {
+    console.log("load", name);
+    promiseList[promiseList.length] = views.getTemplateSource(name);
   }
 
   var p = Promise.all(promiseList);
@@ -68,3 +72,4 @@ ctlMenu.setGlobals();
 ctlSignup.setGlobals();
 ctlAdmin.setGlobals();
 ctlBlogList.setGlobals();
+ctlProfile.setGlobals();

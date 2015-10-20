@@ -1,10 +1,15 @@
 var datastore = require("../scripts/datastore");
 var ctlBlogList = require("./blogList");
 var ctlSplash = require("./splash");
+var ctlProfile = require("./profile");
 
 function clickBlogList() {
   history.pushState("", document.title, window.location.pathname + window.location.search);
   ctlBlogList.viewBlogList();
+}
+
+function clickProfile() {
+  ctlProfile.viewProfile();
 }
 
 function clickLogout() {
@@ -23,4 +28,5 @@ function clickLogout() {
 exports.setGlobals = function () {
   global.clickBlogList = clickBlogList;
   global.clickLogout = clickLogout;
+  global.clickProfile = clickProfile;
 };

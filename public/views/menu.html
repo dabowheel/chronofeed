@@ -11,10 +11,8 @@
       </div>
       <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="javascript:void(0)">{{username}}</a></li>
-          {{#unless isAdmin}}
-          <li><a href="#admin">Admin</a></li>
-          {{/unless}}
+          <li {{#if isProfile}}class="active"{{/if}}><a href="#profile" onclick="clickProfile();">{{username}}</a></li>
+          <li {{#if isAdmin}}class="active"{{/if}}><a href="#admin">Admin</a></li>
           <li><a href="javascript:void(0)" onclick="clickLogout();"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
         </ul>
       </div>
