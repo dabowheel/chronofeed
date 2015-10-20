@@ -68,7 +68,7 @@ function validateSignupForm(values,passwordPlain) {
   } else if (passwordPlain.length < 8) {
     $("#inputPasswordFormGroup").addClass("has-error");
     $("#placeForAlert").addClass("alert alert-warning");
-    $("#placeForAlert").html("Password length must be greater than 8 characters.");
+    $("#placeForAlert").html("Password length must be at least 8 characters.");
     valid = false;
   } else {
     $("#inputPasswordFormGroup").removeClass("has-error");

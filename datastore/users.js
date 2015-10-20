@@ -66,3 +66,28 @@ exports.getProfile = function (req,res,next) {
     res.json(doc);
   });
 };
+
+exports.saveProfile = function (req,res,next) {
+  if (!req.session.userID) {
+    return next("user is not logged in");
+  }
+
+  util.getJSONFromBody(req, function (err,obj) {
+    if (err) {
+      return next(err);
+    }
+
+    var users = req.db.collection("users");
+    users.updateOne({_id:new ObjectID(req.session.userID)}, obj, function (err,result) {
+      if (err) {
+        return next(err);
+      }
+
+      if (!result.result.ok) {
+        return next("could not find user profile");
+      }
+
+      res.end();
+    });
+  });
+};

@@ -37,6 +37,7 @@ app.get("/datastore/logout",datastore_session.logout);
 app.get("/datastore/userList", datastore_users.userList);
 app.delete("/datastore/deleteUser", datastore_users.deleteUser);
 app.get("/datastore/getProfile", datastore_users.getProfile);
+app.post("/datastore/saveProfile", datastore_users.saveProfile);
 
 app.get("/datastore/readBlogList", datastore_blogs.readBlogList);
 app.post("/datastore/createBlog", datastore_blogs.createBlog);
