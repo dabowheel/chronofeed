@@ -56,7 +56,7 @@ function loadAssetsFromServer(callback) {
     promiseList[promiseList.length] = views.getTemplateSource(names[i]);
   }
 
-  p = Promise.all(promiseList);
+  var p = Promise.all(promiseList);
   p.then(function (val) {
     callback();
   });

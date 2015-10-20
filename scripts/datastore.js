@@ -29,7 +29,7 @@ function datastore(method,path,obj,callback) {
     request.send();
   } else {
     request.setRequestHeader("Content-type","application/json");
-    body = JSON.stringify(obj);
+    var body = JSON.stringify(obj);
     console.log(body);
     request.send(body);
   }

@@ -1,6 +1,8 @@
 module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-jshint");
   grunt.loadNpmTasks('grunt-browserify');
+  require('load-grunt-tasks')(grunt);
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-jasmine-nodejs');
 
   grunt.initConfig({
@@ -12,6 +14,23 @@ module.exports = function(grunt) {
     },
     browserify: {
       "public/scripts/grackle.js": ["controllers/*.js", "model/*.js", "scripts/*.js"]
+    },
+    babel: {
+        options: {
+            sourceMap: true
+        },
+        dist: {
+            files: {
+                'public/scripts/grackle.5.js': 'public/scripts/grackle.js'
+            }
+        }
+    },
+    uglify: {
+      grackle: {
+        files: {
+          'public/scripts/grackle.5.min.js': ["public/scripts/grackle.5.js"]
+        }
+      }
     },
     jasmine_nodejs: {
       // task specific (default) options
@@ -50,5 +69,5 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask("default",["jshint","browserify","jasmine_nodejs"]);
+  grunt.registerTask("default",["jshint","browserify","babel","uglify","jasmine_nodejs"]);
 };
