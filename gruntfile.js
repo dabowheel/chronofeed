@@ -4,6 +4,7 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-jasmine-nodejs');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.initConfig({
     jshint: {
@@ -69,6 +70,10 @@ module.exports = function(grunt) {
               "test/helpers/**"
           ]
       }
+    },
+    watch: {
+      files: ["*.js", "controllers/*.js", "model/*.js", "datastore/*.js", "views/*.html"],
+      tasks: ['default']
     }
   });
 
