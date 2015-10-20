@@ -12,6 +12,9 @@ module.exports = function(grunt) {
       },
       all: ["gruntfile.js","app.js","controllers/**/*.js","model/**/*.js","scripts/**/*.js","datastore/**/*.js"]
     },
+    eslint: {
+        target: ["*.js", "controllers/**/*.js", "model/**/*.js", "scripts/**/*.js"]
+    },
     browserify: {
       "public/scripts/grackle.js": ["controllers/*.js", "model/*.js", "scripts/*.js"]
     },
@@ -69,5 +72,5 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask("default",["jshint","browserify","babel","uglify","jasmine_nodejs"]);
+  grunt.registerTask("default",["jshint","eslint","browserify","babel","uglify","jasmine_nodejs"]);
 };
