@@ -7,6 +7,7 @@ var ctlMenu = require("./menu");
 var ctlProfile = require("./profile");
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
+var modelData = require("../model/data");
 
 function getStack() {
   return (new Error()).stack;
@@ -27,21 +28,33 @@ function viewInitial() {
     ctlLogin.viewLogin();
   } else if (location.hash == "#signup") {
     ctlSignup.viewSignup();
-  } else if (location.hash == "#admin") {
-    ctlAdmin.viewAdmin();
-  } else if (location.hash == "#profile") {
-    ctlProfile.viewProfile();
   } else {
     datastore("GET", "session", null, function (err,res) {
       if (err) {
-        error(err);
+        if (location.hash) {
+          history.pushState("", document.title, window.location.pathname + window.location.search);
+        }
+        ctlSplash.viewSplash();
+        $("#placeForAlert").addClass("alert alert-warning");
+        $("#placeForAlert").html(err);
+        return;
+      }
+
+      if (!res.username) {
         ctlSplash.viewSplash();
         return;
       }
-      if (res.userID) {
-        ctlBlogList.viewBlogList();
+
+      modelData.username = res.username;
+      if (location.hash == "#admin") {
+        ctlAdmin.viewAdmin();
+      } else if (location.hash == "#profile") {
+        ctlProfile.viewProfile();
       } else {
-        ctlSplash.viewSplash();
+        if (location.hash) {
+          history.pushState("", document.title, window.location.pathname + window.location.search);
+        }
+        ctlBlogList.viewBlogList();
       }
     });
   }

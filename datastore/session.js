@@ -1,7 +1,9 @@
 var util = require("./util");
 
 exports.session = function (req,res,next) {
-  res.json({userID:req.session.userID});
+  res.json({
+    username: req.session.username
+  });
 };
 
 exports.signup = function (req,res,next) {
@@ -53,6 +55,7 @@ exports.login = function (req,res,next) {
       }
       if (success) {
         req.session.userID = userID;
+        req.session.username = result.username;
       }
       res.json({
         username: result.username,
@@ -66,5 +69,6 @@ exports.logout = function (req,res,next) {
   console.log("logout");
 
   delete req.session.userID;
+  delete req.session.username;
   res.end();
 };
