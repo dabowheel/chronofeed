@@ -92,12 +92,13 @@ exports.readBlog = function (req,res,next) {
         return next("could not find blog");
       }
 
-      console.log("res2",res2);
       var blog = new modelBlog.Blog(res2._id, res2.title);
 
       var posts = req.db.collection("posts");
       posts.find({blogID:blog._id}, function (err,res3) {
         res3.toArray(function (err, list) {
+          console.log("toArray err",err);
+          console.log("toArray list",list);
           if (err) {
             return next(err);
           }
@@ -106,7 +107,7 @@ exports.readBlog = function (req,res,next) {
             var post = new modelBlog.Post(obj._id, obj.title, obj.text, obj.date, obj.blogID);
             blog.addPost(post);
           }
-          res.json(blog.exportObject);
+          res.json(blog.exportObject());
         });
       });
     });

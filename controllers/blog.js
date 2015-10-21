@@ -1,14 +1,16 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var modelData = require("../model/data");
+var modelBlog = require("../model/blog");
 
 function displayBlog2HTML(blog,callback) {
   Handlebars.registerHelper("encodeText", function (str) {
     return str.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;").replace(/\n/g,"<br>");
   });
 
-  menuHTML = views.menu;
-  var template = Handlebars.compile(views.blog);
+  var template = Handlebars.compile(views.list.menu);
+  var menuHTML = template({username:modelData.username});
+  template = Handlebars.compile(views.list.blog);
   var blogHTML = template(blog);
   callback(menuHTML + blogHTML);
 }
@@ -20,15 +22,16 @@ function displayBlog(blog) {
 }
 
 function viewBlog(_id) {
-  datastore("GET", "readBlog", {_id:_id}, function (err,res) {
+  datastore("POST", "readBlog", {_id:_id}, function (err,res) {
     if (err) {
       $("#placeForAlert").addClass("alert alert-warning");
       $("#placeForAlert").html(err);
       return;
     }
 
-    modelData.blog = new Blog();
-    modelData.blog.loadObject(res.blog);
+    console.log("blog",res);
+    modelData.blog = new modelBlog.Blog();
+    modelData.blog.loadObject(res);
     displayBlog(modelData.blog);
   });
 }

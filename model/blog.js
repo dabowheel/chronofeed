@@ -28,6 +28,19 @@ Blog.prototype.loadObject = function (obj) {
     }
   }
 };
+Blog.prototype.exportObject = function () {
+  var ret = {
+    _id: this._id,
+    title: this.title,
+    postList: []
+  };
+
+  for (var post of this.postList) {
+    ret.postList.push(post.exportObject());
+  }
+
+  return ret;
+};
 Blog.prototype.editTitle = function(title) {
   this.title = title;
 };
