@@ -39,6 +39,7 @@ function viewBlog(_id) {
 function editBlogTitle() {
   modelData.blog.editBlogTitle = true;
   displayBlog(modelData.blog);
+  document.getElementById("inputTitle").select();
 }
 
 function saveBlogTitleChange() {
@@ -63,8 +64,8 @@ function saveBlogTitleChange() {
 }
 
 function cancelBlogTitleChange() {
-  g_blog.editBlogTitle = false;
-  displayBlog(g_blog);
+  modelData.blog.editBlogTitle = false;
+  displayBlog(modelData.blog);
 }
 
 function addPost() {
@@ -164,3 +165,8 @@ function deletePost(domID) {
 }
 
 exports.viewBlog = viewBlog;
+exports.setGlobals = function () {
+  global.editBlogTitle = editBlogTitle;
+  global.saveBlogTitleChange = saveBlogTitleChange;
+  global.cancelBlogTitleChange = cancelBlogTitleChange;
+};
