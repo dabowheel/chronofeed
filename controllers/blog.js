@@ -2,6 +2,7 @@ var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var modelData = require("../model/data");
 var modelBlog = require("../model/blog");
+var modelPost = require("../model/post");
 
 function displayBlog2HTML(blog,callback) {
   Handlebars.registerHelper("encodeText", function (str) {
@@ -83,10 +84,11 @@ function cancelBlogTitleChange() {
 }
 
 function addPost() {
-  var domID = g_blog.getDOMID();
-  g_blog.addPost(new Post(domID,0,"","",new Date(),g_blog.blogID,g_blog.userID));
-  g_blog.editPost(domID);
-  displayBlog(g_blog);
+  var domID = modelData.blog.getDOMID();
+  modelData.blog.addPost(new modelPost.Post(0, "", "", new Date(), modelData.blog._id, domID));
+  modelData.blog.editPost(domID);
+  displayBlog(modelData.blog);
+  document.getElementById("posttitle").select();
 }
 
 function getPost() {
@@ -108,7 +110,7 @@ function getPost() {
 
 function savePostChanges(domID) {
   var values = getPost();
-  var post = new Post(values.domID,values.postID,values.title,values.text,values.date,values.blogID,values.userID);
+  var post = new modelPost.Post(values.domID,values.postID,values.title,values.text,values.date,values.blogID,values.userID);
   g_blog.stopEditingPost(domID);
   if (post.postID) {
     g_blog.savePost(domID,post);
@@ -144,13 +146,13 @@ function savePostChanges(domID) {
 
 function cancelPostChanges(domID) {
   var values = getPost();
-  var post = g_blog.getPost(domID);
-  if (post.postID) {
-    g_blog.stopEditingPost(domID);
+  var post = modelData.blog.getPost(domID);
+  if (post._id) {
+    modelData.blog.stopEditingPost(domID);
   } else {
-    g_blog.deletePost(domID);
+    modelData.blog.deletePost(domID);
   }
-  displayBlog(g_blog);
+  displayBlog(modelData.blog);
 }
 
 function editPost(domID) {
@@ -179,4 +181,9 @@ exports.setGlobals = function () {
   global.editBlogTitle = editBlogTitle;
   global.saveBlogTitleChange = saveBlogTitleChange;
   global.cancelBlogTitleChange = cancelBlogTitleChange;
+  global.addPost = addPost;
+  global.savePostChanges = savePostChanges;
+  global.cancelPostChanges = cancelPostChanges;
+  global.editPost = editPost;
+  global.deletePost = deletePost;
 };

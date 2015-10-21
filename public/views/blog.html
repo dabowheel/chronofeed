@@ -40,12 +40,11 @@
           <input id="postblogid" type="hidden" value="{{blogID}}"/>
           <input id="postuserid" type="hidden" value="{{userID}}"/>
           <div><strong>Edit</strong></div>
-          <div><input id="posttitle" type="text" style="width:100%;box-sizing:border-box;" value="{{title}}"/></div>
-          <div><textarea id="posttext" rows="5" style="width:100%;box-sizing:border-box;">{{text}}</textarea></div>
-          <div><input id="postdateonly" type="date" value="{{dateOnly}}"/><input id="posttimeonly" type="time" value="{{timeOnly}}"/></div>
-        </td>
-        <td>
-          <div><span><button class="fillerbutton">Here</button></span><span class="listbutton"><button class="savebutton" onclick="savePostChanges('{{domID}}');">Accept</button><button class="savebutton" onclick="cancelPostChanges('{{domID}}');">Cancel</button></span></div>
+          <div><input class="form-control" id="posttitle" type="text" value="{{title}}"/></div>
+          <div><textarea class="form-control" id="posttext" rows="5">{{text}}</textarea></div>
+          <div><input class="form-control" id="postdateonly" type="date" value="{{dateOnly}}"/><input class="form-control" id="posttimeonly" type="time" value="{{timeOnly}}"/></div>
+          <button class="btn btn-primary" onclick="savePostChanges('{{domID}}');">Accept</button>
+          <button class="btn btn-primary" onclick="cancelPostChanges('{{domID}}');">Cancel</button>
         </td>
 
         {{else}}
