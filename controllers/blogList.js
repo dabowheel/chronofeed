@@ -46,7 +46,7 @@ function viewBlogList() {
 }
 
 function addBlog() {
-  var blogInfo = new BlogInfo(0, modelData.blogList.getNewTitle(), modelData.blogList.getDOMID());
+  var blogInfo = new modelBlog.BlogInfo(0, modelData.blogList.getNewTitle(), modelData.blogList.getDOMID());
   modelData.blogList.add(blogInfo);
   displayBlogList(modelData.blogList);
   datastore("POST", "createBlog", blogInfo.exportObject(), function (err,res) {
