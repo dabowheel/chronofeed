@@ -42,28 +42,42 @@ function editBlogTitle() {
   document.getElementById("inputTitle").select();
 }
 
+function getBlogTitle() {
+  return document.getElementById("inputTitle").value;
+}
+
 function saveBlogTitleChange() {
   var title = getBlogTitle();
-  if (title != g_blog.title && g_blogList.hasTitle(title)) {
-    alert("Another blog already has this title: " + title);
+  if (title === modelData.blog.title) {
+    cancelBlogTitleChange();
     return;
   }
-  g_blog.editTitle(getBlogTitle());
-  g_blog.editBlogTitle = false;
-  displayBlog(g_blog);
-  var req = {
-    "type": "blogInfo",
-    "action": "update",
-    "blogInfo": new BlogInfo("",g_blog.blogID, g_blog.title,g_blog.userID)
-  };
-  datastore(req, function (res) {
-    if (!res.success) {
-      error(res.error);
+
+  if (title === "") {
+    $("#inputTitleFormGroup").addClass("has-error");
+    return;
+  } else if (modelData.blogList.hasTitle(title)) {
+    $("#placeForAlert").addClass("alert alert-warning");
+    $("#placeForAlert").html("A blog with this title already exists");
+    return;
+  }
+
+  modelData.blog.editTitle(title);
+  cancelBlogTitleChange();
+
+  var blogInfo = new modelBlog.BlogInfo(modelData.blog._id, modelData.blog.title);
+  datastore("POST", "saveBlogTitle", blogInfo.exportObject(), function (err, res) {
+    if (err) {
+      $("#placeForAlert").addClass("alert alert-warning");
+      $("#placeForAlert").html(err);
+      return;
     }
   });
 }
 
 function cancelBlogTitleChange() {
+  $("#placeForAlert").removeClass("alert alert-warning");
+  $("#placeForAlert").html("");
   modelData.blog.editBlogTitle = false;
   displayBlog(modelData.blog);
 }
@@ -90,10 +104,6 @@ function getPost() {
     dateOnly: dateOnly,
     timeOnly: timeOnly
   };
-}
-
-function getBlogTitle() {
-  return document.getElementById("blogtitle").value;
 }
 
 function savePostChanges(domID) {

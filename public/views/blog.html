@@ -6,19 +6,22 @@
 
   {{#if editBlogTitle}}
   <div class="row">
-    <h2>
-      <div class="col-md-3 col-lg-3">
-        <input class="form-control" id="inputTitle" type="text" value="{{title}}"/>
+    <div class="col-md-6 col-lg-6">
+      <div class="form-group" id="inputTitleFormGroup">
+        <input class="form-control gr-form-control" id="inputTitle" type="text" value="{{title}}"/>
+        <button class="btn btn-primary" onclick="saveBlogTitleChange();">Accept</button>
+        <button class="btn btn-primary" onclick="cancelBlogTitleChange()">Cancel</button>
       </div>
-      <button class="btn btn-primary" onclick="saveBlogTitleChange();">Accept</button>
-      <button class="btn btn-primary" onclick="cancelBlogTitleChange()">Cancel</button>
-    </h2>
+    </div>
   </div>
 
   {{else}}
   <div class="row">
-    <div class="col-mid-3 col-lg-3">
-      <h2>{{title}} <button class="btn btn-primary" onclick="editBlogTitle();">Edit Name</button></h2>
+    <div class="col-mid-12 col-lg-12">
+      <div class="form-group" id="inputTitleFormGroup">
+        <span class="gr-blog-title">{{title}}</span>
+        <button class="btn btn-primary" onclick="editBlogTitle();">Edit Name</button>
+      </div>
     </div>
   </div>
   {{/if}}

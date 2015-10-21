@@ -113,3 +113,29 @@ exports.readBlog = function (req,res,next) {
     });
   });
 };
+
+exports.saveBlogTitle = function (req,res,next) {
+  if (!req.session.userID) {
+    return next("user not logged in");
+  }
+
+  util.getJSONFromBody(req, function (err,obj) {
+    if (err) {
+      return next(err);
+    }
+
+    var blogs = req.db.collection("blogs");
+
+    blogs.updateOne({_id: new ObjectID(obj._id)}, {title: obj.title}, function (err, res2) {
+      if (err) {
+        return next(err);
+      }
+
+      if (res2.modifiedCount < 1) {
+        return next("could not find blog");
+      }
+
+      res.end();
+    });
+  });
+};
