@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/dabowheel/grackle",
   "dependencies": {
+    "connect-mongo": "^0.8.2",
     "cookie-parser": "^1.3.5",
     "express": "^4.12.4",
     "express-session": "^1.11.2",

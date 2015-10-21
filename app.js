@@ -4,18 +4,22 @@ var app = express();
 var datastore = require("./datastore/main");
 var cookieParser = require("cookie-parser");
 var session = require("express-session");
+var MongoStore = require('connect-mongo')(session);
+var mongodb = require("mongodb");
+var MongoClient = mongodb.MongoClient;
 var datastore_session = require("./datastore/session");
 var datastore_users = require("./datastore/users");
 var datastore_blogs = require("./datastore/blogs");
-var mongodb = require("mongodb");
-var MongoClient = mongodb.MongoClient;
 
 app.use(express.static('public'));
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: new MongoStore({
+    url: process.env.MONGODB_URL
+  })
 }));
 
 app.use("/datastore", function (req,res,next) {
