@@ -4,37 +4,62 @@
     </div>
   </div>
 
-  {{!-- editing blog title --}}
   {{#if editBlogTitle}}
-  <div><input id="blogtitle" type="text" class="field" value="{{title}}"/></div>
-  <div><span><button class="fillerbutton">Here</button></span><span class="listbutton"><button class="savebutton" onclick="saveBlogTitleChange();">Accept</button><button class="savebutton" onclick="cancelBlogTitleChange()">Cancel</button></span></div>
-  {{!-- not editing blog title --}}
-  {{else}}
-  <div class="blogtitlebox"><strong class="blogtitle">{{title}}</strong><button onclick="editBlogTitle();">Edit</button></div>
-  {{/if}}
-  <div id="blogmessage"></div>
-  <button onclick="addPost();">Add Post</button>
-  {{!-- each post --}}
-  {{#each postList}}
-  <div class="post">
-  {{!-- if editing post --}}
-  {{#if edit}}
-    <input id="postdomid" type="hidden" value="{{domID}}"/>
-    <input id="postpostid" type="hidden" value="{{postID}}"/>
-    <input id="postdate" type="hidden" value="{{dateString}}"/>
-    <input id="postblogid" type="hidden" value="{{blogID}}"/>
-    <input id="postuserid" type="hidden" value="{{userID}}"/>
-    <div><strong>Edit</strong></div>
-    <div><input id="posttitle" type="text" style="width:100%;box-sizing:border-box;" value="{{title}}"/></div>
-    <div><textarea id="posttext" rows="5" style="width:100%;box-sizing:border-box;">{{text}}</textarea></div>
-    <div><input id="postdateonly" type="date" value="{{dateOnly}}"/><input id="posttimeonly" type="time" value="{{timeOnly}}"/></div>
-    <div><span><button class="fillerbutton">Here</button></span><span class="listbutton"><button class="savebutton" onclick="savePostChanges('{{domID}}');">Accept</button><button class="savebutton" onclick="cancelPostChanges('{{domID}}');">Cancel</button></span></div>
-  {{!-- not editing post --}}
-  {{else}}
-    <div><strong>{{title}}</strong><span class="listbutton"><button onclick="editPost('{{domID}}');">Edit</button><button onclick="deletePost('{{domID}}');">Delete</button></span></div>
-    <div>{{{encodeText text}}}</div>
-    <div>{{dateString}}<button class="hiddenbutton">Button to float against</button></div>
-  {{/if}}
+  <div class="row">
+    <div class="col-mid-3 col-lg-3">
+      <div class="form-group" id="inputTitleFormGroup">
+        <label class="control-label" for="inputTitle">Title</label>
+        <input class="form-control" id="inputTitle" type="text" value="{{title}}"/>
+      </div>
+      <button class="btn btn-primary" onclick="saveBlogTitleChange();">Accept</button>
+      <button class="btn btn-primary" onclick="cancelBlogTitleChange()">Cancel</button>
+    </div>
   </div>
-  {{/each}}
+
+  {{else}}
+  <div class="row">
+    <div class="col-mid-3 col-lg-3">
+      <h2>{{title}} <button class="btn btn-primary" onclick="editBlogTitle();">Edit</button></h2>
+    </div>
+  </div>
+  {{/if}}
+
+  <button class="btn btn-primary" onclick="addPost();">Add Post</button>
+  <table class="table table-hover">
+    <tbody>
+      {{#each postList}}
+      <tr>
+        {{!-- if editing post --}}
+        {{#if edit}}
+        <td>
+          <input id="postdomid" type="hidden" value="{{domID}}"/>
+          <input id="postpostid" type="hidden" value="{{postID}}"/>
+          <input id="postdate" type="hidden" value="{{dateString}}"/>
+          <input id="postblogid" type="hidden" value="{{blogID}}"/>
+          <input id="postuserid" type="hidden" value="{{userID}}"/>
+          <div><strong>Edit</strong></div>
+          <div><input id="posttitle" type="text" style="width:100%;box-sizing:border-box;" value="{{title}}"/></div>
+          <div><textarea id="posttext" rows="5" style="width:100%;box-sizing:border-box;">{{text}}</textarea></div>
+          <div><input id="postdateonly" type="date" value="{{dateOnly}}"/><input id="posttimeonly" type="time" value="{{timeOnly}}"/></div>
+        </td>
+        <td>
+          <div><span><button class="fillerbutton">Here</button></span><span class="listbutton"><button class="savebutton" onclick="savePostChanges('{{domID}}');">Accept</button><button class="savebutton" onclick="cancelPostChanges('{{domID}}');">Cancel</button></span></div>
+        </td>
+
+        {{else}}
+        <td>
+          <div><strong>{{title}}</strong></div>
+          <div>{{{encodeText text}}}</div>
+          <div>{{dateString}}</div>
+        </td>
+        <td>
+          <button class="btn btn-primary" onclick="editPost('{{domID}}');">Edit</button>
+          <button class="btn btn-primary" onclick="deletePost('{{domID}}');">Delete</button>
+        </td>
+        {{/if}}
+
+      {{/each}}
+      </tr>
+    </tbody>
+  </table>
 </div>
