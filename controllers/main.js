@@ -57,7 +57,7 @@ function viewInitial() {
       console.log("location.pathname",location.pathname);
       if (location.pathname == "/admin") {
         ctlAdmin.viewAdmin();
-      } else if (location.hash == "#profile") {
+      } else if (location.pathname == "/profile") {
         ctlProfile.viewProfile();
       } else if (location.pathname.match(blogRE)) {
         var title = location.pathname.match(blogRE)[1];

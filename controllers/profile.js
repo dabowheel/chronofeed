@@ -1,18 +1,20 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var modelData = require("../model/data");
+var page = require("../scripts/page");
 
 function getProfile(callback) {
   if (modelData.profile) {
-    callback(null, modelData.profile);
+    callback();
     return;
   }
 
   datastore("GET", "getProfile", null, function (err,res) {
     if (err) {
-      return callback(err, null);
+      return callback(err);
     }
-    callback(null, res);
+    modelData.profile = res;
+    callback();
   });
 }
 
@@ -28,14 +30,16 @@ function displayProfile(profile) {
 }
 
 function viewProfile() {
-  getProfile(function (err, res) {
+  getProfile(function (err) {
     if (err) {
       $("#placeForAlert").addClass("alert alert-warning");
+      $("#placeForAlert").html(err);
       displayProfile({});
       return;
     }
-    modelData.profile = res;
-    displayProfile(res);
+
+    page.setURL("/profile");
+    displayProfile(modelData.profile);
   });
 }
 
