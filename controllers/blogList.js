@@ -6,6 +6,7 @@ var modelData = require("../model/data");
 var ctlBlogList = require("./blogList");
 var ctlBlog = require("./blog");
 var ctlLogin = require("./login");
+var page = require("../scripts/page");
 
 function displayBlogList2HTML(blogList,callback) {
   var template;
@@ -17,6 +18,7 @@ function displayBlogList2HTML(blogList,callback) {
 }
 
 function displayBlogList(blogList) {
+  page.setURL("/", "Grackle");
   displayBlogList2HTML(blogList, function (html) {
     document.getElementById("main").innerHTML = html;
   });
