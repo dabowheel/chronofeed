@@ -11,3 +11,7 @@
 .gr-row-buttons {
   float: right;
 }
+
+.gr-datetime {
+  width: auto;
+}
