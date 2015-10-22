@@ -49,7 +49,8 @@ function viewInitial() {
 
       modelData.username = res.username;
       var blogRE = /^\/blog\/(.*)$/;
-      if (location.hash == "#admin") {
+      console.log("location.pathname",location.pathname);
+      if (location.pathname == "/admin") {
         ctlAdmin.viewAdmin();
       } else if (location.hash == "#profile") {
         ctlProfile.viewProfile();

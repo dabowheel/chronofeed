@@ -26,6 +26,10 @@ app.get("/blog/*", function (req,res,next) {
   res.sendFile(__dirname + "/public/index.html");
 });
 
+app.get("/admin", function (req,res,next) {
+  res.sendFile(__dirname + "/public/index.html");
+});
+
 app.use("/datastore", function (req,res,next) {
   MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
     if (error) {

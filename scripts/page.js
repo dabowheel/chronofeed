@@ -9,9 +9,6 @@ function setURL(url,title) {
     if (!title) {
       title = document.title;
     }
-    if (url != "/") {
-      url = "/" + url;
-    }
     console.log("setting url", url);
     history.pushState("", title, url);
     document.title = title;

@@ -3,14 +3,18 @@ var ctlBlogList = require("./blogList");
 var ctlSplash = require("./splash");
 var ctlProfile = require("./profile");
 var modelData = require("../model/data");
+var ctlAdmin = require("./admin");
 
 function clickBlogList() {
-  history.pushState("", document.title, window.location.pathname + window.location.search);
   ctlBlogList.viewBlogList();
 }
 
 function clickProfile() {
   ctlProfile.viewProfile();
+}
+
+function clickAdmin() {
+  ctlAdmin.viewAdmin();
 }
 
 function clickLogout() {
@@ -31,4 +35,5 @@ exports.setGlobals = function () {
   global.clickBlogList = clickBlogList;
   global.clickLogout = clickLogout;
   global.clickProfile = clickProfile;
+  global.clickAdmin = clickAdmin;
 };

@@ -2,6 +2,7 @@ var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var modelUserList = require("../model/userList");
 var modelData = require("../model/data");
+var page = require("../scripts/page");
 
 function displayAdmin(adminList) {
   var template = Handlebars.compile(views.list.menu);
@@ -22,6 +23,7 @@ function viewAdmin() {
     modelData.userList = new modelUserList.UserList();
     modelData.userList.loadObject(res);
     console.log("user list", modelData.userList);
+    page.setURL("/admin", "Grackle | Admin");
     displayAdmin(modelData.userList);
   });
 }
