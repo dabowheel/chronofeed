@@ -12,16 +12,30 @@ function displayAdmin(adminList) {
   document.getElementById("main").innerHTML = menuHTML + adminHTML;
 }
 
-function viewAdmin() {
+function getAdmin(callback) {
+  if (modelData.UserList) {
+    return callback();
+  }
+
   datastore("GET", "userList", null, function (err,res) {
+    if (err) {
+      return callback(err);
+    }
+
+    modelData.userList = new modelUserList.UserList();
+    modelData.userList.loadObject(res);
+    callback();
+  });
+}
+
+function viewAdmin() {
+  getAdmin(function (err) {
     if (err) {
       $("#placeForAlert").addClass("alert alert-warning");
       $("#placeForAlert").html(err);
       return;
     }
 
-    modelData.userList = new modelUserList.UserList();
-    modelData.userList.loadObject(res);
     console.log("user list", modelData.userList);
     page.setURL("/admin", "Grackle | Admin");
     displayAdmin(modelData.userList);
