@@ -85,7 +85,7 @@ function cancelBlogTitleChange() {
 
 function addPost() {
   var domID = modelData.blog.getDOMID();
-  modelData.blog.addPost(new modelPost.Post(0, "", "", new Date(), modelData.blog._id, domID));
+  modelData.blog.addPost(new modelPost.Post("", "", "", new Date(), modelData.blog._id, domID));
   modelData.blog.editPost(domID);
   displayBlog(modelData.blog);
   document.getElementById("posttitle").select();
