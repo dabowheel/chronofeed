@@ -35,8 +35,8 @@ Post.prototype.load = function (_id,title,text,date,blogID,domID) {
 Post.prototype.loadObject = function (post) {
   this.load(post._id, post.title, post.text, new Date(post.date), post.blogID, post.domID);
 };
-Post.prototype.exportObject = function () {
-  return {
+Post.prototype.exportObject = function (noID, noDOMID) {
+  var ret = {
     _id: this._id,
     title: this.title,
     text: this.text,
@@ -44,6 +44,16 @@ Post.prototype.exportObject = function () {
     blogID: this.blogID,
     domID: this.domID
   };
+
+  if (noID) {
+    delete ret._id;
+  }
+
+  if (noDOMID) {
+    delete ret.domID;
+  }
+
+  return ret;
 };
 
 exports.Post = Post;

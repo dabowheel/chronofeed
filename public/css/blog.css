@@ -7,3 +7,7 @@
 .gr-blog-title {
   font-weight: bold;
 }
+
+.gr-row-buttons {
+  float: right;
+}

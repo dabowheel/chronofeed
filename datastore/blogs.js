@@ -2,6 +2,7 @@ var util = require("./util");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 var modelBlog = require("../model/blog");
+var modelPost = require("../model/post");
 
 exports.readBlogList = function (req,res,next) {
   console.log("blogList read");
@@ -95,7 +96,10 @@ exports.readBlog = function (req,res,next) {
       var blog = new modelBlog.Blog(res2._id, res2.title);
 
       var posts = req.db.collection("posts");
-      posts.find({blogID:blog._id}, function (err,res3) {
+      console.log("blogID",blog._id);
+      console.log("blogID",blog._id.toString());
+      console.log("blogID type",typeof blog._id);
+      posts.find({blogID:blog._id.toString()}, function (err,res3) {
         res3.toArray(function (err, list) {
           console.log("toArray err",err);
           console.log("toArray list",list);
@@ -104,7 +108,7 @@ exports.readBlog = function (req,res,next) {
           }
 
           for (obj of list) {
-            var post = new modelBlog.Post(obj._id, obj.title, obj.text, obj.date, obj.blogID);
+            var post = new modelPost.Post(obj._id, obj.title, obj.text, new Date(obj.date), obj.blogID);
             blog.addPost(post);
           }
           res.json(blog.exportObject());

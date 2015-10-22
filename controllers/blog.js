@@ -96,50 +96,43 @@ function getPost() {
   var timeOnly = document.getElementById("posttimeonly").value;
   var date = new Date(dateOnly + " " + timeOnly);
   return {
-    domID: document.getElementById("postdomid").value,
-    postID: Number(document.getElementById("postpostid").value),
+    _id: Number(document.getElementById("postpostid").value),
     title: document.getElementById("posttitle").value,
     text: document.getElementById("posttext").value,
     date: date,
-    blogID: Number(document.getElementById("postblogid").value),
-    userID: Number(document.getElementById("postuserid").value),
+    blogID: document.getElementById("postblogid").value,
     dateOnly: dateOnly,
-    timeOnly: timeOnly
+    timeOnly: timeOnly,
+    domID: document.getElementById("postdomid").value
   };
 }
 
 function savePostChanges(domID) {
   var values = getPost();
-  var post = new modelPost.Post(values.domID,values.postID,values.title,values.text,values.date,values.blogID,values.userID);
-  g_blog.stopEditingPost(domID);
-  if (post.postID) {
-    g_blog.savePost(domID,post);
-    displayBlog(g_blog);
-    req = {
-      type: "post",
-      action: "update",
-      post: post
-    };
-    datastore(req,function (res) {
-      if (!res.success) {
-        error(res.error);
+  var post = new modelPost.Post(values._id, values.title, values.text, values.date, values.blogID, values.domID);
+  modelData.blog.stopEditingPost(domID);
+  if (post._id) {
+    modelData.blog.savePost(domID,post);
+    displayBlog(modelData.blog);
+    datastore("POST", "updatePost", post.exportObject(), function (err,res) {
+      if (err) {
+        $("#placeForAlert").addClass("alert alert-warning");
+        $("#placeForAlert").html(err);
+        return;
       }
     });
   } else {
-    g_blog.savePost(domID,post);
-    displayBlog(g_blog);
-    req = {
-      type: "post",
-      action: "create",
-      post: post
-    };
-    datastore(req,function (res) {
-      if (res.success) {
-        post._id = res._id;
-        displayBlog(g_blog);
-      } else {
-        error(res.error);
+    modelData.blog.savePost(domID,post);
+    displayBlog(modelData.blog);
+    datastore("POST", "createPost", post.exportObject(), function (err,res) {
+      if (err) {
+        $("#placeForAlert").addClass("alert alert-warning");
+        $("#placeForAlert").html(err);
+        return;
       }
+
+      post._id = res._id;
+      displayBlog(modelData.blog);
     });
   }
 }
@@ -156,22 +149,19 @@ function cancelPostChanges(domID) {
 }
 
 function editPost(domID) {
-  g_blog.editPost(domID);
-  displayBlog(g_blog);
+  modelData.blog.editPost(domID);
+  displayBlog(modelData.blog);
 }
 
 function deletePost(domID) {
-  post = g_blog.deletePost(domID);
-  displayBlog(g_blog);
-  req = {
-    type: "post",
-    action: "delete",
-    postID: post.postID
-  };
-  datastore(req,function (res) {
-    if (res.success) {
-    } else {
-      error(res.error);
+  var post = modelData.blog.deletePost(domID);
+  displayBlog(modelData.blog);
+
+  datastore("DELETE", "deletePost", post.exportObject(), function (err,res) {
+    if (err) {
+      $("#placeForAlert").addClass("alert alert-warning");
+      $("#placeForAlert").html(err);
+      return;
     }
   });
 }

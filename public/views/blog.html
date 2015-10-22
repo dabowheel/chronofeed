@@ -31,14 +31,12 @@
     <tbody>
       {{#each postList}}
       <tr>
-        {{!-- if editing post --}}
         {{#if edit}}
         <td>
-          <input id="postdomid" type="hidden" value="{{domID}}"/>
           <input id="postpostid" type="hidden" value="{{postID}}"/>
           <input id="postdate" type="hidden" value="{{dateString}}"/>
           <input id="postblogid" type="hidden" value="{{blogID}}"/>
-          <input id="postuserid" type="hidden" value="{{userID}}"/>
+          <input id="postdomid" type="hidden" value="{{domID}}"/>
           <div><strong>Edit</strong></div>
           <div><input class="form-control" id="posttitle" type="text" value="{{title}}"/></div>
           <div><textarea class="form-control" id="posttext" rows="5">{{text}}</textarea></div>
@@ -54,8 +52,10 @@
           <div>{{dateString}}</div>
         </td>
         <td>
-          <button class="btn btn-primary" onclick="editPost('{{domID}}');">Edit</button>
-          <button class="btn btn-primary" onclick="deletePost('{{domID}}');">Delete</button>
+          <span class="gr-row-buttons">
+            <button class="btn btn-primary" onclick="editPost('{{domID}}');">Edit</button>
+            <button class="btn btn-primary" onclick="deletePost('{{domID}}');">Delete</button>
+          </span>
         </td>
         {{/if}}
 
