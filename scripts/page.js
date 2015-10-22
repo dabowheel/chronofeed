@@ -14,6 +14,7 @@ function setURL(url,title) {
     }
     console.log("setting url", url);
     history.pushState("", title, url);
+    document.title = title;
   }
 }
 
