@@ -13,18 +13,18 @@ function Blog(_id,title) {
 Blog.prototype.getDOMID = function () {
   return (++this.maxPostDOMID).toString();
 };
-Blog.prototype.appendObjectPost = function (obj) {
-  var post = new modelPost.Post();
-  post.loadObject(obj);
-  this.postList[this.postList.length] = post;
-};
-Blog.prototype.loadObject = function (obj) {
+Blog.prototype.loadObject = function (obj,generateDOMID) {
   this._id = obj._id;
   this.title = obj.title;
 
   if (obj && obj.postList && obj.postList.length) {
-    for (var post of obj.postList) {
-      this.appendObjectPost(post);
+    for (var postObj of obj.postList) {
+      var post = new modelPost.Post();
+      post.loadObject(postObj);
+      if (generateDOMID) {
+        post.domID = this.getDOMID();
+      }
+      this.postList[this.postList.length] = post;
     }
   }
 };
@@ -51,9 +51,10 @@ Blog.prototype.editPost = function (domID) {
   for (var i = 0; i < this.postList.length; i++) {
     if (this.postList[i].domID == domID) {
       this.postList[i].edit = true;
-      break;
+      return true;
     }
   }
+  return false;
 };
 Blog.prototype.stopEditingPost = function (domID) {
   for (var i = 0; i < this.postList.length; i++) {

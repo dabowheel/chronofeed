@@ -32,7 +32,7 @@ function viewBlog(_id) {
 
     console.log("blog",res);
     modelData.blog = new modelBlog.Blog();
-    modelData.blog.loadObject(res);
+    modelData.blog.loadObject(res, true);
     displayBlog(modelData.blog);
   });
 }
@@ -96,7 +96,7 @@ function getPost() {
   var timeOnly = document.getElementById("posttimeonly").value;
   var date = new Date(dateOnly + " " + timeOnly);
   return {
-    _id: Number(document.getElementById("postpostid").value),
+    _id: document.getElementById("postpostid").value,
     title: document.getElementById("posttitle").value,
     text: document.getElementById("posttext").value,
     date: date,
@@ -149,8 +149,14 @@ function cancelPostChanges(domID) {
 }
 
 function editPost(domID) {
-  modelData.blog.editPost(domID);
+  console.log("domID",domID);
+  if (!modelData.blog.editPost(domID)) {
+    $("#placeForAlert").addClass("alert alert-warning");
+    $("#placeForAlert").html("could set edit on post");
+    return;
+  }
   displayBlog(modelData.blog);
+  document.getElementById("posttitle").select();
 }
 
 function deletePost(domID) {
