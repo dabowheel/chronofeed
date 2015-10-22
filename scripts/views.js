@@ -10,7 +10,7 @@ function getTemplateSource(name) {
       }
     };
 
-    request.open("GET","views/" + name + ".html",true);
+    request.open("GET","/views/" + name + ".html",true);
     request.send();
   });
 }

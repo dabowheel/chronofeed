@@ -24,8 +24,18 @@ function displayBlog(blog) {
   });
 }
 
-function viewBlog(_id) {
-  datastore("POST", "readBlog", {_id:_id}, function (err,res) {
+function getBlog(_id, title, callback) {
+  var criterion;
+  if (_id) {
+    criterion = {
+      _id: _id
+    };
+  } else {
+    criterion = {
+      title: title
+    };
+  }
+  datastore("POST", "readBlog", criterion, function (err,res) {
     if (err) {
       $("#placeForAlert").addClass("alert alert-warning");
       $("#placeForAlert").html(err);
@@ -35,6 +45,12 @@ function viewBlog(_id) {
     console.log("blog",res);
     modelData.blog = new modelBlog.Blog();
     modelData.blog.loadObject(res, true);
+    callback();
+  });
+}
+
+function viewBlog(_id,title) {
+  getBlog(_id, title, function () {
     displayBlog(modelData.blog);
   });
 }

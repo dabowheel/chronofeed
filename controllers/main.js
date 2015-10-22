@@ -19,6 +19,7 @@ function error(message) {
 }
 
 function loadAll() {
+  console.log("loadAll");
   loadAssetsFromServer(function () {
     viewInitial();
   });
@@ -47,14 +48,15 @@ function viewInitial() {
       }
 
       modelData.username = res.username;
+      var blogRE = /^\/blog\/(.*)$/;
       if (location.hash == "#admin") {
         ctlAdmin.viewAdmin();
       } else if (location.hash == "#profile") {
         ctlProfile.viewProfile();
+      } else if (location.pathname.match(blogRE)) {
+        var title = location.pathname.match(blogRE)[1];
+        ctlBlog.viewBlog("",title);
       } else {
-        if (location.hash) {
-          history.pushState("", document.title, window.location.pathname + window.location.search);
-        }
         ctlBlogList.viewBlogList();
       }
     });

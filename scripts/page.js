@@ -9,8 +9,11 @@ function setURL(url,title) {
     if (!title) {
       title = document.title;
     }
-    history.pushState("", title, url);
+    if (url != "/") {
+      url = "/" + url;
+    }
     console.log("setting url", url);
+    history.pushState("", title, url);
   }
 }
 

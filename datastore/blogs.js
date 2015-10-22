@@ -79,12 +79,18 @@ exports.deleteBlog = function (req,res,next) {
 exports.readBlog = function (req,res,next) {
   console.log("read blog");
   util.getJSONFromBody(req, function (err,obj) {
+    console.log("err",err);
+    console.log("obj",obj);
     if (err) {
       return next(err);
     }
 
     var blogs = req.db.collection("blogs");
-    blogs.findOne({_id:new ObjectID(obj._id)}, function (err,res2) {
+    if (obj._id) {
+      obj._id = new ObjectID(obj._id);
+    }
+    console.log("criterion",obj);
+    blogs.findOne(obj, function (err,res2) {
       if (err) {
         return next(err);
       }
