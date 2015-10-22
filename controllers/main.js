@@ -30,29 +30,33 @@ function loadAll() {
   });
 }
 
+function getUsername(callback) {
+  if (modelData.username) {
+    return callback();
+  }
+
+  datastore("GET", "session", null, function (err,res) {
+    if (err) {
+      return callback(err);
+    }
+
+    modelData.username = res.username;
+    callback();
+  });
+}
+
 function viewInitial() {
-  if (location.hash == "#login") {
-    ctlLogin.viewLogin();
-  } else if (location.hash == "#signup") {
-    ctlSignup.viewSignup();
-  } else {
-    datastore("GET", "session", null, function (err,res) {
-      if (err) {
-        if (location.hash) {
-          history.pushState("", document.title, window.location.pathname + window.location.search);
-        }
-        ctlSplash.viewSplash();
-        $("#placeForAlert").addClass("alert alert-warning");
-        $("#placeForAlert").html(err);
-        return;
-      }
+  console.log("here");
+  getUsername(function (err) {
+    console.log("err",err);
+    if (err) {
+      ctlSplash.viewSplash();
+      $("#placeForAlert").addClass("alert alert-warning");
+      $("#placeForAlert").html(err);
+      return;
+    }
 
-      if (!res.username) {
-        ctlSplash.viewSplash();
-        return;
-      }
-
-      modelData.username = res.username;
+    if (modelData.username) {
       var blogRE = /^\/blog\/(.*)$/;
       console.log("location.pathname",location.pathname);
       if (location.pathname == "/admin") {
@@ -65,8 +69,16 @@ function viewInitial() {
       } else {
         ctlBlogList.viewBlogList();
       }
-    });
-  }
+    } else {
+      if (location.pathname == "/login") {
+        ctlLogin.viewLogin();
+      } else if (location.pathname == "/signup") {
+        ctlSignup.viewSignup();
+      } else {
+        ctlSplash.viewSplash();
+      }
+    }
+  });
 }
 
 window.onhashchange = function () {
@@ -96,3 +108,4 @@ ctlAdmin.setGlobals();
 ctlBlogList.setGlobals();
 ctlProfile.setGlobals();
 ctlBlog.setGlobals();
+ctlSplash.setGlobals();

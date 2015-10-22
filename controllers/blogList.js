@@ -18,7 +18,6 @@ function displayBlogList2HTML(blogList,callback) {
 }
 
 function displayBlogList(blogList) {
-  page.setURL("/", "Grackle");
   displayBlogList2HTML(blogList, function (html) {
     document.getElementById("main").innerHTML = html;
   });
@@ -49,6 +48,7 @@ function viewBlogList() {
       return;
     }
 
+    page.setURL("/", "Grackle");
     displayBlogList(modelData.blogList);
   });
 }

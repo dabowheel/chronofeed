@@ -2,8 +2,10 @@ var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var ctlBlogList = require("./blogList");
 var modelData = require("../model/data");
+var page = require("../scripts/page");
 
 function viewLogin() {
+  page.setURL("/login","Grackle | Login");
   document.getElementById("main").innerHTML = views.list.login;
   function onKeypress (e) {
     if (e.keyCode == 13) {

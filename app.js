@@ -22,13 +22,15 @@ app.use(session({
   })
 }));
 
-app.get("/blog/*", function (req,res,next) {
+function sendPage(req,res,next) {
   res.sendFile(__dirname + "/public/index.html");
-});
+}
 
-app.get("/admin", function (req,res,next) {
-  res.sendFile(__dirname + "/public/index.html");
-});
+app.get("/blog/*", sendPage);
+app.get("/admin", sendPage);
+app.get("/profile", sendPage);
+app.get("/signup", sendPage);
+app.get("/login", sendPage);
 
 app.use("/datastore", function (req,res,next) {
   MongoClient.connect(process.env.MONGODB_URL, function (error,db) {

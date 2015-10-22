@@ -11,7 +11,11 @@ function setURL(url,title) {
     }
     console.log("previous url", location.pathname);
     console.log("setting url", url);
-    history.pushState("", title, url);
+    if (url == "/") {
+      history.replaceState("", title, url + location.search);
+    } else {
+      history.pushState("", title, url + location.search);
+    }
     document.title = title;
   }
 }

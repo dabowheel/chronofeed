@@ -1,8 +1,10 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var ctlBlogList = require("./blogList");
+var page = require("../scripts/page");
 
 function viewSignup() {
+  page.setURL("/signup","Grackle | Signup");
   document.getElementById("main").innerHTML = views.list.signup;
   document.getElementById("inputUsername").focus();
   function onKeypress(e) {
