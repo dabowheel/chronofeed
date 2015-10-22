@@ -10,6 +10,11 @@ var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var modelData = require("../model/data");
 
+window.onpopstate = function (e) {
+  console.log("popstate");
+  viewInitial();
+};
+
 function getStack() {
   return (new Error()).stack;
 }
