@@ -15,6 +15,17 @@ BlogList.prototype.loadObject = function (obj) {
     }
   }
 };
+BlogList.prototype.exportObject = function () {
+  var ret = {
+    list: []
+  };
+
+  for (var blogInfo of this.list) {
+    ret.list.push(blogInfo.exportObject());
+  }
+
+  return ret;
+};
 BlogList.prototype.getBlogInfo = function (domID) {
   for (var i = 0; i < this.list.length; i++) {
     if (this.list[i].domID == domID) {
@@ -24,7 +35,6 @@ BlogList.prototype.getBlogInfo = function (domID) {
 };
 BlogList.prototype.add = function (blogInfo) {
   this.list.push(blogInfo);
-  this.sort();
 };
 BlogList.prototype.sort = function () {
   this.list.sort(function (a,b) {

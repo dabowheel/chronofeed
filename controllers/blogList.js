@@ -24,26 +24,32 @@ function displayBlogList(blogList) {
   });
 }
 
-function viewBlogList() {
+function getBlogList(callback) {
+  if (modelData.blogList) {
+    return callback();
+  }
+
   datastore("GET","readBlogList",null,function (err,res) {
+    if (err) {
+      return callback(err);
+    }
+
+    modelData.blogList = new modelBlogList.BlogList();
+    modelData.blogList.loadObject(res);
+    modelData.blogList.sort();
+    callback();
+  });
+}
+
+function viewBlogList() {
+  getBlogList(function (err) {
     if (err) {
       $("#placeForAlert").addClass("alert alert-warning");
       $("#placeForAlert").html(err);
       return;
     }
-    if (res.success) {
-      modelData.blogList = new modelBlogList.BlogList();
-      modelData.blogList.loadObject(res.blogList);
-      modelData.blogList.sort();
-      displayBlogList(modelData.blogList);
-    } else {
-      if (res.endSession) {
-        ctlLogin.viewLogin();
-      } else {
-        $("#placeForAlert").addClass("alert alert-warning");
-        $("#placeForAlert").html(err);
-      }
-    }
+
+    displayBlogList(modelData.blogList);
   });
 }
 

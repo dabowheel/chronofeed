@@ -1,6 +1,7 @@
 var util = require("./util");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
+var modelBlogList = require("../model/blogList");
 var modelBlog = require("../model/blog");
 var modelPost = require("../model/post");
 
@@ -19,13 +20,16 @@ exports.readBlogList = function (req,res,next) {
         return;
       }
 
-      var blogList = {
-        list: list
-      };
-      res.json({
-        success: true,
-        blogList: blogList
-      });
+      var blogList = new modelBlogList.BlogList();
+      for (var obj of list) {
+        var blogInfo = new modelBlog.BlogInfo();
+        blogInfo.loadObject(obj);
+        console.log("blogInfo",blogInfo.exportObject());
+        blogList.add(blogInfo);
+        console.log("export",blogList.list[0].exportObject());
+      }
+
+      res.json(blogList.exportObject());
     });
   });
 };
