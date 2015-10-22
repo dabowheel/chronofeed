@@ -19,7 +19,7 @@ function displayBlog2HTML(blog,callback) {
 }
 
 function displayBlog(blog) {
-  page.setURL("blog/" + blog.title, "Grackle Blog | " + blog.title);
+  page.setURL("/blog/" + blog.title, "Grackle Blog | " + blog.title);
   displayBlog2HTML(blog,function (html) {
     document.getElementById("main").innerHTML = html;
   });

@@ -5,10 +5,11 @@ function setHash(hash) {
 }
 
 function setURL(url,title) {
-  if (this.url != (location.pathname + location.search)) {
+  if (url != (location.pathname + location.search)) {
     if (!title) {
       title = document.title;
     }
+    console.log("previous url", location.pathname);
     console.log("setting url", url);
     history.pushState("", title, url);
     document.title = title;
