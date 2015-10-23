@@ -76,7 +76,18 @@ exports.deleteBlog = function (req,res,next) {
       }
 
       if (res2.result.ok) {
-        res.end();
+        var posts = req.db.collection("posts");
+        var filter = {
+          blogID: obj._id,
+          userID: req.session.userID
+        };
+        posts.deleteMany(filter, function (err,res3) {
+          if (err) {
+            return next(err);
+          }
+
+          res.end();
+        });
       } else {
         next("blog not deleted because the blog was not found");
       }
