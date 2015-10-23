@@ -52,6 +52,7 @@ exports.createBlog = function (req,res,next) {
 
     var blogs = req.db.collection("blogs");
     delete obj._id;
+    obj.userID = req.session.userID;
     console.log("createBlog before update");
     blogs.insertOne(obj, function (err,res2) {
       if (err) {
@@ -155,8 +156,11 @@ exports.saveBlogTitle = function (req,res,next) {
     }
 
     var blogs = req.db.collection("blogs");
-
-    blogs.updateOne({_id: new ObjectID(obj._id)}, {title: obj.title}, function (err, res2) {
+    var blogObj = {
+      title: obj.title,
+      userID: req.session.userID
+    };
+    blogs.updateOne({_id: new ObjectID(obj._id)}, blogObj, function (err, res2) {
       if (err) {
         return next(err);
       }

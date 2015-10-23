@@ -16,7 +16,9 @@ exports.updatePost = function (req,res,next) {
     var posts = req.db.collection("posts");
     var post = new modelPost.Post();
     post.loadObject(obj);
-    posts.updateOne({_id:new ObjectID(post._id)}, post.exportObject(true, true), function (err,res2) {
+    var postObj = post.exportObject(true, true);
+    postObj.userID = req.session.userID;
+    posts.updateOne({_id:new ObjectID(post._id)}, postObj, function (err,res2) {
       if (err) {
         return next(err);
       }
@@ -43,7 +45,9 @@ exports.createPost = function (req,res,next) {
     var posts = req.db.collection("posts");
     var post = new modelPost.Post();
     post.loadObject(obj);
-    posts.insertOne(post.exportObject(true, true), function (err, res2) {
+    var postObj = post.exportObject(true, true);
+    postObj.userID = req.session.userID;
+    posts.insertOne(postObj, function (err, res2) {
       if (err) {
         return next(err);
       }
