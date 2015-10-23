@@ -24,7 +24,6 @@ function displayBlogList(blogList) {
 
 function getBlogList(callback) {
   if (cache.blogList) {
-    console.log("cached",JSON.stringify(cache.blogList));
     return callback();
   }
 
