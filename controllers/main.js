@@ -11,6 +11,7 @@ var datastore = require("../scripts/datastore");
 
 global.clearCache = function() {
   global.cache = {};
+  global.cache.blogs = {};
 };
 global.clearCache();
 

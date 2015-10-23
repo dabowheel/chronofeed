@@ -25,6 +25,12 @@ function displayBlog(blog) {
 }
 
 function getBlog(_id, title, callback) {
+  if (_id && cache.blogs[_id]) {
+    cache.blog = cache.blogs[_id];
+    callback();
+    return;
+  }
+
   var criterion;
   if (_id) {
     criterion = {
@@ -42,6 +48,7 @@ function getBlog(_id, title, callback) {
 
     cache.blog = new modelBlog.Blog();
     cache.blog.loadObject(res, true);
+    cache.blogs[cache.blog._id] = cache.blog;
     callback();
   });
 }
