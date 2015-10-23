@@ -40,16 +40,20 @@ exports.login = function (req,res,next) {
       }
       var userID = "";
       var success = false;
+      var username = "";
       if (result) {
         userID = result._id;
+        username = result.username;
         success = obj.password == result.password;
+      } else {
+        success = false;
       }
       if (success) {
         req.session.userID = userID;
-        req.session.username = result.username;
+        req.session.username = username;
       }
       res.json({
-        username: result.username,
+        username: username,
         success: success
       });
     });

@@ -45,7 +45,27 @@ exports.deleteUser = function (req,res,next) {
       }
 
       if (result.result.ok) {
-        res.end();
+        var blogs = req.db.collection("blogs");
+        var filter = {
+          userID: req.session.userID
+        };
+        blogs.deleteMany(filter, function (err,res2) {
+          if (err) {
+            return next(err);
+          }
+
+          var posts = req.db.collection("posts");
+          var filter = {
+            userID: req.session.userID
+          };
+          posts.deleteMany(filter, function (err, res3) {
+            if (err) {
+              return next(err);
+            }
+
+            res.end();
+          });
+        });
       } else {
         next("user was not deleted because the user was not found");
       }
