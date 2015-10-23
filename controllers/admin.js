@@ -36,7 +36,6 @@ function viewAdmin() {
       return;
     }
 
-    console.log("user list", modelData.userList);
     page.setURL("/admin", "Grackle | Admin");
     displayAdmin(modelData.userList);
   });
@@ -53,10 +52,7 @@ function deleteUser(id) {
       return;
     }
 
-    console.log("global",modelData.userList);
-    console.log("delete user",id);
     modelData.userList.delete(id);
-    console.log("global",modelData.userList);
     displayAdmin(modelData.userList);
   });
 }

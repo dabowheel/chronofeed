@@ -37,12 +37,10 @@ function getBlog(_id, title, callback) {
     };
   }
   datastore("POST", "readBlog", criterion, function (err,res) {
-    console.log("post readblog");
     if (err) {
       return callback(err);
     }
 
-    console.log("blog",res);
     modelData.blog = new modelBlog.Blog();
     modelData.blog.loadObject(res, true);
     callback();
@@ -171,7 +169,6 @@ function cancelPostChanges(domID) {
 }
 
 function editPost(domID) {
-  console.log("domID",domID);
   if (!modelData.blog.editPost(domID)) {
     $("#placeForAlert").addClass("alert alert-warning");
     $("#placeForAlert").html("could set edit on post");

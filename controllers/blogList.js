@@ -74,7 +74,6 @@ function editBlog(domID) {
 }
 
 function deleteBlog(domID) {
-  console.log("delete",domID);
   var blogInfo = modelData.blogList.delete(domID);
   displayBlogList(modelData.blogList);
   datastore("DELETE", "deleteBlog", blogInfo.exportObject(), function(err,res) {

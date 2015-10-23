@@ -12,8 +12,6 @@ exports.signup = function (req,res,next) {
       return next(error);
     }
 
-    console.log("signup", obj);
-
     var users = req.db.collection("users");
     users.insert(obj, function (error,result) {
       if (error) {
@@ -28,17 +26,14 @@ exports.signup = function (req,res,next) {
 };
 
 exports.login = function (req,res,next) {
-  console.log("login");
   util.getJSONFromBody(req, function (error,obj) {
     if (error) {
       next(error);
       return;
     }
-    console.log("login",obj);
 
     var users = req.db.collection("users");
     users.findOne({$or: [{username:obj.username},{email:obj.username}]}, function (error,result) {
-      console.log("found one");
       if (error) {
         next(error);
         return;
@@ -46,10 +41,6 @@ exports.login = function (req,res,next) {
       var userID = "";
       var success = false;
       if (result) {
-        console.log("result",result);
-        console.log("inputPassword",obj.password, typeof obj.password);
-        console.log("foundPassword",result.password, typeof result.password);
-        console.log("success",obj.password == result.password);
         userID = result._id;
         success = obj.password == result.password;
       }
@@ -66,8 +57,6 @@ exports.login = function (req,res,next) {
 };
 
 exports.logout = function (req,res,next) {
-  console.log("logout");
-
   delete req.session.userID;
   delete req.session.username;
   res.end();

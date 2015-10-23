@@ -9,8 +9,6 @@ function setURL(url,title) {
     if (!title) {
       title = document.title;
     }
-    console.log("previous url", location.pathname);
-    console.log("setting url", url);
     if (url == "/") {
       history.replaceState("", title, url + location.search);
     } else {

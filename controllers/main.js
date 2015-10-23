@@ -11,7 +11,6 @@ var datastore = require("../scripts/datastore");
 var modelData = require("../model/data");
 
 window.onpopstate = function (e) {
-  console.log("popstate");
   viewInitial();
 };
 
@@ -24,7 +23,6 @@ function error(message) {
 }
 
 function loadAll() {
-  console.log("loadAll");
   loadAssetsFromServer(function () {
     viewInitial();
   });
@@ -46,9 +44,7 @@ function getUsername(callback) {
 }
 
 function viewInitial() {
-  console.log("here");
   getUsername(function (err) {
-    console.log("err",err);
     if (err) {
       ctlSplash.viewSplash();
       $("#placeForAlert").addClass("alert alert-warning");
@@ -58,7 +54,6 @@ function viewInitial() {
 
     if (modelData.username) {
       var blogRE = /^\/blog\/(.*)$/;
-      console.log("location.pathname",location.pathname);
       if (location.pathname == "/admin") {
         ctlAdmin.viewAdmin();
       } else if (location.pathname == "/profile") {
@@ -82,7 +77,6 @@ function viewInitial() {
 }
 
 window.onhashchange = function () {
-  console.log("hash change");
   viewInitial();
 };
 
@@ -90,7 +84,6 @@ function loadAssetsFromServer(callback) {
   var promiseList = [];
   var names = ["admin","blog","blogList","login","menu","profile","signup","splash"];
   for (var name of names) {
-    console.log("load", name);
     promiseList[promiseList.length] = views.getTemplateSource(name);
   }
 

@@ -3,7 +3,6 @@ var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
 exports.userList = function (req,res,next) {
-  console.log("get user list");
   if (!req.session.userID) {
     return next("user is not logged in");
   }
@@ -38,7 +37,6 @@ exports.deleteUser = function (req,res,next) {
       return;
     }
 
-    console.log("delete user", obj);
     var users = req.db.collection("users");
     users.deleteOne({_id:new ObjectID(obj.id)}, function (err,result) {
       if (err) {
