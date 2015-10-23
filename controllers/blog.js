@@ -17,11 +17,21 @@ function displayBlog2HTML(blog,callback) {
   callback(menuHTML + blogHTML);
 }
 
+function onKeypress (e) {
+  if (e.keyCode == 13) {
+    saveBlogTitleChange();
+  }
+}
+
 function displayBlog(blog) {
   page.setURL("/blog/" + blog.title, "Grackle Blog | " + blog.title);
   displayBlog2HTML(blog,function (html) {
     document.getElementById("main").innerHTML = html;
   });
+
+  if (cache.blog.editBlogTitle) {
+    document.getElementById("inputTitle").onkeypress = onKeypress;
+  }
 }
 
 function getBlog(_id, title, callback) {
@@ -83,7 +93,7 @@ function saveBlogTitleChange() {
   if (title === "") {
     $("#inputTitleFormGroup").addClass("has-error");
     return;
-  } else if (cache.blogList.hasTitle(title)) {
+  } else if (cache.blogList && cache.blogList.hasTitle(title)) {
     $("#placeForAlert").addClass("alert alert-warning");
     $("#placeForAlert").html("A blog with this title already exists");
     return;
