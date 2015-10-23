@@ -41,9 +41,6 @@ Blog.prototype.exportObject = function () {
 
   return ret;
 };
-Blog.prototype.editTitle = function(title) {
-  this.title = title;
-};
 Blog.prototype.addPost = function (post) {
   this.postList.unshift(post);
 };

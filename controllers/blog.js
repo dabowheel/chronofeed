@@ -82,7 +82,10 @@ function saveBlogTitleChange() {
     return;
   }
 
-  cache.blog.editTitle(title);
+  cache.blog.title = title;
+  if (cache.blogList) {
+    cache.blogList.updateTitle(cache.blog._id, title);
+  }
   cancelBlogTitleChange();
 
   var blogInfo = new modelBlog.BlogInfo(cache.blog._id, cache.blog.title);

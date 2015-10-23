@@ -43,13 +43,6 @@ describe("Blog", function () {
     expect(blog.postList[0].exportObject()).toEqual(obj.postList[0]);
   });
 
-  it("should change title", function () {
-    var blog = new modelBlog.Blog();
-    blog.loadObject(obj);
-    blog.editTitle("newtitle");
-    expect(blog.title).toEqual("newtitle");
-  });
-
   it("should set edit post", function () {
     var blog = new modelBlog.Blog();
     blog.loadObject(obj);

@@ -75,5 +75,13 @@ BlogList.prototype.delete = function (domID) {
   }
   return null;
 };
+BlogList.prototype.updateTitle = function (_id,title) {
+  for (var blogInfo of this.list) {
+    if (blogInfo._id === _id) {
+      blogInfo.title = title;
+      return;
+    }
+  }
+};
 
 exports.BlogList = BlogList;
