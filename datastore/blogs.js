@@ -6,6 +6,10 @@ var modelBlog = require("../model/blog");
 var modelPost = require("../model/post");
 
 exports.readBlogList = function (req,res,next) {
+  if (!req.session.userID) {
+    return next("user is not logged in");
+  }
+
   console.log("blogList read");
   var blogs = req.db.collection("blogs");
   blogs.find(function (error,result) {
@@ -35,6 +39,10 @@ exports.readBlogList = function (req,res,next) {
 };
 
 exports.createBlog = function (req,res,next) {
+  if (!req.session.userID) {
+    return next("user is not logged in");
+  }
+
   console.log("createBlog");
   util.getJSONFromBody(req, function (err,obj) {
     console.log("obj",obj);
@@ -58,6 +66,10 @@ exports.createBlog = function (req,res,next) {
 
 exports.deleteBlog = function (req,res,next) {
   console.log("delete blog");
+  if (!req.session.userID) {
+    return next("user is not logged in");
+  }
+
   util.getJSONFromBody(req, function (err,obj) {
     if (err) {
       return next(err);
@@ -82,6 +94,10 @@ exports.deleteBlog = function (req,res,next) {
 
 exports.readBlog = function (req,res,next) {
   console.log("read blog");
+  if (!req.session.userID) {
+    return next("user is not logged in");
+  }
+
   util.getJSONFromBody(req, function (err,obj) {
     console.log("err",err);
     console.log("obj",obj);
@@ -130,7 +146,7 @@ exports.readBlog = function (req,res,next) {
 
 exports.saveBlogTitle = function (req,res,next) {
   if (!req.session.userID) {
-    return next("user not logged in");
+    return next("user is not logged in");
   }
 
   util.getJSONFromBody(req, function (err,obj) {

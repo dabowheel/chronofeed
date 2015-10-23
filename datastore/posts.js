@@ -4,6 +4,10 @@ var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
 exports.updatePost = function (req,res,next) {
+  if (!req.session.userID) {
+    return next("user is not logged in");
+  }
+
   util.getJSONFromBody(req, function (err,obj) {
     if (err) {
       return next(err);
@@ -27,6 +31,10 @@ exports.updatePost = function (req,res,next) {
 };
 
 exports.createPost = function (req,res,next) {
+  if (!req.session.userID) {
+    return next("user is not logged in");
+  }
+
   util.getJSONFromBody(req, function (err,obj) {
     if (err) {
       return next(err);
@@ -47,6 +55,10 @@ exports.createPost = function (req,res,next) {
 };
 
 exports.deletePost = function (req,res,next) {
+  if (!req.session.userID) {
+    return next("user is not logged in");
+  }
+
   util.getJSONFromBody(req, function (err,obj) {
     if (err) {
       return next(err);

@@ -4,6 +4,9 @@ var ObjectID = mongodb.ObjectID;
 
 exports.userList = function (req,res,next) {
   console.log("get user list");
+  if (!req.session.userID) {
+    return next("user is not logged in");
+  }
 
   var users = req.db.collection("users");
   users.find(function (error, result) {
@@ -25,6 +28,10 @@ exports.userList = function (req,res,next) {
 };
 
 exports.deleteUser = function (req,res,next) {
+  if (!req.session.userID) {
+    return next("user is not logged in");
+  }
+
   util.getJSONFromBody(req, function (error, obj) {
     if (error) {
       next(error);
