@@ -8,7 +8,11 @@ var ctlMenu = require("./menu");
 var ctlProfile = require("./profile");
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
-var modelData = require("../model/data");
+
+global.clearCache = function() {
+  global.cache = {};
+};
+global.clearCache();
 
 window.onpopstate = function (e) {
   viewInitial();
@@ -29,7 +33,7 @@ function loadAll() {
 }
 
 function getUsername(callback) {
-  if (modelData.username) {
+  if (cache.username) {
     return callback();
   }
 
@@ -38,7 +42,7 @@ function getUsername(callback) {
       return callback(err);
     }
 
-    modelData.username = res.username;
+    cache.username = res.username;
     callback();
   });
 }
@@ -52,7 +56,7 @@ function viewInitial() {
       return;
     }
 
-    if (modelData.username) {
+    if (cache.username) {
       var blogRE = /^\/blog\/(.*)$/;
       if (location.pathname == "/admin") {
         ctlAdmin.viewAdmin();

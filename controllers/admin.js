@@ -1,19 +1,18 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var modelUserList = require("../model/userList");
-var modelData = require("../model/data");
 var page = require("../scripts/page");
 
 function displayAdmin(adminList) {
   var template = Handlebars.compile(views.list.menu);
-  var menuHTML = template({username:modelData.username, isAdmin: true});
+  var menuHTML = template({username:cache.username, isAdmin: true});
   template = Handlebars.compile(views.list.admin);
   var adminHTML = template(adminList);
   document.getElementById("main").innerHTML = menuHTML + adminHTML;
 }
 
 function getAdmin(callback) {
-  if (modelData.UserList) {
+  if (cache.UserList) {
     return callback();
   }
 
@@ -22,8 +21,8 @@ function getAdmin(callback) {
       return callback(err);
     }
 
-    modelData.userList = new modelUserList.UserList();
-    modelData.userList.loadObject(res);
+    cache.userList = new modelUserList.UserList();
+    cache.userList.loadObject(res);
     callback();
   });
 }
@@ -37,7 +36,7 @@ function viewAdmin() {
     }
 
     page.setURL("/admin", "Grackle | Admin");
-    displayAdmin(modelData.userList);
+    displayAdmin(cache.userList);
   });
 }
 
@@ -52,8 +51,8 @@ function deleteUser(id) {
       return;
     }
 
-    modelData.userList.delete(id);
-    displayAdmin(modelData.userList);
+    cache.userList.delete(id);
+    displayAdmin(cache.userList);
   });
 }
 

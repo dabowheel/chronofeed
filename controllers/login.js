@@ -1,7 +1,6 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var ctlBlogList = require("./blogList");
-var modelData = require("../model/data");
 var page = require("../scripts/page");
 
 function viewLogin() {
@@ -61,7 +60,7 @@ function clickLogin() {
       return;
     }
     if (res.success) {
-      modelData.username = res.username;
+      cache.username = res.username;
       history.pushState("", document.title, window.location.pathname + window.location.search);
       ctlBlogList.viewBlogList();
     } else {

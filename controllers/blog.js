@@ -1,6 +1,5 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
-var modelData = require("../model/data");
 var modelBlog = require("../model/blog");
 var modelPost = require("../model/post");
 var page = require("../scripts/page");
@@ -12,7 +11,7 @@ function displayBlog2HTML(blog,callback) {
   });
 
   var template = Handlebars.compile(views.list.menu);
-  var menuHTML = template({username:modelData.username});
+  var menuHTML = template({username:cache.username});
   template = Handlebars.compile(views.list.blog);
   var blogHTML = template(blog);
   callback(menuHTML + blogHTML);
@@ -41,8 +40,8 @@ function getBlog(_id, title, callback) {
       return callback(err);
     }
 
-    modelData.blog = new modelBlog.Blog();
-    modelData.blog.loadObject(res, true);
+    cache.blog = new modelBlog.Blog();
+    cache.blog.loadObject(res, true);
     callback();
   });
 }
@@ -53,13 +52,13 @@ function viewBlog(_id,title) {
       ctlBlogList.viewBlogList();
       return;
     }
-    displayBlog(modelData.blog);
+    displayBlog(cache.blog);
   });
 }
 
 function editBlogTitle() {
-  modelData.blog.editBlogTitle = true;
-  displayBlog(modelData.blog);
+  cache.blog.editBlogTitle = true;
+  displayBlog(cache.blog);
   document.getElementById("inputTitle").select();
 }
 
@@ -69,7 +68,7 @@ function getBlogTitle() {
 
 function saveBlogTitleChange() {
   var title = getBlogTitle();
-  if (title === modelData.blog.title) {
+  if (title === cache.blog.title) {
     cancelBlogTitleChange();
     return;
   }
@@ -77,16 +76,16 @@ function saveBlogTitleChange() {
   if (title === "") {
     $("#inputTitleFormGroup").addClass("has-error");
     return;
-  } else if (modelData.blogList.hasTitle(title)) {
+  } else if (cache.blogList.hasTitle(title)) {
     $("#placeForAlert").addClass("alert alert-warning");
     $("#placeForAlert").html("A blog with this title already exists");
     return;
   }
 
-  modelData.blog.editTitle(title);
+  cache.blog.editTitle(title);
   cancelBlogTitleChange();
 
-  var blogInfo = new modelBlog.BlogInfo(modelData.blog._id, modelData.blog.title);
+  var blogInfo = new modelBlog.BlogInfo(cache.blog._id, cache.blog.title);
   datastore("POST", "saveBlogTitle", blogInfo.exportObject(), function (err, res) {
     if (err) {
       $("#placeForAlert").addClass("alert alert-warning");
@@ -99,15 +98,15 @@ function saveBlogTitleChange() {
 function cancelBlogTitleChange() {
   $("#placeForAlert").removeClass("alert alert-warning");
   $("#placeForAlert").html("");
-  modelData.blog.editBlogTitle = false;
-  displayBlog(modelData.blog);
+  cache.blog.editBlogTitle = false;
+  displayBlog(cache.blog);
 }
 
 function addPost() {
-  var domID = modelData.blog.getDOMID();
-  modelData.blog.addPost(new modelPost.Post("", "", "", new Date(), modelData.blog._id, domID));
-  modelData.blog.editPost(domID);
-  displayBlog(modelData.blog);
+  var domID = cache.blog.getDOMID();
+  cache.blog.addPost(new modelPost.Post("", "", "", new Date(), cache.blog._id, domID));
+  cache.blog.editPost(domID);
+  displayBlog(cache.blog);
   document.getElementById("posttitle").select();
 }
 
@@ -130,10 +129,10 @@ function getPost() {
 function savePostChanges(domID) {
   var values = getPost();
   var post = new modelPost.Post(values._id, values.title, values.text, values.date, values.blogID, values.domID);
-  modelData.blog.stopEditingPost(domID);
+  cache.blog.stopEditingPost(domID);
   if (post._id) {
-    modelData.blog.savePost(domID,post);
-    displayBlog(modelData.blog);
+    cache.blog.savePost(domID,post);
+    displayBlog(cache.blog);
     datastore("POST", "updatePost", post.exportObject(), function (err,res) {
       if (err) {
         $("#placeForAlert").addClass("alert alert-warning");
@@ -142,8 +141,8 @@ function savePostChanges(domID) {
       }
     });
   } else {
-    modelData.blog.savePost(domID,post);
-    displayBlog(modelData.blog);
+    cache.blog.savePost(domID,post);
+    displayBlog(cache.blog);
     datastore("POST", "createPost", post.exportObject(), function (err,res) {
       if (err) {
         $("#placeForAlert").addClass("alert alert-warning");
@@ -152,35 +151,35 @@ function savePostChanges(domID) {
       }
 
       post._id = res._id;
-      displayBlog(modelData.blog);
+      displayBlog(cache.blog);
     });
   }
 }
 
 function cancelPostChanges(domID) {
   var values = getPost();
-  var post = modelData.blog.getPost(domID);
+  var post = cache.blog.getPost(domID);
   if (post._id) {
-    modelData.blog.stopEditingPost(domID);
+    cache.blog.stopEditingPost(domID);
   } else {
-    modelData.blog.deletePost(domID);
+    cache.blog.deletePost(domID);
   }
-  displayBlog(modelData.blog);
+  displayBlog(cache.blog);
 }
 
 function editPost(domID) {
-  if (!modelData.blog.editPost(domID)) {
+  if (!cache.blog.editPost(domID)) {
     $("#placeForAlert").addClass("alert alert-warning");
     $("#placeForAlert").html("could set edit on post");
     return;
   }
-  displayBlog(modelData.blog);
+  displayBlog(cache.blog);
   document.getElementById("posttitle").select();
 }
 
 function deletePost(domID) {
-  var post = modelData.blog.deletePost(domID);
-  displayBlog(modelData.blog);
+  var post = cache.blog.deletePost(domID);
+  displayBlog(cache.blog);
 
   datastore("DELETE", "deletePost", post.exportObject(), function (err,res) {
     if (err) {

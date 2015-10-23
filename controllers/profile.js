@@ -1,10 +1,9 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
-var modelData = require("../model/data");
 var page = require("../scripts/page");
 
 function getProfile(callback) {
-  if (modelData.profile) {
+  if (cache.profile) {
     callback();
     return;
   }
@@ -13,7 +12,7 @@ function getProfile(callback) {
     if (err) {
       return callback(err);
     }
-    modelData.profile = res;
+    cache.profile = res;
     callback();
   });
 }
@@ -21,7 +20,7 @@ function getProfile(callback) {
 function displayProfile(profile) {
   var template = Handlebars.compile(views.list.menu);
   var menuHTML = template({
-    username: modelData.username,
+    username: cache.username,
     isProfile: true
   });
   template = Handlebars.compile(views.list.profile);
@@ -39,7 +38,7 @@ function viewProfile() {
     }
 
     page.setURL("/profile");
-    displayProfile(modelData.profile);
+    displayProfile(cache.profile);
   });
 }
 
@@ -49,9 +48,9 @@ function getPasswordPlain() {
 
 function getValues() {
   return {
-    username: modelData.profile.username,
+    username: cache.profile.username,
     email: document.getElementById("inputEmail").value,
-    password: getPasswordPlain().length > 0 ? CryptoJS.SHA256(getPasswordPlain()).toString() : modelData.profile.password
+    password: getPasswordPlain().length > 0 ? CryptoJS.SHA256(getPasswordPlain()).toString() : cache.profile.password
   };
 }
 
@@ -92,7 +91,7 @@ function clickSaveProfile() {
       return;
     }
 
-    modelData.profile = values;
+    cache.profile = values;
     $("#placeForAlert").removeClass("alert alert-warning");
     $("#placeForAlert").addClass("alert alert-success");
     $("#placeForAlert").html("Saved");

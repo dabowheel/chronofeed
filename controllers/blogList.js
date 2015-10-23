@@ -2,7 +2,6 @@ var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var modelBlogList = require("../model/blogList");
 var modelBlog = require("../model/blog");
-var modelData = require("../model/data");
 var ctlBlogList = require("./blogList");
 var ctlBlog = require("./blog");
 var ctlLogin = require("./login");
@@ -11,7 +10,7 @@ var page = require("../scripts/page");
 function displayBlogList2HTML(blogList,callback) {
   var template;
   template = Handlebars.compile(views.list.menu);
-  var menuHTML = template({username:modelData.username});
+  var menuHTML = template({username:cache.username});
   template = Handlebars.compile(views.list.blogList);
   var blogListHTML = template(blogList);
   callback(menuHTML + blogListHTML);
@@ -24,7 +23,8 @@ function displayBlogList(blogList) {
 }
 
 function getBlogList(callback) {
-  if (modelData.blogList) {
+  if (cache.blogList) {
+    console.log("cached",JSON.stringify(cache.blogList));
     return callback();
   }
 
@@ -33,9 +33,9 @@ function getBlogList(callback) {
       return callback(err);
     }
 
-    modelData.blogList = new modelBlogList.BlogList();
-    modelData.blogList.loadObject(res);
-    modelData.blogList.sort();
+    cache.blogList = new modelBlogList.BlogList();
+    cache.blogList.loadObject(res);
+    cache.blogList.sort();
     callback();
   });
 }
@@ -49,14 +49,14 @@ function viewBlogList() {
     }
 
     page.setURL("/", "Grackle");
-    displayBlogList(modelData.blogList);
+    displayBlogList(cache.blogList);
   });
 }
 
 function addBlog() {
-  var blogInfo = new modelBlog.BlogInfo(0, modelData.blogList.getNewTitle(), modelData.blogList.getDOMID());
-  modelData.blogList.add(blogInfo);
-  displayBlogList(modelData.blogList);
+  var blogInfo = new modelBlog.BlogInfo(0, cache.blogList.getNewTitle(), cache.blogList.getDOMID());
+  cache.blogList.add(blogInfo);
+  displayBlogList(cache.blogList);
   datastore("POST", "createBlog", blogInfo.exportObject(), function (err,res) {
     if (err) {
       $("#placeForAlert").addClass("alert alert-warning");
@@ -69,13 +69,13 @@ function addBlog() {
 }
 
 function editBlog(domID) {
-  var blogInfo = modelData.blogList.getBlogInfo(domID);
+  var blogInfo = cache.blogList.getBlogInfo(domID);
   ctlBlog.viewBlog(blogInfo._id);
 }
 
 function deleteBlog(domID) {
-  var blogInfo = modelData.blogList.delete(domID);
-  displayBlogList(modelData.blogList);
+  var blogInfo = cache.blogList.delete(domID);
+  displayBlogList(cache.blogList);
   datastore("DELETE", "deleteBlog", blogInfo.exportObject(), function(err,res) {
     if (err) {
       $("#placeForAlert").addClass("alert alert-warning");

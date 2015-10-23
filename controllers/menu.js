@@ -2,7 +2,6 @@ var datastore = require("../scripts/datastore");
 var ctlBlogList = require("./blogList");
 var ctlSplash = require("./splash");
 var ctlProfile = require("./profile");
-var modelData = require("../model/data");
 var ctlAdmin = require("./admin");
 
 function clickBlogList() {
@@ -25,7 +24,7 @@ function clickLogout() {
       return;
     }
 
-    modelData.clear();
+    clearCache();
     history.pushState("", document.title, window.location.pathname + window.location.search);
     ctlSplash.viewSplash();
   });
