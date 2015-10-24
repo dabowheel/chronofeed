@@ -16,3 +16,7 @@
   width: auto;
   display: inline;
 }
+
+.gr-hotkey:first-letter {
+  text-decoration: underline;
+}
