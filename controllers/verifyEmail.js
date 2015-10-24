@@ -1,5 +1,6 @@
 var datastore = require("../scripts/datastore");
 var views = require("../scripts/views");
+var page = require("../scripts/page");
 
 function displayVerifyEmail(verified) {
   var template = Handlebars.compile(views.list.verifyEmail);
@@ -20,4 +21,12 @@ function viewVerifyEmail(hash,code) {
   });
 }
 
+function clickGoHome() {
+  page.setURL("/");
+  viewInitial();
+}
+
 exports.viewVerifyEmail = viewVerifyEmail;
+exports.setGlobals = function () {
+  global.clickGoHome = clickGoHome;
+};
