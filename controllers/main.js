@@ -71,7 +71,7 @@ function viewInitial() {
       } else if (location.pathname == "/profile") {
         ctlProfile.viewProfile();
       } else if (location.pathname.match(blogRE)) {
-        var title = location.pathname.match(blogRE)[1];
+        var title = decodeURI(location.pathname.match(blogRE)[1]);
         ctlBlog.viewBlog("",title);
       } else {
         ctlBlogList.viewBlogList();
