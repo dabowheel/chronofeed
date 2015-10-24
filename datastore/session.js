@@ -1,4 +1,6 @@
 var util = require("./util");
+var email = require("./email");
+var crypto = require("crypto");
 
 exports.session = function (req,res,next) {
   res.json({
@@ -13,14 +15,32 @@ exports.signup = function (req,res,next) {
     }
 
     var users = req.db.collection("users");
+    obj.emailVerified = false;
     users.insert(obj, function (error,result) {
       if (error) {
         return next(error);
       }
 
-      var userID = result.ops[0]._id;
+      var userID = result.ops[0]._id.toString();
       req.session.userID = userID;
-      res.json({userID:userID});
+      req.session.username = obj.username;
+
+      var verifyInfo = {};
+      var h = new crypto.Hash("sha256");
+      h.update(obj.email);
+      verifyInfo.userID = userID;
+      verifyInfo.type = "email";
+      verifyInfo.hash = h.digest("hex");
+      verifyInfo.code = crypto.randomBytes(256/8).toString("hex");
+      var verify = req.db.collection("verify");
+      verify.insert(verifyInfo, function (err,res3) {
+        if (err) {
+          return next(err);
+        }
+
+        email.sendEmailVerification(req.get("host"), obj, verifyInfo);
+        res.json({username:obj.username});
+      });
     });
   });
 };

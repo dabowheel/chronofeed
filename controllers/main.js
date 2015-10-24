@@ -6,6 +6,7 @@ var ctlBlogList = require("./blogList");
 var ctlBlog = require("./blog");
 var ctlMenu = require("./menu");
 var ctlProfile = require("./profile");
+var ctlVerifyEmail = require("./verifyEmail");
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 
@@ -49,6 +50,12 @@ function getUsername(callback) {
 }
 
 function viewInitial() {
+  var verifyEmailMatch = location.pathname.match(/^\/verifyEmail\/(.*)\/(.*)$/);
+  if (verifyEmailMatch) {
+    ctlVerifyEmail.viewVerifyEmail(verifyEmailMatch[1],verifyEmailMatch[2]);
+    return;
+  }
+
   getUsername(function (err) {
     if (err) {
       ctlSplash.viewSplash();
@@ -87,7 +94,7 @@ window.onhashchange = function () {
 
 function loadAssetsFromServer(callback) {
   var promiseList = [];
-  var names = ["admin","blog","blogList","login","menu","profile","signup","splash"];
+  var names = ["admin","blog","blogList","login","menu","profile","signup","splash","verifyEmail"];
   for (var name of names) {
     promiseList[promiseList.length] = views.getTemplateSource(name);
   }
