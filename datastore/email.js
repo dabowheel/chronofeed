@@ -17,7 +17,7 @@ var smtpConfig = {
 var transporter = nodemailer.createTransport(smtpTransport(smtpConfig));
 
 exports.sendEmailVerification = function (host,user,verifyInfo) {
-  var link = "http://" + host + "/datastore/verifyEmail/" + verifyInfo.hash + "/" + verifyInfo.code;
+  var link = "http://" + host + "/verifyEmail/" + verifyInfo.hash + "/" + verifyInfo.code;
   var mailOptions = {
       from: "Grackle <" + process.env.NODEMAILER_USER + ">", // sender address
       to: user.email, // list of receivers
@@ -48,7 +48,9 @@ exports.verifyEmail = function (req,res,next) {
     }
 
     if (!res2) {
-      return next("Could not find verification record");
+      // already verified
+      res.end();
+      return;
     }
 
     var users = req.db.collection("users");

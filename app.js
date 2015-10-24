@@ -32,6 +32,7 @@ app.get("/admin", sendPage);
 app.get("/profile", sendPage);
 app.get("/signup", sendPage);
 app.get("/login", sendPage);
+app.get("/verifyEmail/*", sendPage);
 
 app.use("/datastore", function (req,res,next) {
   MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
