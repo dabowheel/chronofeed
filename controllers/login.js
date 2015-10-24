@@ -61,7 +61,6 @@ function clickLogin() {
     }
     if (res.success) {
       cache.username = res.username;
-      history.pushState("", document.title, window.location.pathname + window.location.search);
       ctlBlogList.viewBlogList();
     } else {
       $("#placeForAlert").addClass("alert alert-warning");

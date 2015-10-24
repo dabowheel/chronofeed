@@ -19,8 +19,12 @@ function datastore(method,path,obj,callback) {
           callback(null,res);
         }
       } else {
-        console.log("response err",responseText);
-        callback(request.responseText);
+        console.log("response err",request.responseText);
+        var err = request.responseText;
+        if (!err) {
+          err = request.statusText;
+        }
+        callback(err);
       }
     }
   };

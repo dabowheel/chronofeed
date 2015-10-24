@@ -40,9 +40,9 @@ function viewAdmin() {
   });
 }
 
-function deleteUser(id) {
+function deleteUser(_id) {
   var obj = {
-    id: id
+    _id: _id
   };
   datastore("DELETE", "deleteUser", obj, function (err, obj) {
     if (err) {
@@ -51,7 +51,7 @@ function deleteUser(id) {
       return;
     }
 
-    cache.userList.delete(id);
+    cache.userList.delete(_id);
     displayAdmin(cache.userList);
   });
 }

@@ -29,7 +29,7 @@ function clickSignup() {
       $("#placeForAlert").addClass("alert alert-warning");
       $("#placeForAlert").html(err);
     } else {
-      history.pushState("", document.title, window.location.pathname + window.location.search);
+      cache.username = res.username;
       ctlBlogList.viewBlogList();
     }
   });

@@ -10,6 +10,7 @@ var datastore_session = require("./datastore/session");
 var datastore_users = require("./datastore/users");
 var datastore_blogs = require("./datastore/blogs");
 var datastore_posts = require("./datastore/posts");
+var datastore_email = require("./datastore/email");
 
 app.use(express.static('public'));
 app.use(cookieParser(process.env.SESSION_SECRET));
@@ -62,6 +63,16 @@ app.post("/datastore/saveBlogTitle", datastore_blogs.saveBlogTitle);
 app.post("/datastore/updatePost", datastore_posts.updatePost);
 app.post("/datastore/createPost", datastore_posts.createPost);
 app.delete("/datastore/deletePost", datastore_posts.deletePost);
+
+app.param(["hash"], function (req,res,next,value) {
+  req.verifyHash = value;
+  next();
+});
+app.param(["code"], function (req,res,next,value) {
+  req.verifyCode = value;
+  next();
+});
+app.get("/datastore/verifyEmail/:hash/:code", datastore_email.verifyEmail);
 
 app.use(function(req,res,next) {
   res.status(404).send("Not Found.");

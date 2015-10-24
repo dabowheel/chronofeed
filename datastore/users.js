@@ -38,7 +38,10 @@ exports.deleteUser = function (req,res,next) {
     }
 
     var users = req.db.collection("users");
-    users.deleteOne({_id:new ObjectID(obj.id)}, function (err,result) {
+    var filter = {
+      _id: new ObjectID(obj._id)
+    };
+    users.deleteOne(filter, function (err,result) {
       if (err) {
         next(err);
         return;
@@ -47,7 +50,7 @@ exports.deleteUser = function (req,res,next) {
       if (result.result.ok) {
         var blogs = req.db.collection("blogs");
         var filter = {
-          userID: req.session.userID
+          userID: obj._id
         };
         blogs.deleteMany(filter, function (err,res2) {
           if (err) {
@@ -56,14 +59,24 @@ exports.deleteUser = function (req,res,next) {
 
           var posts = req.db.collection("posts");
           var filter = {
-            userID: req.session.userID
+            userID: obj._id
           };
           posts.deleteMany(filter, function (err, res3) {
             if (err) {
               return next(err);
             }
 
-            res.end();
+            var verify = req.db.collection("verify");
+            var filter = {
+              userID: obj._id
+            };
+            verify.deleteMany(filter, function (err, res4) {
+              if (err) {
+                return next(err);
+              }
+
+              res.end();
+            });
           });
         });
       } else {
