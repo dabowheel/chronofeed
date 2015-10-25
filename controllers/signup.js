@@ -2,6 +2,7 @@ var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var ctlBlogList = require("./blogList");
 var page = require("../scripts/page");
+var validate = require("../scripts/validate");
 
 function viewSignup() {
   page.setURL("/signup","Grackle | Signup");
@@ -15,6 +16,8 @@ function viewSignup() {
   for (var id of ["inputUsername", "inputEmail", "inputPassword"]) {
     document.getElementById(id).onkeypress = onKeypress;
   }
+
+  validate.listenToFields(["inputUsername", "inputEmail", "inputPassword"], "signupButton");
 }
 
 function clickSignup() {
