@@ -4,6 +4,7 @@ var modelBlog = require("../model/blog");
 var modelPost = require("../model/post");
 var page = require("../scripts/page");
 var ctlBlogList = require("./blogList");
+var validate = require("../scripts/validate");
 
 function displayBlog2HTML(blog,callback) {
   Handlebars.registerHelper("encodeText", function (str) {
@@ -31,6 +32,7 @@ function displayBlog(blog) {
 
   if (cache.blog.editBlogTitle) {
     document.getElementById("inputTitle").onkeypress = onKeypress;
+    validate.listenToFields(["inputTitle"], "blogTitleAcceptButton");
   }
 }
 
