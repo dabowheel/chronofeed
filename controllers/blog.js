@@ -12,7 +12,7 @@ function displayBlog2HTML(blog,callback) {
   });
 
   var template = Handlebars.compile(views.list.menu);
-  var menuHTML = template({username:cache.username});
+  var menuHTML = template({});
   template = Handlebars.compile(views.list.blog);
   var blogHTML = template(blog);
   callback(menuHTML + blogHTML);

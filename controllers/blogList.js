@@ -10,7 +10,7 @@ var page = require("../scripts/page");
 function displayBlogList2HTML(blogList,callback) {
   var template;
   template = Handlebars.compile(views.list.menu);
-  var menuHTML = template({username:cache.username});
+  var menuHTML = template({});
   template = Handlebars.compile(views.list.blogList);
   var blogListHTML = template(blogList);
   callback(menuHTML + blogListHTML);

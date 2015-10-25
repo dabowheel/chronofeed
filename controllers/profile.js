@@ -21,7 +21,6 @@ function getProfile(callback) {
 function displayProfile(profile) {
   var template = Handlebars.compile(views.list.menu);
   var menuHTML = template({
-    username: cache.username,
     isProfile: true
   });
   template = Handlebars.compile(views.list.profile);

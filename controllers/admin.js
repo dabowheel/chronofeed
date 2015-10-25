@@ -5,7 +5,7 @@ var page = require("../scripts/page");
 
 function displayAdmin(adminList) {
   var template = Handlebars.compile(views.list.menu);
-  var menuHTML = template({username:cache.username, isAdmin: true});
+  var menuHTML = template({isAdmin: true});
   template = Handlebars.compile(views.list.admin);
   var adminHTML = template(adminList);
   document.getElementById("main").innerHTML = menuHTML + adminHTML;
