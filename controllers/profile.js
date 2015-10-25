@@ -1,6 +1,7 @@
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var page = require("../scripts/page");
+var validate = require("../scripts/validate");
 
 function getProfile(callback) {
   if (cache.profile) {
@@ -26,6 +27,8 @@ function displayProfile(profile) {
   template = Handlebars.compile(views.list.profile);
   var profileHTML = template(profile);
   document.getElementById("main").innerHTML = menuHTML + profileHTML;
+
+  validate.listenToFields(["inputEmail"], "saveButton");
 }
 
 function viewProfile() {
