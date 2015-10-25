@@ -73,7 +73,14 @@ function editBlog(domID) {
 }
 
 function deleteBlog(domID) {
-  var blogInfo = cache.blogList.delete(domID);
+  cache.blogDOMID = domID;
+  var blogInfo = cache.blogList.delete(cache.blogDOMID);
+  $("#deleteHeader").html("Delete " + blogInfo.title);
+  $("#deleteModal").modal("show");
+}
+
+function confirmDeleteBlog() {
+  var blogInfo = cache.blogList.delete(cache.blogDOMID);
   displayBlogList(cache.blogList);
   datastore("DELETE", "deleteBlog", blogInfo.exportObject(), function(err,res) {
     if (err) {
@@ -89,4 +96,5 @@ exports.setGlobals = function () {
   global.addBlog = addBlog;
   global.editBlog = editBlog;
   global.deleteBlog = deleteBlog;
+  global.confirmDeleteBlog = confirmDeleteBlog;
 };

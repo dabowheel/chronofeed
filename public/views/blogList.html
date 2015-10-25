@@ -21,4 +21,19 @@
       {{/each}}
     </tbody>
   </table>
+
+  <div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" id="deleteHeader">Delete Item</div>
+        <div class="modal-body">
+          Are you sure that you want to delete the blog?
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default" data-dismiss="modal">Don't Delete</button>
+          <button class="btn btn-primary" data-dismiss="modal" onclick="confirmDeleteBlog();">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
