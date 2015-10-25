@@ -2,6 +2,7 @@ var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var ctlBlogList = require("./blogList");
 var page = require("../scripts/page");
+var validate = require("../scripts/validate");
 
 function viewLogin() {
   page.setURL("/login","Grackle | Login");
@@ -14,6 +15,8 @@ function viewLogin() {
   document.getElementById("inputUsername").onkeypress = onKeypress;
   document.getElementById("inputPassword").onkeypress = onKeypress;
   document.getElementById("inputUsername").focus();
+
+  validate.listenToFields(["inputUsername", "inputPassword"], "loginButton");
 }
 
 function getLoginFormValues() {
