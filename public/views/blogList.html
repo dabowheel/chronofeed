@@ -14,7 +14,7 @@
         <td>
           <span style="float:right;">
             <button class="btn btn-primary" onclick="editBlog('{{domID}}');">Edit</button>
-            <button class="btn btn-primary" onclick="deleteBlog('{{domID}}')">Delete</button>
+            <button class="btn btn-primary" onclick="confirmDeleteBlog('{{domID}}')">Delete</button>
           </span>
         </td>
       </tr>
@@ -25,13 +25,13 @@
   <div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header" id="deleteHeader">Delete Item</div>
+        <div class="modal-header" id="deleteHeader"></div>
         <div class="modal-body">
           Are you sure that you want to delete the blog?
         </div>
         <div class="modal-footer">
           <button class="btn btn-default" data-dismiss="modal">Don't Delete</button>
-          <button class="btn btn-primary" data-dismiss="modal" onclick="confirmDeleteBlog();">Delete</button>
+          <button class="btn btn-primary" data-dismiss="modal" id="deleteButton">Delete</button>
         </div>
       </div>
     </div>

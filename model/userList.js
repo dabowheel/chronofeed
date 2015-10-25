@@ -47,6 +47,14 @@ UserList.prototype.delete = function (_id) {
     }
   }
 };
+UserList.prototype.getUser = function (_id) {
+  for (var i = 0; i < this.list.length; i++) {
+    if (this.list[i]._id == _id) {
+      return this.list[i];
+    }
+  }
+  return null;
+};
 
 exports.User = User;
 exports.UserList = UserList;

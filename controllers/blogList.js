@@ -72,15 +72,17 @@ function editBlog(domID) {
   ctlBlog.viewBlog(blogInfo._id);
 }
 
-function deleteBlog(domID) {
-  cache.blogDOMID = domID;
-  var blogInfo = cache.blogList.delete(cache.blogDOMID);
+function confirmDeleteBlog(domID) {
+  var blogInfo = cache.blogList.getBlogInfo(domID);
   $("#deleteHeader").html("Delete " + blogInfo.title);
+  document.getElementById("deleteButton").onclick = function () {
+    deleteBlog(domID);
+  };
   $("#deleteModal").modal("show");
 }
 
-function confirmDeleteBlog() {
-  var blogInfo = cache.blogList.delete(cache.blogDOMID);
+function deleteBlog(domID) {
+  var blogInfo = cache.blogList.delete(domID);
   displayBlogList(cache.blogList);
   datastore("DELETE", "deleteBlog", blogInfo.exportObject(), function(err,res) {
     if (err) {

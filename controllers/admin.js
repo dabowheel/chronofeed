@@ -40,6 +40,15 @@ function viewAdmin() {
   });
 }
 
+function confirmDeleteUser(_id) {
+  var user = cache.userList.getUser(_id);
+  $("#deleteHeader").html("Delete " + user.username);
+  document.getElementById("deleteButton").onclick = function () {
+    deleteUser(_id);
+  };
+  $("#deleteModal").modal("show");
+}
+
 function deleteUser(_id) {
   var obj = {
     _id: _id
@@ -59,4 +68,5 @@ function deleteUser(_id) {
 exports.viewAdmin = viewAdmin;
 exports.setGlobals = function () {
   global.deleteUser = deleteUser;
+  global.confirmDeleteUser = confirmDeleteUser;
 };
