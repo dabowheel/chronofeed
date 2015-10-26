@@ -1,19 +1,4 @@
-function getInputDateValue(d) {
-  return d.getFullYear() + "-" + ((d.getMonth()+1)<10?"0":"") + (d.getMonth()+1) + "-" + (d.getDate()<10?"0":"") + d.getDate();
-}
-function getInputTimeValue(d) {
-  return ((d.getHours()<10)?"0":"") + d.getHours() + ":" + ((d.getMinutes()<10)?"0":"") + d.getMinutes();
-}
-function toDateString(d) {
-  if (global.navigator) {
-    return d.toLocaleDateString() + " " + d.toLocaleTimeString(global.navigator.language,{hour:"2-digit",minute:"2-digit"});
-  } else {
-    return d.toString();
-  }
-}
-function toDBDateString(d) {
-  return getInputDateValue(d) + " " + getInputTimeValue(d);
-}
+var dateUtil = require("./dateUtil");
 
 function Post(_id,title,text,date,blogID,domID) {
   this.load(_id, title, text, date, blogID, domID);
@@ -24,10 +9,10 @@ Post.prototype.load = function (_id,title,text,date,blogID,domID) {
   this.text = text;
   this.date = date;
   if (this.date) {
-    this.dateString = toDateString(this.date);
-    this.dateOnly = getInputDateValue(this.date);
-    this.timeOnly = getInputTimeValue(this.date);
-    this.dbDateString = toDBDateString(this.date);
+    this.dateString = dateUtil.toDateString(this.date);
+    this.dateOnly = dateUtil.getInputDateValue(this.date);
+    this.timeOnly = dateUtil.getInputTimeValue(this.date);
+    this.dbDateString = dateUtil.toDBDateString(this.date);
   }
   this.blogID = blogID;
   this.domID = domID;

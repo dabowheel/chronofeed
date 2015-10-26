@@ -42,7 +42,7 @@ function getSignupFormValues() {
   return {
     username: document.getElementById("inputUsername").value,
     email: document.getElementById("inputEmail").value,
-    password: CryptoJS.SHA256(getPasswordPlain()).toString(),
+    password: CryptoJS.SHA256(getPasswordPlain()).toString()
   };
 }
 

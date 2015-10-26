@@ -16,6 +16,7 @@ exports.signup = function (req,res,next) {
 
     var users = req.db.collection("users");
     obj.emailVerified = false;
+    obj.joinedDate = new Date();
     users.insert(obj, function (error,result) {
       if (error) {
         return next(error);

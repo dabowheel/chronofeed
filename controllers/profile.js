@@ -2,6 +2,7 @@ var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var page = require("../scripts/page");
 var validate = require("../scripts/validate");
+var modelUserList = require("../model/userList");
 
 function getProfile(callback) {
   if (cache.profile) {
@@ -13,7 +14,9 @@ function getProfile(callback) {
     if (err) {
       return callback(err);
     }
-    cache.profile = res;
+    var user = new modelUserList.User();
+    user.loadObject(res);
+    cache.profile = user;
     callback();
   });
 }

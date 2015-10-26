@@ -1,23 +1,27 @@
+var model = require("./model");
+var dateUtil = require("./dateUtil");
 
-function User(_id,username,email,emailVerified) {
+function User(_id,username,email,emailVerified,joinedDate) {
   this._id = _id;
   this.username = username;
   this.email = email;
   this.emailVerified = emailVerified;
+  this.joinedDate = joinedDate;
+  this.postLoad();
 }
-User.prototype.exportObject = function () {
-  return {
-    _id: this._id,
-    username: this.username,
-    email: this.email,
-    emailVerified: this.emailVerified
-  };
+User.prototype = new model.Model();
+User.prototype.schema = {
+  _id: String,
+  username: String,
+  email: String,
+  emailVerified: Boolean,
+  joinedDate: Date
 };
-User.prototype.loadObject = function (obj) {
-  this._id = obj._id;
-  this.username = obj.username;
-  this.email = obj.email;
-  this.emailVerified = obj.emailVerified;
+User.prototype.postLoad = function () {
+  if (this.joinedDate) {
+    this.joinedDateString = dateUtil.toDateString(this.joinedDate);
+    this.joinedDateOnly = dateUtil.getInputDateValue(this.joinedDate);
+  }
 };
 
 function UserList() {
@@ -29,7 +33,9 @@ UserList.prototype.add = function (user) {
 UserList.prototype.loadObject = function (obj) {
   for (var i = 0; i < obj.list.length; i++) {
     var values = obj.list[i];
-    this.add(new User(values._id ,values.username, values.email, values.emailVerified));
+    var user = new User();
+    user.loadObject(values);
+    this.add(user);
   }
 };
 UserList.prototype.exportObject = function () {

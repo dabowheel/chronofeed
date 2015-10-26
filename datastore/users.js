@@ -2,6 +2,7 @@ var util = require("./util");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 var email = require("./email");
+var modelUserList = require("../model/userList");
 
 exports.userList = function (req,res,next) {
   if (!req.session.userID) {
@@ -102,7 +103,9 @@ exports.getProfile = function (req,res,next) {
       return next("user not found");
     }
 
-    res.json(doc);
+    var user = new modelUserList.User();
+    user.loadObject(doc);
+    res.json(user.exportObject());
   });
 };
 
@@ -128,6 +131,7 @@ exports.saveProfile = function (req,res,next) {
       } else {
         obj.emailVerified = false;
       }
+      obj.joinedDate = current.joinedDate;
 
       users.updateOne({_id:new ObjectID(req.session.userID)}, obj, function (err,result) {
         if (err) {
