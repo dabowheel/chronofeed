@@ -1,6 +1,7 @@
 var util = require("./util");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
+var email = require("./email");
 
 exports.userList = function (req,res,next) {
   if (!req.session.userID) {
@@ -116,16 +117,35 @@ exports.saveProfile = function (req,res,next) {
     }
 
     var users = req.db.collection("users");
-    users.updateOne({_id:new ObjectID(req.session.userID)}, obj, function (err,result) {
+
+    users.findOne({_id:new ObjectID(req.session.userID)}, function (err, current) {
       if (err) {
         return next(err);
       }
 
-      if (!result.result.ok) {
-        return next("could not find user profile");
+      if (obj.email == current.email) {
+        obj.emailVerified = current.emailVerified;
+      } else {
+        obj.emailVerified = false;
       }
 
-      res.end();
+      users.updateOne({_id:new ObjectID(req.session.userID)}, obj, function (err,result) {
+        if (err) {
+          return next(err);
+        }
+
+        if (!result.result.ok) {
+          return next("could not find user profile");
+        }
+
+        email.createVerifyInfo(req.get("host"), req.session.userID, obj.email, req.db, function (err) {
+          if (err) {
+            return next(err);
+          }
+
+          res.end();
+        });
+      });
     });
   });
 };

@@ -56,7 +56,7 @@ function getValues() {
   };
 }
 
-function validate(values, passwordPlain) {
+function validateProfileForm(values, passwordPlain) {
   var valid = true;
 
   if (values.email === "") {
@@ -82,7 +82,7 @@ function validate(values, passwordPlain) {
 
 function clickSaveProfile() {
   var values = getValues();
-  if (!validate(values, getPasswordPlain())) {
+  if (!validateProfileForm(values, getPasswordPlain())) {
     return;
   }
 

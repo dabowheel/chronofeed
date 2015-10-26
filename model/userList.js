@@ -1,20 +1,23 @@
 
-function User(_id,username,email) {
+function User(_id,username,email,emailVerified) {
   this._id = _id;
   this.username = username;
   this.email = email;
+  this.emailVerified = emailVerified;
 }
 User.prototype.exportObject = function () {
   return {
     _id: this._id,
     username: this.username,
-    email: this.email
+    email: this.email,
+    emailVerified: this.emailVerified
   };
 };
 User.prototype.loadObject = function (obj) {
   this._id = obj._id;
   this.username = obj.username;
   this.email = obj.email;
+  this.emailVerified = obj.emailVerified;
 };
 
 function UserList() {
@@ -26,7 +29,7 @@ UserList.prototype.add = function (user) {
 UserList.prototype.loadObject = function (obj) {
   for (var i = 0; i < obj.list.length; i++) {
     var values = obj.list[i];
-    this.add(new User(values._id ,values.username, values.email));
+    this.add(new User(values._id ,values.username, values.email, values.emailVerified));
   }
 };
 UserList.prototype.exportObject = function () {

@@ -72,7 +72,7 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      files: ["*.js", "controllers/*.js", "model/*.js", "datastore/*.js", "scripts/*.js", "views/*.html"],
+      files: ["*.js", "controllers/*.js", "model/**/*.js", "datastore/*.js", "scripts/*.js", "views/*.html"],
       tasks: ['default']
     }
   });

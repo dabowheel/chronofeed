@@ -4,18 +4,20 @@ describe("user", function () {
   var obj = {
     _id: "id",
     username: "username",
-    email: "email"
+    email: "email",
+    emailVerified: true
   };
   var user;
 
   beforeEach(function () {
-    user = new modelUserList.User(obj._id, obj.username, obj.email);
+    user = new modelUserList.User(obj._id, obj.username, obj.email, obj.emailVerified);
   });
 
   it("should create a user", function () {
     expect(user._id).toEqual(obj._id);
     expect(user.username).toEqual(obj.username);
     expect(user.email).toEqual(obj.email);
+    expect(user.emailVerified).toEqual(obj.emailVerified);
   });
 
   it("should export an object", function () {
@@ -35,12 +37,14 @@ describe("user list", function () {
       {
         _id: "id",
         username: "username",
-        email: "email"
+        email: "email",
+        emailVerified: true
       },
       {
         _id: "id2",
         username: "username2",
-        email: "email2"
+        email: "email2",
+        emailVerified: false
       }
     ]
   };
@@ -49,8 +53,8 @@ describe("user list", function () {
 
   beforeEach(function () {
     userList = new modelUserList.UserList();
-    userList.add(new modelUserList.User("id", "username", "email"));
-    userList.add(new modelUserList.User("id2", "username2", "email2"));
+    userList.add(new modelUserList.User("id", "username", "email", true));
+    userList.add(new modelUserList.User("id2", "username2", "email2",false));
   });
 
   it("should create an user list", function () {
@@ -58,10 +62,12 @@ describe("user list", function () {
     expect(user._id).toEqual("id");
     expect(user.username).toEqual("username");
     expect(user.email).toEqual("email");
+    expect(user.emailVerified).toEqual(true);
     user = userList.list[1];
     expect(user._id).toEqual("id2");
     expect(user.username).toEqual("username2");
     expect(user.email).toEqual("email2");
+    expect(user.emailVerified).toEqual(false);
   });
 
   it("should load an object", function () {
@@ -71,10 +77,12 @@ describe("user list", function () {
     expect(user._id).toEqual("id");
     expect(user.username).toEqual("username");
     expect(user.email).toEqual("email");
+    expect(user.emailVerified).toEqual(true);
     user = userList.list[1];
     expect(user._id).toEqual("id2");
     expect(user.username).toEqual("username2");
     expect(user.email).toEqual("email2");
+    expect(user.emailVerified).toEqual(false);
   });
 
   it("should export an object", function () {

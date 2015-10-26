@@ -25,20 +25,11 @@ exports.signup = function (req,res,next) {
       req.session.userID = userID;
       req.session.username = obj.username;
 
-      var verifyInfo = {};
-      var h = new crypto.Hash("sha256");
-      h.update(obj.email);
-      verifyInfo.userID = userID;
-      verifyInfo.type = "email";
-      verifyInfo.hash = h.digest("hex");
-      verifyInfo.code = crypto.randomBytes(256/8).toString("hex");
-      var verify = req.db.collection("verify");
-      verify.insert(verifyInfo, function (err,res3) {
+      email.createVerifyInfo(req.get("host"), userID, obj.email, req.db, function (err) {
         if (err) {
           return next(err);
         }
 
-        email.sendEmailVerification(req.get("host"), obj, verifyInfo);
         res.json({username:obj.username});
       });
     });

@@ -16,11 +16,30 @@ var smtpConfig = {
 };
 var transporter = nodemailer.createTransport(smtpTransport(smtpConfig));
 
-exports.sendEmailVerification = function (host,user,verifyInfo) {
-  var link = "http://" + host + "/verifyEmail/" + verifyInfo.hash + "/" + verifyInfo.code;
+exports.createVerifyInfo = function (host,userID,email,db,callback) {
+  var verifyInfo = {};
+  var h = new crypto.Hash("sha256");
+  h.update(email);
+  verifyInfo.userID = userID;
+  verifyInfo.type = "email";
+  verifyInfo.hash = h.digest("hex");
+  verifyInfo.code = crypto.randomBytes(256/8).toString("hex");
+  var verify = db.collection("verify");
+  verify.insert(verifyInfo, function (err,res) {
+    if (err) {
+      return callback(err);
+    }
+
+    sendEmailVerification(host, email, verifyInfo.hash, verifyInfo.code);
+    callback();
+  });
+};
+
+function sendEmailVerification (host,email,hash,code) {
+  var link = "http://" + host + "/verifyEmail/" + hash + "/" + code;
   var mailOptions = {
       from: "Grackle <" + process.env.NODEMAILER_USER + ">", // sender address
-      to: user.email, // list of receivers
+      to: email, // list of receivers
       subject: "Grackle - Verify Email Address", // Subject line
       text: 'Please verify your email address by following this link: ' + link, // plaintext body
       html: 'Please verify your email address by following this link: <a href="' + link + '">Verify</a>' // html body
@@ -32,7 +51,7 @@ exports.sendEmailVerification = function (host,user,verifyInfo) {
       }
       console.log('Message sent: ' + info.response);
   });
-};
+}
 
 exports.verifyEmail = function (req,res,next) {
   console.log("verifyEmail");
