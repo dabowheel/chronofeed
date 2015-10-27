@@ -9,6 +9,7 @@ var ctlProfile = require("./profile");
 var ctlVerifyEmail = require("./verifyEmail");
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
+var ctlForgotPassword = require("./forgotPassword");
 
 global.clearCache = function() {
   global.cache = {};
@@ -81,6 +82,8 @@ function viewInitial() {
         ctlLogin.viewLogin();
       } else if (location.pathname == "/signup") {
         ctlSignup.viewSignup();
+      } else if (location.pathname == "/forgotPassword") {
+        ctlForgotPassword.viewForgotPassword();
       } else {
         ctlSplash.viewSplash();
       }
@@ -94,7 +97,7 @@ window.onhashchange = function () {
 
 function loadAssetsFromServer(callback) {
   var promiseList = [];
-  var names = ["admin","blog","blogList","login","menu","profile","signup","splash","verifyEmail"];
+  var names = ["admin","blog","blogList","login","menu","profile","forgotPassword","signup","splash","verifyEmail"];
   for (var name of names) {
     promiseList[promiseList.length] = views.getTemplateSource(name);
   }
@@ -117,3 +120,4 @@ ctlProfile.setGlobals();
 ctlBlog.setGlobals();
 ctlSplash.setGlobals();
 ctlVerifyEmail.setGlobals();
+ctlForgotPassword.setGlobals();

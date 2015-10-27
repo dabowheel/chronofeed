@@ -1,7 +1,7 @@
 var util = require("./util");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
-var email = require("./email");
+var verify = require("./verify");
 var modelUserList = require("../model/userList");
 
 exports.userList = function (req,res,next) {
@@ -142,7 +142,7 @@ exports.saveProfile = function (req,res,next) {
           return next("could not find user profile");
         }
 
-        email.createVerifyInfo(req.get("host"), req.session.userID, obj.email, req.db, function (err) {
+        verify.createVerifyInfo(req.get("host"), req.session.userID, obj.email, req.db, function (err) {
           if (err) {
             return next(err);
           }

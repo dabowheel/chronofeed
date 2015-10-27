@@ -10,7 +10,8 @@ var datastore_session = require("./datastore/session");
 var datastore_users = require("./datastore/users");
 var datastore_blogs = require("./datastore/blogs");
 var datastore_posts = require("./datastore/posts");
-var datastore_email = require("./datastore/email");
+var datastore_verify = require("./datastore/verify");
+var datastore_reset = require("./datastore/reset");
 
 app.use(express.static('public'));
 app.use(cookieParser(process.env.SESSION_SECRET));
@@ -33,6 +34,7 @@ app.get("/profile", sendPage);
 app.get("/signup", sendPage);
 app.get("/login", sendPage);
 app.get("/verifyEmail/*", sendPage);
+app.get("/forgotPassword", sendPage);
 
 app.use("/datastore", function (req,res,next) {
   MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
@@ -65,6 +67,8 @@ app.post("/datastore/updatePost", datastore_posts.updatePost);
 app.post("/datastore/createPost", datastore_posts.createPost);
 app.delete("/datastore/deletePost", datastore_posts.deletePost);
 
+app.post("/datastore/forgotPassword", datastore_reset.forgotPassword);
+
 app.param(["hash"], function (req,res,next,value) {
   req.verifyHash = value;
   next();
@@ -73,7 +77,7 @@ app.param(["code"], function (req,res,next,value) {
   req.verifyCode = value;
   next();
 });
-app.get("/datastore/verifyEmail/:hash/:code", datastore_email.verifyEmail);
+app.get("/datastore/verifyEmail/:hash/:code", datastore_verify.verifyEmail);
 
 app.use(function(req,res,next) {
   res.status(404).send("Not Found.");

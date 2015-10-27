@@ -1,20 +1,7 @@
-var nodemailer = require("nodemailer");
 var util = require("./util");
-var smtpTransport = require('nodemailer-smtp-transport');
 var crypto = require("crypto");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
-
-var smtpConfig = {
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
-  },
-  secure: true
-};
-var transporter = nodemailer.createTransport(smtpTransport(smtpConfig));
 
 exports.createVerifyInfo = function (host,userID,email,db,callback) {
   var verifyInfo = {};
@@ -45,7 +32,7 @@ function sendEmailVerification (host,email,hash,code) {
       html: 'Please verify your email address by following this link: <a href="' + link + '">Verify</a>' // html body
   };
 
-  transporter.sendMail(mailOptions, function(error, info){
+  util.transporter.sendMail(mailOptions, function(error, info){
       if(error){
           return console.log(error);
       }

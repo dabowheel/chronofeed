@@ -24,6 +24,9 @@ function datastore(method,path,obj,callback) {
         if (!err) {
           err = request.statusText;
         }
+        if (!err) {
+          err = "connection error";
+        }
         callback(err);
       }
     }

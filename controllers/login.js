@@ -3,6 +3,7 @@ var datastore = require("../scripts/datastore");
 var ctlBlogList = require("./blogList");
 var page = require("../scripts/page");
 var validate = require("../scripts/validate");
+var ctlForgotPassword = require("./forgotPassword");
 
 function viewLogin() {
   page.setURL("/login","Grackle | Login");
@@ -67,12 +68,26 @@ function clickLogin() {
       ctlBlogList.viewBlogList();
     } else {
       $("#placeForAlert").addClass("alert alert-warning");
-      $("#placeForAlert").html("Invalid username or password.");
+      var element = document.getElementById("placeForAlert");
+      var link = document.createElement("a");
+      link.href = "#";
+      link.onclick = function () {
+        clickForgotPasswordLink();
+        return false;
+      };
+      link.innerHTML = "Did you forget your password?";
+      $("#placeForAlert").html("Invalid username or password. ");
+      document.getElementById("forgotPasswordLink").appendChild(link);
     }
   });
+}
+
+function clickForgotPasswordLink() {
+  ctlForgotPassword.viewForgotPassword();
 }
 
 exports.viewLogin = viewLogin;
 exports.setGlobals = function () {
   global.clickLogin = clickLogin;
+  global.clickResetPasswordLink = clickForgotPasswordLink;
 };

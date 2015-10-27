@@ -1,4 +1,7 @@
-function getJSONFromBody(req,callback) {
+var nodemailer = require("nodemailer");
+var smtpTransport = require('nodemailer-smtp-transport');
+
+exports.getJSONFromBody = function (req,callback) {
   var body = "";
   req.on("data", function(data) {
     body += data;
@@ -10,6 +13,16 @@ function getJSONFromBody(req,callback) {
       callback(error,null);
     }
   });
-}
+};
 
-exports.getJSONFromBody = getJSONFromBody;
+var smtpConfig = {
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS
+  },
+  secure: true
+};
+
+exports.transporter = nodemailer.createTransport(smtpTransport(smtpConfig));

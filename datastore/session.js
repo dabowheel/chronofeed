@@ -1,5 +1,5 @@
 var util = require("./util");
-var email = require("./email");
+var verify = require("./verify");
 var crypto = require("crypto");
 
 exports.session = function (req,res,next) {
@@ -26,7 +26,7 @@ exports.signup = function (req,res,next) {
       req.session.userID = userID;
       req.session.username = obj.username;
 
-      email.createVerifyInfo(req.get("host"), userID, obj.email, req.db, function (err) {
+      verify.createVerifyInfo(req.get("host"), userID, obj.email, req.db, function (err) {
         if (err) {
           return next(err);
         }

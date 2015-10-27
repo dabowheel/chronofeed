@@ -20,3 +20,12 @@
 .gr-hotkey:first-letter {
   text-decoration: underline;
 }
+
+.gr-forgot-password-link {
+  position: relative;
+  top: -11px;
+}
+
+.gr-alert {
+  float: none;
+}
