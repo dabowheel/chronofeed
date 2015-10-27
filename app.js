@@ -36,6 +36,7 @@ app.get("/login", sendPage);
 app.get("/verifyEmail/*", sendPage);
 app.get("/forgotPassword", sendPage);
 app.get("/resetPassword/*", sendPage);
+app.get("/resetPasswordResult", sendPage);
 
 app.use("/datastore", function (req,res,next) {
   MongoClient.connect(process.env.MONGODB_URL, function (error,db) {

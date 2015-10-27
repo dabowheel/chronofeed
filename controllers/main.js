@@ -11,6 +11,7 @@ var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var ctlForgotPassword = require("./forgotPassword");
 var ctlResetPassword = require("./resetPassword");
+var ctlResetPasswordResult = require("./resetPasswordResult");
 
 global.clearCache = function() {
   global.cache = {};
@@ -60,8 +61,14 @@ function viewInitial() {
 
   var resetPasswordMatch = location.pathname.match(/^\/resetPassword\/(.*)\/(.*)$/);
   if (resetPasswordMatch) {
-    var p = new ctlResetPassword.Page(views.list.resetPassword, "main", resetPasswordMatch[1], resetPasswordMatch[2]);
+    var p = new ctlResetPassword.ResetPassword(views.list.resetPassword, "main", resetPasswordMatch[1], resetPasswordMatch[2]);
     p.show();
+    return;
+  }
+
+  if (location.pathname == "/resetPasswordResult") {
+    var c = new ctlResetPasswordResult.ResetPasswordResult(views.list.resetPasswordResult, "main");
+    c.show();
     return;
   }
 
@@ -105,9 +112,13 @@ window.onhashchange = function () {
 
 function loadAssetsFromServer(callback) {
   var promiseList = [];
-  var names = ["admin","blog","blogList","login","menu","profile","forgotPassword","resetPassword","signup","splash","verifyEmail"];
+  var names = ["admin","blog","blogList","login","menu","profile","forgotPassword","signup","splash","verifyEmail"];
   for (var name of names) {
     promiseList[promiseList.length] = views.getTemplateSource(name);
+  }
+
+  for (var ctl of [ctlResetPassword, ctlResetPasswordResult]) {
+    promiseList.push(views.getTemplateSource(ctl.viewName));
   }
 
   var p = Promise.all(promiseList);
