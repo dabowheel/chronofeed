@@ -35,6 +35,7 @@ app.get("/signup", sendPage);
 app.get("/login", sendPage);
 app.get("/verifyEmail/*", sendPage);
 app.get("/forgotPassword", sendPage);
+app.get("/resetPassword/*", sendPage);
 
 app.use("/datastore", function (req,res,next) {
   MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
@@ -68,6 +69,7 @@ app.post("/datastore/createPost", datastore_posts.createPost);
 app.delete("/datastore/deletePost", datastore_posts.deletePost);
 
 app.post("/datastore/forgotPassword", datastore_reset.forgotPassword);
+app.post("/datastore/resetPassword", datastore_reset.resetPassword);
 
 app.param(["hash"], function (req,res,next,value) {
   req.verifyHash = value;

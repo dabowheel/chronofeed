@@ -60,3 +60,7 @@ function sendResetEmail(host,email,emailHash,code) {
       console.log('Message sent: ' + info.response);
   });
 }
+
+exports.resetPassword = function (req,res,next) {
+  res.end();
+};

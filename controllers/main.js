@@ -10,6 +10,7 @@ var ctlVerifyEmail = require("./verifyEmail");
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var ctlForgotPassword = require("./forgotPassword");
+var ctlResetPassword = require("./resetPassword");
 
 global.clearCache = function() {
   global.cache = {};
@@ -57,6 +58,13 @@ function viewInitial() {
     return;
   }
 
+  var resetPasswordMatch = location.pathname.match(/^\/resetPassword\/(.*)\/(.*)$/);
+  if (resetPasswordMatch) {
+    var p = new ctlResetPassword.Page(views.list.resetPassword, "main", resetPasswordMatch[1], resetPasswordMatch[2]);
+    p.show();
+    return;
+  }
+
   getUsername(function (err) {
     if (err) {
       ctlSplash.viewSplash();
@@ -97,7 +105,7 @@ window.onhashchange = function () {
 
 function loadAssetsFromServer(callback) {
   var promiseList = [];
-  var names = ["admin","blog","blogList","login","menu","profile","forgotPassword","signup","splash","verifyEmail"];
+  var names = ["admin","blog","blogList","login","menu","profile","forgotPassword","resetPassword","signup","splash","verifyEmail"];
   for (var name of names) {
     promiseList[promiseList.length] = views.getTemplateSource(name);
   }
