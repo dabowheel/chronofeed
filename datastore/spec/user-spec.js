@@ -1,5 +1,3 @@
-var main = require("../main");
-
 xdescribe("user", function () {
   it("should login", function (done) {
     var inObject = {

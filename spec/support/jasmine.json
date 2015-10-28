@@ -1,0 +1,12 @@
+{
+    "spec_dir": "",
+    "spec_files": [
+        "controllers/**/*spec.js",
+        "model/**/*spec.js",
+        "datastore/**/*spec.js",
+        "scripts/**/*spec.js"
+    ],
+    "helpers": [
+        "helpers/**/*.js"
+    ]
+}

@@ -1,5 +1,3 @@
-var main = require("../main");
-
 xdescribe("blogList", function() {
   it("should return list of blogs", function(done) {
     var inObject = {
