@@ -4,9 +4,14 @@
   "description": "Fitness and Health",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jasmine",
     "start": "node app.js",
-    "build": "grunt && jasmine",
+    "browserify": "browserify controllers/*.js model/*.js scripts/*.js -o public/scripts/grackle.js",
+    "browserify-win": "powershell -c ./globify browserify controllers/*.js model/*.js scripts/*.js -o public/scripts/grackle.js",
+    "babel": "babel public/scripts/grackle.js -o public/scripts/grackle.5.js",
+    "uglify": "uglifyjs public/scripts/grackle.5.js -o public/scripts/grackle.5.min.js",
+    "build": "npm run browserify && npm run babel && npm run uglify",
+    "build-win": "npm run browserify-win && npm run babel && npm run uglify",
     "wc": "git ls-files | grep .js | xargs wc -l"
   },
   "repository": {
