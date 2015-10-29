@@ -26,4 +26,16 @@ function listenToFields(fieldList,buttonID) {
   }
 }
 
+exports.addReturnPressListener = function (fieldList,callback) {
+  function handler (e) {
+    if (e.keyCode == 13) {
+      callback();
+    }
+  }
+
+  for (let id of fieldList) {
+    document.getElementById(id).onkeypress = handler;
+  }
+};
+
 exports.listenToFields = listenToFields;

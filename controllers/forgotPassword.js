@@ -8,6 +8,7 @@ function viewForgotPassword() {
   document.getElementById("main").innerHTML = views.list.forgotPassword;
   document.getElementById("inputUsername").focus();
   validate.listenToFields(["inputUsername"], "resetButton");
+  validate.addReturnPressListener(["inputUsername"], clickResetPassword);
 }
 
 function clickResetPassword() {
