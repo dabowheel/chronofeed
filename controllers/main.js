@@ -35,6 +35,9 @@ function loadAll() {
   loadAssetsFromServer(function () {
     viewInitial();
   });
+  if (liveReload) {
+    liveReload();
+  }
 }
 
 function getUsername(callback) {
