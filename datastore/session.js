@@ -31,23 +31,37 @@ exports.signup = function (req,res,next) {
         return next("This username already exists");
       }
 
-      obj.emailVerified = false;
-      obj.joinedDate = new Date();
-      users.insert(obj, function (error,result) {
-        if (error) {
-          return next(error);
+      // check if email exits
+      let filter = {
+        email: obj.email
+      };
+      users.findOne(filter, function (err,userDoc) {
+        if (err) {
+          return next(err);
         }
 
-        var userID = result.ops[0]._id.toString();
-        req.session.userID = userID;
-        req.session.username = obj.username;
+        if (userDoc) {
+          return next("This email address is already used with an existing account");
+        }
 
-        verify.createVerifyInfo(req.get("host"), userID, obj.email, req.db, function (err) {
-          if (err) {
-            return next(err);
+        obj.emailVerified = false;
+        obj.joinedDate = new Date();
+        users.insert(obj, function (error,result) {
+          if (error) {
+            return next(error);
           }
 
-          res.json({username:obj.username});
+          var userID = result.ops[0]._id.toString();
+          req.session.userID = userID;
+          req.session.username = obj.username;
+
+          verify.createVerifyInfo(req.get("host"), userID, obj.email, req.db, function (err) {
+            if (err) {
+              return next(err);
+            }
+
+            res.json({username:obj.username});
+          });
         });
       });
     });

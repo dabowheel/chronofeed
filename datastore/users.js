@@ -1,3 +1,5 @@
+"use strict";
+
 var util = require("./util");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
@@ -133,21 +135,36 @@ exports.saveProfile = function (req,res,next) {
       }
       obj.joinedDate = current.joinedDate;
 
-      users.updateOne({_id:new ObjectID(req.session.userID)}, obj, function (err,result) {
+      // check of email already used
+      let filter = {
+        _id: {"$ne": current._id},
+        email: obj.email
+      };
+      users.findOne(filter, function (err, userObj) {
         if (err) {
           return next(err);
         }
 
-        if (!result.result.ok) {
-          return next("could not find user profile");
+        if (userObj) {
+          return next("Another user is already using this email address");
         }
 
-        verify.createVerifyInfo(req.get("host"), req.session.userID, obj.email, req.db, function (err) {
+        users.updateOne({_id:new ObjectID(req.session.userID)}, obj, function (err,result) {
           if (err) {
             return next(err);
           }
 
-          res.end();
+          if (!result.result.ok) {
+            return next("could not find user profile");
+          }
+
+          verify.createVerifyInfo(req.get("host"), req.session.userID, obj.email, req.db, function (err) {
+            if (err) {
+              return next(err);
+            }
+
+            res.end();
+          });
         });
       });
     });
