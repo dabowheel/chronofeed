@@ -1,3 +1,5 @@
+"use strict";
+
 var util = require("./util");
 var verify = require("./verify");
 var crypto = require("crypto");
@@ -15,23 +17,38 @@ exports.signup = function (req,res,next) {
     }
 
     var users = req.db.collection("users");
-    obj.emailVerified = false;
-    obj.joinedDate = new Date();
-    users.insert(obj, function (error,result) {
-      if (error) {
-        return next(error);
+
+    //check if username exists
+    let filter = {
+      username: obj.username
+    };
+    users.findOne(filter, function (err, userDoc) {
+      if (err) {
+        return next(err);
       }
 
-      var userID = result.ops[0]._id.toString();
-      req.session.userID = userID;
-      req.session.username = obj.username;
+      if (userDoc) {
+        return next("This username already exists");
+      }
 
-      verify.createVerifyInfo(req.get("host"), userID, obj.email, req.db, function (err) {
-        if (err) {
-          return next(err);
+      obj.emailVerified = false;
+      obj.joinedDate = new Date();
+      users.insert(obj, function (error,result) {
+        if (error) {
+          return next(error);
         }
 
-        res.json({username:obj.username});
+        var userID = result.ops[0]._id.toString();
+        req.session.userID = userID;
+        req.session.username = obj.username;
+
+        verify.createVerifyInfo(req.get("host"), userID, obj.email, req.db, function (err) {
+          if (err) {
+            return next(err);
+          }
+
+          res.json({username:obj.username});
+        });
       });
     });
   });
