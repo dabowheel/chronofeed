@@ -128,10 +128,14 @@ exports.saveProfile = function (req,res,next) {
         return next(err);
       }
 
+      // reply object
+      let ret = {};
+
       if (obj.email == current.email) {
         obj.emailVerified = current.emailVerified;
       } else {
         obj.emailVerified = false;
+        ret.checkEmail = true;
       }
       obj.joinedDate = current.joinedDate;
 
@@ -163,7 +167,7 @@ exports.saveProfile = function (req,res,next) {
               return next(err);
             }
 
-            res.end();
+            res.json(ret);
           });
         });
       });

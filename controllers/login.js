@@ -68,16 +68,7 @@ function clickLogin() {
       ctlBlogList.viewBlogList();
     } else {
       $("#placeForAlert").addClass("alert alert-warning");
-      var element = document.getElementById("placeForAlert");
-      var link = document.createElement("a");
-      link.href = "#";
-      link.onclick = function () {
-        clickForgotPasswordLink();
-        return false;
-      };
-      link.innerHTML = "Did you forget your password?";
       $("#placeForAlert").html("Invalid username or password. ");
-      document.getElementById("forgotPasswordLink").appendChild(link);
     }
   });
 }
@@ -89,5 +80,5 @@ function clickForgotPasswordLink() {
 exports.viewLogin = viewLogin;
 exports.setGlobals = function () {
   global.clickLogin = clickLogin;
-  global.clickResetPasswordLink = clickForgotPasswordLink;
+  global.clickForgotPasswordLink = clickForgotPasswordLink;
 };

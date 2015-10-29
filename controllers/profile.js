@@ -96,10 +96,16 @@ function clickSaveProfile() {
       return;
     }
 
+    let message;
+    if (res.checkEmail) {
+      message = "Check your email for a message to verify your email address.";
+    } else {
+      message = "Saved.";
+    }
     cache.profile = values;
     $("#placeForAlert").removeClass("alert alert-warning");
     $("#placeForAlert").addClass("alert alert-success");
-    $("#placeForAlert").html("Saved");
+    $("#placeForAlert").html(message);
   });
 }
 
