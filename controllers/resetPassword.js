@@ -17,6 +17,7 @@ ResetPassword.prototype.beforeLoad = function () {
 ResetPassword.prototype.afterLoad = function () {
   document.getElementById("inputPassword").focus();
   validate.listenToFields(["inputPassword"], "submitButton");
+  validate.addReturnPressListener(["inputPassword"], clickResetPasswordSubmit);
 };
 
 ResetPassword.prototype.getValues = function() {
