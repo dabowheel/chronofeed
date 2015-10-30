@@ -167,6 +167,7 @@ exports.saveProfile = function (req,res,next) {
               return next(err);
             }
 
+            notifyPreviousEmailAddress(req.get("host"), current.email);
             res.json(ret);
           });
         });
@@ -174,6 +175,30 @@ exports.saveProfile = function (req,res,next) {
     });
   });
 };
+
+function notifyPreviousEmailAddress(host,email,callback) {
+  var mailOptions = {
+      from: "Grackle <" + process.env.NODEMAILER_USER + ">",
+      to: email,
+      subject: "Grackle - Email Address Changed",
+      text: "This is a notification that your email address was changed.\n\nhttp://" + host,
+      html: "<p>This is a notification that your email address was changed.</p><p><a href=\"" + host + "\">Visit Grackle</a></p>"
+  };
+
+  util.transporter.sendMail(mailOptions, function(err, info) {
+    if(err){
+        console.log(err);
+        if (callback) {
+          callback(err);
+        }
+    }
+
+    console.log('Message sent: ' + info.response);
+    if (callback) {
+      callback();
+    }
+  });
+}
 
 exports.resendVerification = function (req,res,next) {
   if (!req.session.userID) {
