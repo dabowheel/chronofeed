@@ -10,6 +10,7 @@
     "test-watch": "watch-spawn -p .jshintrc -p *.js -p controllers/**/*.js -p model/**/*.js -p datastore/**/*.js -p scripts/**/*.js npm run test",
     "build": "npm run browserify && npm run babel && npm run uglify",
     "browserify": "n-run \"browserify $g[controllers/*.js] $g[model/*.js] $g[scripts/*.js] -o public/scripts/grackle.js\"",
+    "babelify": "n-run \"browserify -t babelify $g[controllers/*.js] $g[model/*.js] $g[scripts/*.js] -o public/scripts/grackle.js\"",
     "babel": "babel public/scripts/grackle.js -o public/scripts/grackle.5.js",
     "uglify": "uglifyjs public/scripts/grackle.5.js -o public/scripts/grackle.5.min.js",
     "test": "npm run lint && npm run jasmine",
@@ -32,6 +33,7 @@
   },
   "homepage": "https://github.com/dabowheel/grackle",
   "dependencies": {
+    "babel-polyfill": "^6.0.2",
     "connect-mongo": "^0.8.2",
     "cookie-parser": "^1.3.5",
     "express": "^4.12.4",
@@ -41,6 +43,8 @@
     "nodemailer-smtp-transport": "^1.0.3"
   },
   "devDependencies": {
+    "babelify": "^7.0.2",
+    "eslint": "^1.7.3",
     "grunt": "^0.4.5",
     "grunt-babel": "^5.0.3",
     "grunt-browserify": "^4.0.1",

@@ -12,6 +12,8 @@ var datastore = require("../scripts/datastore");
 var ctlForgotPassword = require("./forgotPassword");
 var ctlResetPassword = require("./resetPassword");
 var ctlResetPasswordResult = require("./resetPasswordResult");
+require("babel-polyfill");
+
 
 global.clearCache = function() {
   global.cache = {};
