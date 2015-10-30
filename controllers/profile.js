@@ -31,6 +31,7 @@ function displayProfile(profile) {
   document.getElementById("main").innerHTML = menuHTML + profileHTML;
 
   validate.listenToFields(["inputEmail"], "saveButton");
+  validate.addReturnPressListener(["inputEmail", "inputPassword"], clickSaveProfile);
 }
 
 function viewProfile() {
@@ -98,7 +99,7 @@ function clickSaveProfile() {
 
     let message;
     if (res.checkEmail) {
-      message = "Check your email for a message to verify your email address.";
+      message = "Saved. Check your email for a message to verify your email address.";
     } else {
       message = "Saved.";
     }
