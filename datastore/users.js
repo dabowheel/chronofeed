@@ -174,3 +174,27 @@ exports.saveProfile = function (req,res,next) {
     });
   });
 };
+
+exports.resendVerification = function (req,res,next) {
+  if (!req.session.userID) {
+    return next("user not logged in");
+  }
+
+  let users = req.db.collection("users");
+  let filter = {
+    _id: new ObjectID(req.session.userID)
+  };
+  users.findOne(filter, function (err,userDoc) {
+    if (err) {
+      return next(err);
+    }
+
+    verify.createVerifyInfo(req.get("host"), req.session.userID, userDoc.email, req.db, function (err) {
+      if (err) {
+        return next(err);
+      }
+
+      res.end();
+    });
+  });
+};

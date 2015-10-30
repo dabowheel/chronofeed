@@ -22,7 +22,7 @@ exports.createVerifyInfo = function (host,userID,email,db,callback) {
   });
 };
 
-function sendEmailVerification (host,email,hash,code) {
+function sendEmailVerification (host,email,hash,code,callback) {
   var link = "http://" + host + "/verifyEmail/" + hash + "/" + code;
   var mailOptions = {
       from: "Grackle <" + process.env.NODEMAILER_USER + ">", // sender address
@@ -32,11 +32,18 @@ function sendEmailVerification (host,email,hash,code) {
       html: 'Please verify your email address by following this link: <a href="' + link + '">Verify</a>' // html body
   };
 
-  util.transporter.sendMail(mailOptions, function(error, info){
-      if(error){
-          return console.log(error);
-      }
-      console.log('Message sent: ' + info.response);
+  util.transporter.sendMail(mailOptions, function(err, info) {
+    if(err){
+        console.log(err);
+        if (callback) {
+          callback(err);
+        }
+    }
+
+    console.log('Message sent: ' + info.response);
+    if (callback) {
+      callback();
+    }
   });
 }
 

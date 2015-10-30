@@ -29,3 +29,24 @@
 .gr-alert {
   float: none;
 }
+
+
+/* Profile View */
+.gr-not-verified {
+  color: orange;
+}
+.gr-verified {
+  color: green;
+}
+@media (min-width: 500px) {
+
+}
+
+.gr-vertical-space {
+  height: 10px;
+}
+
+.gr-verify-email {
+  position: relative;
+  top: -5px;
+}

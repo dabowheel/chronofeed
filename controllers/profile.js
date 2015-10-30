@@ -97,18 +97,36 @@ function clickSaveProfile() {
       return;
     }
 
+    for (let name in values) {
+      cache.profile[name] = values[name];
+    }
     let message;
     if (res.checkEmail) {
+      cache.profile.emailVerified = false;
+      displayProfile(cache.profile);
       message = "Saved. Check your email for a message to verify your email address.";
     } else {
       message = "Saved.";
     }
-    cache.profile = values;
     $("#placeForAlert").removeClass("alert alert-warning");
     $("#placeForAlert").addClass("alert alert-success");
     $("#placeForAlert").html(message);
   });
 }
+
+global.clickResendVerification = function () {
+  datastore("GET", "resendVerification", null, function (err,obj) {
+    if (err) {
+      $("#placeForAlert").addClass("alert alert-warning");
+      $("#placeForAlert").html(err);
+      return;
+    }
+
+    $("#placeForAlert").removeClass("alert-warning");
+    $("#placeForAlert").addClass("alert alert-success");
+    $("#placeForAlert").html("A verfication message was sent to your email address. Check your email to verify that you recieved it.");
+  });
+};
 
 exports.viewProfile = viewProfile;
 exports.setGlobals = function () {
