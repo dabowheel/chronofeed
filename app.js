@@ -55,10 +55,12 @@ app.post("/datastore/login",datastore_session.login);
 app.get("/datastore/logout",datastore_session.logout);
 
 app.get("/datastore/userList", datastore_users.userList);
-app.delete("/datastore/deleteUser", datastore_users.deleteUser);
 app.get("/datastore/getProfile", datastore_users.getProfile);
 app.post("/datastore/saveProfile", datastore_users.saveProfile);
 app.get("/datastore/resendVerification", datastore_users.resendVerification);
+
+app.delete("/datastore/deleteUser", datastore_users.deleteUser);
+app.delete("/datastore/cleanupReset", datastore_reset.cleanupResetHandler);
 
 app.get("/datastore/readBlogList", datastore_blogs.readBlogList);
 app.post("/datastore/createBlog", datastore_blogs.createBlog);

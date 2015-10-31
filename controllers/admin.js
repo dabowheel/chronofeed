@@ -65,6 +65,20 @@ function deleteUser(_id) {
   });
 }
 
+global.clickCleanupReset = function () {
+  datastore("DELETE", "cleanupReset", null, function (err, obj) {
+    if (err) {
+      $("#placeForAlert").addClass("alert alert-warning");
+      $("#placeForAlert").html(err);
+      return;
+    }
+
+    $("#placeForAlert").removeClass("alert-warning");
+    $("#placeForAlert").addClass("alert alert-success");
+    $("#placeForAlert").html("Reset records deleted: " + obj.count);
+  });
+};
+
 exports.viewAdmin = viewAdmin;
 exports.setGlobals = function () {
   global.deleteUser = deleteUser;
