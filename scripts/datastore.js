@@ -1,3 +1,5 @@
+"use strict";
+
 function datastore(method,path,obj,callback) {
   console.log("send",method,path,obj);
   var request = new XMLHttpRequest();

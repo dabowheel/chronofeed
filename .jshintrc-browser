@@ -1,3 +1,7 @@
 {
-  "esnext": true
+  "browser": true,
+  "browserify": true,
+  "esnext": true,
+  "devel": true,
+  "predef": ["Handlebars","cache","clearCache","$","CryptoJS"]
 }

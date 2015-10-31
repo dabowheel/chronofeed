@@ -1,3 +1,4 @@
+"use strict";
 var views = require("../scripts/views");
 var ctlLogin = require("./login");
 var ctlSignup = require("./signup");

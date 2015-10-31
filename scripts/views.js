@@ -1,3 +1,5 @@
+"use strict";
+
 var list = [];
 
 function getTemplateSource(name) {

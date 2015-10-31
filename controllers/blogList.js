@@ -1,3 +1,4 @@
+"use strict";
 var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var modelBlogList = require("../model/blogList");

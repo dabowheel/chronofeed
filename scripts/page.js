@@ -1,6 +1,8 @@
+"use strict";
+
 function setHash(hash) {
-  if (this.hash != location.hash) {
-    location.hash = this.hash;
+  if (hash != location.hash) {
+    location.hash = hash;
   }
 }
 

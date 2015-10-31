@@ -1,3 +1,4 @@
+"use strict";
 var views = require("../scripts/views");
 var page = require("../scripts/page");
 var validate = require("../scripts/validate");

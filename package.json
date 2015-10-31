@@ -8,11 +8,12 @@
     "live-reload": "live-reload app.js datastore public --port=1009",
     "build-watch": "watch-spawn -p controllers/*.js -p model/*.js -p scripts/*.js npm run build",
     "test-watch": "watch-spawn -p .jshintrc -p *.js -p controllers/**/*.js -p model/**/*.js -p datastore/**/*.js -p scripts/**/*.js npm run test",
-    "build": "npm run browserify && npm run babel && npm run uglify",
+    "build": "npm run webpack && npm run uglify",
     "browserify": "n-run \"browserify $g[controllers/*.js] $g[model/*.js] $g[scripts/*.js] -o public/scripts/grackle.js\"",
     "babelify": "n-run \"browserify -t babelify $g[controllers/*.js] $g[model/*.js] $g[scripts/*.js] -o public/scripts/grackle.js\"",
+    "webpack": "webpack",
     "babel": "babel public/scripts/grackle.js -o public/scripts/grackle.5.js",
-    "uglify": "uglifyjs public/scripts/grackle.5.js -o public/scripts/grackle.5.min.js",
+    "uglify": "uglifyjs public/scripts/grackle.js -o public/scripts/grackle.min.js",
     "test": "npm run lint && npm run jasmine",
     "jasmine": "jasmine",
     "lint": "npm run jshint && npm run eslint",
@@ -43,6 +44,10 @@
     "nodemailer-smtp-transport": "^1.0.3"
   },
   "devDependencies": {
+    "babel-core": "^6.0.14",
+    "babel-loader": "^6.0.0",
+    "babel-polyfill": "^6.0.14",
+    "babel-preset-es2015": "^6.0.14",
     "babelify": "^7.0.2",
     "eslint": "^1.7.3",
     "grunt": "^0.4.5",
@@ -53,6 +58,8 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-eslint": "^17.3.1",
     "grunt-jasmine-nodejs": "^1.4.3",
-    "load-grunt-tasks": "^3.3.0"
+    "load-grunt-tasks": "^3.3.0",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.1"
   }
 }

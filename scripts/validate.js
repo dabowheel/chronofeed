@@ -1,3 +1,5 @@
+"use strict";
+
 function fieldsAreValid(fieldList) {
   for (var id of fieldList) {
     if (document.getElementById(id).value === "") {

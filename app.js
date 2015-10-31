@@ -35,6 +35,7 @@ app.get("/signup", sendPage);
 app.get("/login", sendPage);
 app.get("/verifyEmail/*", sendPage);
 app.get("/forgotPassword", sendPage);
+app.get("/forgotPasswordResult", sendPage);
 app.get("/resetPassword/*", sendPage);
 app.get("/resetPasswordResult", sendPage);
 

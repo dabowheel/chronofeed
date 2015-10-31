@@ -1,4 +1,5 @@
-var Component = require("./Component");
+"use strict";
+var Component = require("./component");
 var ctlLogin = require("./login");
 
 function ResetPasswordResult(view,containerID) {

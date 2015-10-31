@@ -1,3 +1,4 @@
+"use strict";
 function Component(view,containerID) {
   this.view = view;
   this.containerID = containerID;

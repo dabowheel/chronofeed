@@ -1,3 +1,4 @@
+"use strict";
 var ctlLogin = require("./login");
 var ctlSignup = require("./signup");
 var ctlAdmin = require("./admin");
@@ -37,8 +38,8 @@ function loadAll() {
   loadAssetsFromServer(function () {
     viewInitial();
   });
-  if (liveReload) {
-    liveReload();
+  if (global.liveReload) {
+    global.liveReload();
   }
 }
 

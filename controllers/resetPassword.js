@@ -1,3 +1,4 @@
+"use strict";
 var validate = require("../scripts/validate");
 var Component = require("./component");
 var datastore = require("../scripts/datastore");
@@ -17,7 +18,7 @@ ResetPassword.prototype.beforeLoad = function () {
 ResetPassword.prototype.afterLoad = function () {
   document.getElementById("inputPassword").focus();
   validate.listenToFields(["inputPassword"], "submitButton");
-  validate.addReturnPressListener(["inputPassword"], clickResetPasswordSubmit);
+  validate.addReturnPressListener(["inputPassword"], global.clickResetPasswordSubmit);
 };
 
 ResetPassword.prototype.getValues = function() {
@@ -65,7 +66,7 @@ ResetPassword.prototype.submit = function () {
     }
 
     page.setURL("/resetPasswordResult");
-    viewInitial();
+    global.viewInitial();
   });
 };
 

@@ -1,3 +1,5 @@
+"use strict";
+
 // include live-reload script
 global.liveReload = function () {
   var script = document.createElement("script");

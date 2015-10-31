@@ -1,3 +1,4 @@
+"use strict";
 var datastore = require("../scripts/datastore");
 var ctlBlogList = require("./blogList");
 var ctlSplash = require("./splash");
