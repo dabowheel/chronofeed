@@ -9,15 +9,15 @@
     "build-watch": "watch-spawn -p controllers/*.js -p model/*.js -p scripts/*.js npm run build",
     "test-watch": "watch-spawn -p .jshintrc -p *.js -p controllers/**/*.js -p model/**/*.js -p datastore/**/*.js -p scripts/**/*.js npm run test",
     "build": "npm run webpack && npm run uglify",
-    "webpack": "webpack",
-    "uglify": "uglifyjs public/scripts/grackle.js -o public/scripts/grackle.min.js",
     "test": "npm run lint && npm run jasmine",
-    "jasmine": "jasmine",
     "lint": "npm run jshint && npm run eslint",
     "jshint": "npm run jshint-node && npm run jshint-browser",
-    "jshint-node": "jshint --config .jshintrc-node app.js model datastore",
-    "jshint-browser": "jshint --config .jshintrc-browser controllers model scripts",
-    "eslint": "eslint app.js controllers model scripts datastore",
+    "webpack": "node_modules/.bin/webpack",
+    "uglify": "node_modules/.bin/uglifyjs public/scripts/grackle.js -o public/scripts/grackle.min.js",
+    "jasmine": "node_modules/.bin/jasmine",
+    "jshint-node": "node_modules/.bin/jshint --config .jshintrc-node app.js model datastore",
+    "jshint-browser": "node_modules/.bin/jshint --config .jshintrc-browser controllers model scripts",
+    "eslint": "node_modules/.bin/eslint app.js controllers model scripts datastore",
     "wc": "git ls-files | grep .js | xargs wc -l"
   },
   "repository": {
@@ -44,8 +44,10 @@
     "babel-core": "^6.0.14",
     "babel-loader": "^6.0.0",
     "babel-preset-es2015": "^6.0.14",
-    "babelify": "^7.0.2",
     "eslint": "^1.7.3",
+    "jasmine": "^2.3.2",
+    "jshint": "^2.8.0",
+    "uglify-js": "^2.5.0",
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.1"
   }
