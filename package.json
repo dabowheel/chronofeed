@@ -48,7 +48,6 @@
     "jasmine": "^2.3.2",
     "jshint": "^2.8.0",
     "uglify-js": "^2.5.0",
-    "webpack": "^1.12.2",
-    "webpack-dev-server": "^1.12.1"
+    "webpack": "^1.12.2"
   }
 }
