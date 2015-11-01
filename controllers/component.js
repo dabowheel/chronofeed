@@ -10,5 +10,16 @@ Component.prototype.show = function () {
   document.getElementById(this.containerID).innerHTML = this.view;
   this.afterLoad();
 };
+Component.prototype.global = function (name) {
+  if (!global.component) {
+    global.component = {};
+  }
+
+  if (!global[this.constructor.name]) {
+    global[this.constructor.name] = {};
+  }
+
+  global[this.constructor.name][name] = this[name];
+};
 
 module.exports = Component;

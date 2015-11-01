@@ -3,6 +3,7 @@ var views = require("../scripts/views");
 var page = require("../scripts/page");
 var validate = require("../scripts/validate");
 var datastore = require("../scripts/datastore");
+var ForgotPasswordResult = require("./forgotPasswordResult/forgotPasswordResult");
 
 function viewForgotPassword() {
   page.setURL("/forgotPassword","Grackle | Forgot Password");
@@ -29,9 +30,8 @@ function clickResetPassword() {
       return;
     }
 
-    $("#placeForAlert").removeClass("alert-warning");
-    $("#placeForAlert").addClass("alert alert-success");
-    $("#placeForAlert").html("An email has been sent with a password reset.");
+    var c = new ForgotPasswordResult("main");
+    c.show();
   });
 }
 
