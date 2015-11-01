@@ -1,5 +1,8 @@
 module.exports = {
-  entry: "./controllers/main.js",
+  entry: [
+    "./controllers/main.js",
+    "./scripts/live-reload.js"
+  ],
   output: {
     path: "public/scripts",
     filename: "grackle.js"
