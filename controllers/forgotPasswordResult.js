@@ -1,6 +1,6 @@
-var Component = require("../component");
+var Component = require("./component");
 var view = require("./forgotPasswordResult.html");
-var page = require("../../scripts/page");
+var page = require("../scripts/page");
 
 class ForgotPasswordResult extends Component {
   constructor(containerID) {

@@ -3,7 +3,7 @@ var views = require("../scripts/views");
 var page = require("../scripts/page");
 var validate = require("../scripts/validate");
 var datastore = require("../scripts/datastore");
-var ForgotPasswordResult = require("./forgotPasswordResult/forgotPasswordResult");
+var ForgotPasswordResult = require("./forgotPasswordResult");
 
 function viewForgotPassword() {
   page.setURL("/forgotPassword","Grackle | Forgot Password");
