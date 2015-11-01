@@ -12,7 +12,6 @@ var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var ctlForgotPassword = require("./forgotPassword");
 var ctlResetPassword = require("./resetPassword");
-var ctlResetPasswordResult = require("./resetPasswordResult");
 require("babel-polyfill");
 
 
@@ -72,12 +71,6 @@ function viewInitial() {
     return;
   }
 
-  if (location.pathname == "/resetPasswordResult") {
-    var c = new ctlResetPasswordResult.ResetPasswordResult(views.list.resetPasswordResult, "main");
-    c.show();
-    return;
-  }
-
   getUsername(function (err) {
     if (err) {
       ctlSplash.viewSplash();
@@ -123,7 +116,7 @@ function loadAssetsFromServer(callback) {
     promiseList[promiseList.length] = views.getTemplateSource(name);
   }
 
-  for (var ctl of [ctlResetPassword, ctlResetPasswordResult]) {
+  for (var ctl of [ctlResetPassword]) {
     promiseList.push(views.getTemplateSource(ctl.viewName));
   }
 

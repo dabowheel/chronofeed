@@ -2,7 +2,7 @@
 var validate = require("../scripts/validate");
 var Component = require("./component");
 var datastore = require("../scripts/datastore");
-var ctlResetPasswordResult = require("./resetPasswordResult");
+var ResetPasswordResult = require("./resetPasswordResult");
 var page = require("../scripts/page");
 
 function ResetPassword(view,containerID,hash,code) {
@@ -66,7 +66,8 @@ ResetPassword.prototype.submit = function () {
     }
 
     page.setURL("/resetPasswordResult");
-    global.viewInitial();
+    let c = new ResetPasswordResult(null, "main");
+    c.show();
   });
 };
 

@@ -104,7 +104,7 @@ exports.resetPassword = function (req,res,next) {
           return next(err);
         }
 
-        if (updateResult.modifiedCount < 1) {
+        if (updateResult.matchedCount < 1) {
           return next("invalid user");
         }
         res.end();
