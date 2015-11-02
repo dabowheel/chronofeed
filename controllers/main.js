@@ -111,7 +111,7 @@ window.onhashchange = function () {
 
 function loadAssetsFromServer(callback) {
   var promiseList = [];
-  var names = ["admin","blog","blogList","login","menu","profile","forgotPassword","signup","splash","verifyEmail"];
+  var names = ["blog","blogList","login","menu","profile","forgotPassword","signup","splash","verifyEmail"];
   for (var name of names) {
     promiseList[promiseList.length] = views.getTemplateSource(name);
   }

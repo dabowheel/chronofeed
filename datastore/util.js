@@ -1,3 +1,4 @@
+"use strict";
 var nodemailer = require("nodemailer");
 var smtpTransport = require('nodemailer-smtp-transport');
 
@@ -26,3 +27,30 @@ var smtpConfig = {
 };
 
 exports.transporter = nodemailer.createTransport(smtpTransport(smtpConfig));
+
+exports.Wait = class {
+  constructor (stepCount,callback) {
+    this.stepCount = stepCount;
+    this.callback = callback;
+    this.resolveCount = 0;
+    this.rejectCount = 0;
+    this.done = false;
+  }
+  resolve () {
+    this.resolveCount++;
+    this.check();
+  }
+  reject () {
+    this.rejectCount++;
+    this.check();
+  }
+  check () {
+    if (this.done) {
+      throw new Error("too many callbacks");
+    }
+    if ((this.resolveCount + this.rejectCount) >= this.stepCount) {
+      this.done = true;
+      this.callback(this.resolveCount, this.rejectCount);
+    }
+  }
+};

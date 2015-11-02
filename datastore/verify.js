@@ -2,6 +2,7 @@ var util = require("./util");
 var crypto = require("crypto");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
+var expiringDocs = require("./expiringDocs");
 
 exports.createVerifyInfo = function (host,userID,email,db,callback) {
   var verifyInfo = {};
@@ -101,4 +102,17 @@ exports.verifyEmail = function (req,res,next) {
       });
     });
   });
+};
+
+exports.cleanupVerify = function (req,res,next) {
+  expiringDocs.cleanupExpired(req.db, "verify").then(
+    function (count) {
+      res.json({
+        count: count
+      });
+    },
+    function (err) {
+      next(err);
+    }
+  );
 };

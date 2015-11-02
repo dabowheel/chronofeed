@@ -1,19 +1,12 @@
 "use strict";
 var views = require("../scripts/views");
+var view = require("./admin.html");
 var datastore = require("../scripts/datastore");
 var modelUserList = require("../model/userList");
 var page = require("../scripts/page");
 
-function displayAdmin(adminList) {
-  var template = Handlebars.compile(views.list.menu);
-  var menuHTML = template({isAdmin: true});
-  template = Handlebars.compile(views.list.admin);
-  var adminHTML = template(adminList);
-  document.getElementById("main").innerHTML = menuHTML + adminHTML;
-}
-
 function getAdmin(callback) {
-  if (cache.UserList) {
+  if (cache.userList && cache.expiredTable) {
     return callback();
   }
 
@@ -24,8 +17,24 @@ function getAdmin(callback) {
 
     cache.userList = new modelUserList.UserList();
     cache.userList.loadObject(res);
-    callback();
+
+    datastore("GET", "getExpiredTable", null, function (err, res) {
+      if (err) {
+        return callback(err);
+      }
+
+      cache.expiredTable = res;
+      callback();
+    });
   });
+}
+
+function displayAdmin(userList,expiredTable) {
+  var template = Handlebars.compile(views.list.menu);
+  var menuHTML = template({isAdmin: true});
+  template = Handlebars.compile(view);
+  var adminHTML = template({userList:userList, expiredTable:expiredTable});
+  document.getElementById("main").innerHTML = menuHTML + adminHTML;
 }
 
 function viewAdmin() {
@@ -37,7 +46,7 @@ function viewAdmin() {
     }
 
     page.setURL("/admin", "Grackle | Admin");
-    displayAdmin(cache.userList);
+    displayAdmin(cache.userList, cache.expiredTable);
   });
 }
 
@@ -66,19 +75,24 @@ function deleteUser(_id) {
   });
 }
 
-global.clickCleanupReset = function () {
-  datastore("DELETE", "cleanupReset", null, function (err, obj) {
-    if (err) {
-      $("#placeForAlert").addClass("alert alert-warning");
-      $("#placeForAlert").html(err);
-      return;
-    }
+function makeClickCleanup(apiPath,dbName) {
+  return function () {
+    datastore("DELETE", apiPath, null, function (err, obj) {
+      if (err) {
+        $("#placeForAlert").addClass("alert alert-warning");
+        $("#placeForAlert").html(err);
+        return;
+      }
 
-    $("#placeForAlert").removeClass("alert-warning");
-    $("#placeForAlert").addClass("alert alert-success");
-    $("#placeForAlert").html("Reset records deleted: " + obj.count);
-  });
-};
+      $("#placeForAlert").removeClass("alert-warning");
+      $("#placeForAlert").addClass("alert alert-success");
+      $("#placeForAlert").html(dbName + " records deleted: " + obj.count);
+    });
+  };
+}
+
+global.clickCleanupReset = makeClickCleanup("cleanupReset", "Reset");
+global.clickCleanupVerify = makeClickCleanup("cleanupVerify", "Verify Email");
 
 exports.viewAdmin = viewAdmin;
 exports.setGlobals = function () {

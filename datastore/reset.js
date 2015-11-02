@@ -4,6 +4,7 @@ var util = require("./util");
 var crypto = require("crypto");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
+var expiringDocs = require("./expiringDocs");
 
 exports.forgotPassword = function (req,res,next) {
   util.getJSONFromBody(req, function (err, obj) {
@@ -113,33 +114,13 @@ exports.resetPassword = function (req,res,next) {
   });
 };
 
-exports.cleanupResetHandler = function (req,res,next) {
-  exports.cleanupReset(req.db).then(
+exports.cleanupReset = function (req,res,next) {
+  expiringDocs.cleanupExpired(req.db,"reset").then(
     function (count) {
       res.json({
         count: count
       });
     }, function (err) {
       next(err);
-  });
-};
-
-exports.cleanupReset = function (db) {
-  return new Promise(function (resolve,reject) {
-    let d = new Date();
-    d.setDate(d.getDate() - 14);
-    let filter = {
-      created: {
-        $lt: d
-      }
-    };
-    let reset = db.collection("reset");
-    reset.deleteMany(filter, function (err, deleteResult) {
-      if (err) {
-      return reject(err);
-      }
-
-      resolve(deleteResult.deletedCount);
-    });
   });
 };
