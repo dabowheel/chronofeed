@@ -1,5 +1,5 @@
 "use strict";
-var views = require("../scripts/views");
+var view = require("./signup.html");
 var datastore = require("../scripts/datastore");
 var ctlBlogList = require("./blogList");
 var page = require("../scripts/page");
@@ -7,7 +7,7 @@ var validate = require("../scripts/validate");
 
 function viewSignup() {
   page.setURL("/signup","Grackle | Signup");
-  document.getElementById("main").innerHTML = views.list.signup;
+  document.getElementById("main").innerHTML = view;
   document.getElementById("inputUsername").focus();
   function onKeypress(e) {
     if (e.keyCode == 13) {

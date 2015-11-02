@@ -1,10 +1,10 @@
 "use strict";
 var datastore = require("../scripts/datastore");
-var views = require("../scripts/views");
 var page = require("../scripts/page");
+var view = require("./verifyEmail.html");
 
 function displayVerifyEmail(verified) {
-  var template = Handlebars.compile(views.list.verifyEmail);
+  var template = Handlebars.compile(view);
   document.getElementById("main").innerHTML = template({verified: verified});
 }
 

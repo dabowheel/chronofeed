@@ -4,8 +4,9 @@ var Component = require("./component");
 var datastore = require("../scripts/datastore");
 var ResetPasswordResult = require("./resetPasswordResult");
 var page = require("../scripts/page");
+var view = require("./resetPassword.html");
 
-function ResetPassword(view,containerID,hash,code) {
+function ResetPassword(containerID,hash,code) {
   Component.call(this, view, containerID);
   this.hash = hash;
   this.code = code;
@@ -66,11 +67,9 @@ ResetPassword.prototype.submit = function () {
     }
 
     page.setURL("/resetPasswordResult");
-    let c = new ResetPasswordResult(null, "main");
+    let c = new ResetPasswordResult("main");
     c.show();
   });
 };
 
 exports.ResetPassword = ResetPassword;
-exports.viewURL = "resetPassword.html";
-exports.viewName = "resetPassword";

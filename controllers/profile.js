@@ -1,5 +1,6 @@
 "use strict";
-var views = require("../scripts/views");
+var view = require("./profile.html");
+var menuView = require("./menu.html");
 var datastore = require("../scripts/datastore");
 var page = require("../scripts/page");
 var validate = require("../scripts/validate");
@@ -23,11 +24,11 @@ function getProfile(callback) {
 }
 
 function displayProfile(profile) {
-  var template = Handlebars.compile(views.list.menu);
+  var template = Handlebars.compile(menuView);
   var menuHTML = template({
     isProfile: true
   });
-  template = Handlebars.compile(views.list.profile);
+  template = Handlebars.compile(view);
   var profileHTML = template(profile);
   document.getElementById("main").innerHTML = menuHTML + profileHTML;
 

@@ -1,5 +1,5 @@
 "use strict";
-var views = require("../scripts/views");
+var view = require("./forgotPassword.html");
 var page = require("../scripts/page");
 var validate = require("../scripts/validate");
 var datastore = require("../scripts/datastore");
@@ -7,7 +7,7 @@ var ForgotPasswordResult = require("./forgotPasswordResult");
 
 function viewForgotPassword() {
   page.setURL("/forgotPassword","Grackle | Forgot Password");
-  document.getElementById("main").innerHTML = views.list.forgotPassword;
+  document.getElementById("main").innerHTML = view;
   document.getElementById("inputUsername").focus();
   validate.listenToFields(["inputUsername"], "resetButton");
   validate.addReturnPressListener(["inputUsername"], clickResetPassword);

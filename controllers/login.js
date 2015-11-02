@@ -1,5 +1,5 @@
 "use strict";
-var views = require("../scripts/views");
+var view = require("./login.html");
 var datastore = require("../scripts/datastore");
 var ctlBlogList = require("./blogList");
 var page = require("../scripts/page");
@@ -8,7 +8,7 @@ var ctlForgotPassword = require("./forgotPassword");
 
 function viewLogin() {
   page.setURL("/login","Grackle | Login");
-  document.getElementById("main").innerHTML = views.list.login;
+  document.getElementById("main").innerHTML = view;
   function onKeypress (e) {
     if (e.keyCode == 13) {
       clickLogin();

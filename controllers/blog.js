@@ -1,5 +1,6 @@
 "use strict";
-var views = require("../scripts/views");
+var view = require("./blog.html");
+var menuView = require("./menu.html");
 var datastore = require("../scripts/datastore");
 var modelBlog = require("../model/blog");
 var modelPost = require("../model/post");
@@ -12,9 +13,9 @@ function displayBlog2HTML(blog,callback) {
     return str.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;").replace(/\n/g,"<br>");
   });
 
-  var template = Handlebars.compile(views.list.menu);
+  var template = Handlebars.compile(menuView);
   var menuHTML = template({});
-  template = Handlebars.compile(views.list.blog);
+  template = Handlebars.compile(view);
   var blogHTML = template(blog);
   callback(menuHTML + blogHTML);
 }

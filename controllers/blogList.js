@@ -1,5 +1,6 @@
 "use strict";
-var views = require("../scripts/views");
+var view = require("./blogList.html");
+var menuView = require("./menu.html");
 var datastore = require("../scripts/datastore");
 var modelBlogList = require("../model/blogList");
 var modelBlog = require("../model/blog");
@@ -10,9 +11,9 @@ var page = require("../scripts/page");
 
 function displayBlogList2HTML(blogList,callback) {
   var template;
-  template = Handlebars.compile(views.list.menu);
+  template = Handlebars.compile(menuView);
   var menuHTML = template({});
-  template = Handlebars.compile(views.list.blogList);
+  template = Handlebars.compile(view);
   var blogListHTML = template(blogList);
   callback(menuHTML + blogListHTML);
 }

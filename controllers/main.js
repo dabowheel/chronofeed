@@ -8,12 +8,10 @@ var ctlBlog = require("./blog");
 var ctlMenu = require("./menu");
 var ctlProfile = require("./profile");
 var ctlVerifyEmail = require("./verifyEmail");
-var views = require("../scripts/views");
 var datastore = require("../scripts/datastore");
 var ctlForgotPassword = require("./forgotPassword");
 var ctlResetPassword = require("./resetPassword");
 require("babel-polyfill");
-
 
 global.clearCache = function() {
   global.cache = {};
@@ -34,12 +32,10 @@ function error(message) {
 }
 
 function loadAll() {
-  loadAssetsFromServer(function () {
-    viewInitial();
-  });
   if (global.liveReload) {
     global.liveReload();
   }
+  viewInitial();
 }
 
 function getUsername(callback) {
@@ -66,7 +62,7 @@ function viewInitial() {
 
   var resetPasswordMatch = location.pathname.match(/^\/resetPassword\/(.*)\/(.*)$/);
   if (resetPasswordMatch) {
-    var p = new ctlResetPassword.ResetPassword(views.list.resetPassword, "main", resetPasswordMatch[1], resetPasswordMatch[2]);
+    var p = new ctlResetPassword.ResetPassword("main", resetPasswordMatch[1], resetPasswordMatch[2]);
     p.show();
     return;
   }
@@ -108,23 +104,6 @@ function viewInitial() {
 window.onhashchange = function () {
   viewInitial();
 };
-
-function loadAssetsFromServer(callback) {
-  var promiseList = [];
-  var names = ["blog","blogList","login","menu","profile","forgotPassword","signup","splash","verifyEmail"];
-  for (var name of names) {
-    promiseList[promiseList.length] = views.getTemplateSource(name);
-  }
-
-  for (var ctl of [ctlResetPassword]) {
-    promiseList.push(views.getTemplateSource(ctl.viewName));
-  }
-
-  var p = Promise.all(promiseList);
-  p.then(function (val) {
-    callback();
-  });
-}
 
 global.loadAll = loadAll;
 global.viewInitial = viewInitial;

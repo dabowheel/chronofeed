@@ -1,6 +1,6 @@
 "use strict";
-var views = require("../scripts/views");
 var view = require("./admin.html");
+var menuView = require("./menu.html");
 var datastore = require("../scripts/datastore");
 var modelUserList = require("../model/userList");
 var page = require("../scripts/page");
@@ -30,7 +30,7 @@ function getAdmin(callback) {
 }
 
 function displayAdmin(userList,expiredTable) {
-  var template = Handlebars.compile(views.list.menu);
+  var template = Handlebars.compile(menuView);
   var menuHTML = template({isAdmin: true});
   template = Handlebars.compile(view);
   var adminHTML = template({userList:userList, expiredTable:expiredTable});

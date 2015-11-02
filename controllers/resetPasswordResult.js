@@ -1,10 +1,10 @@
 "use strict";
 var Component = require("./component");
 var ctlLogin = require("./login");
-var view = require("../public/views/resetPasswordResult.html");
+var view = require("./resetPasswordResult.html");
 var page = require("../scripts/page");
 
-function ResetPasswordResult(notUsed,containerID) {
+function ResetPasswordResult(containerID) {
   Component.call(this, view, containerID);
   global.clickResetPasswordResultGoToLogin = this.goToLogin.bind(this);
 }

@@ -1,12 +1,12 @@
 "use strict";
-var views = require("../scripts/views");
+var view = require("./splash.html");
 var ctlLogin = require("./login");
 var ctlSignup = require("./signup");
 var page = require("../scripts/page");
 
 function viewSplash() {
   page.setURL("/", "Grackle");
-  document.getElementById("main").innerHTML = views.list.splash;
+  document.getElementById("main").innerHTML = view;
 }
 
 function clickViewSignup() {
