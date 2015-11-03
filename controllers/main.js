@@ -9,7 +9,7 @@ var ctlMenu = require("./menu");
 var ctlProfile = require("./profile");
 var ctlVerifyEmail = require("./verifyEmail");
 var datastore = require("../scripts/datastore");
-var ctlForgotPassword = require("./forgotPassword");
+var ForgotPassword = require("./forgotPassword");
 var ctlResetPassword = require("./resetPassword");
 require("babel-polyfill");
 
@@ -22,14 +22,6 @@ global.clearCache();
 window.onpopstate = function (e) {
   viewInitial();
 };
-
-function getStack() {
-  return (new Error()).stack;
-}
-
-function error(message) {
-  console.error(message, "\n", getStack());
-}
 
 function loadAll() {
   if (global.liveReload) {
@@ -93,7 +85,8 @@ function viewInitial() {
       } else if (location.pathname == "/signup") {
         ctlSignup.viewSignup();
       } else if (location.pathname == "/forgotPassword") {
-        ctlForgotPassword.viewForgotPassword();
+        let c = new ForgotPassword("main");
+        c.show();
       } else {
         ctlSplash.viewSplash();
       }
@@ -117,4 +110,3 @@ ctlProfile.setGlobals();
 ctlBlog.setGlobals();
 ctlSplash.setGlobals();
 ctlVerifyEmail.setGlobals();
-ctlForgotPassword.setGlobals();

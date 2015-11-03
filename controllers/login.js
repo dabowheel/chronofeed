@@ -4,7 +4,6 @@ var datastore = require("../scripts/datastore");
 var ctlBlogList = require("./blogList");
 var page = require("../scripts/page");
 var validate = require("../scripts/validate");
-var ctlForgotPassword = require("./forgotPassword");
 
 function viewLogin() {
   page.setURL("/login","Grackle | Login");
@@ -75,7 +74,8 @@ function clickLogin() {
 }
 
 function clickForgotPasswordLink() {
-  ctlForgotPassword.viewForgotPassword();
+  page.setURL("/forgotPassword");
+  global.viewInitial();
 }
 
 exports.viewLogin = viewLogin;
