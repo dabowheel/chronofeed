@@ -1,85 +1,82 @@
 "use strict";
 var view = require("./login.html");
 var datastore = require("../scripts/datastore");
-var ctlBlogList = require("./blogList");
 var page = require("../scripts/page");
 var validate = require("../scripts/validate");
+var Component = require("./component");
 
-function viewLogin() {
-  page.setURL("/login","Grackle | Login");
-  document.getElementById("main").innerHTML = view;
-  function onKeypress (e) {
-    if (e.keyCode == 13) {
-      clickLogin();
+class Login extends Component {
+  constructor(containerID) {
+    super(containerID);
+    this.global();
+  }
+  render(callback) {
+    page.setURL("/login","Grackle | Login");
+    callback(null,view);
+  }
+  afterLoad() {
+    validate.addReturnPressListener(["inputUsername", "inputPassword"], this.clickLogin.bind(this));
+    validate.listenToFields(["inputUsername", "inputPassword"], "loginButton");
+    document.getElementById("inputUsername").focus();
+  }
+  getLoginFormValues() {
+    return {
+      username: document.getElementById("inputUsername").value,
+      password: CryptoJS.SHA256(document.getElementById("inputPassword").value).toString()
+    };
+  }
+  getPasswordPlain() {
+    return document.getElementById("inputPassword").value;
+  }
+  validateLoginForm(values,passwordPlain) {
+    var valid = true;
+
+    if (values.username === "") {
+      $("#inputUsernameFormGroup").addClass("has-error");
+      valid = false;
+    } else {
+      $("#inputUsernameFormGroup").removeClass("has-error");
     }
+
+    if (passwordPlain === "") {
+      $("#inputPasswordFormGroup").addClass("has-error");
+      valid = false;
+    } else {
+      $("#inputPasswordFormGroup").removeClass("has-error");
+    }
+
+    return valid;
   }
-  document.getElementById("inputUsername").onkeypress = onKeypress;
-  document.getElementById("inputPassword").onkeypress = onKeypress;
-  document.getElementById("inputUsername").focus();
-
-  validate.listenToFields(["inputUsername", "inputPassword"], "loginButton");
-}
-
-function getLoginFormValues() {
-  return {
-    username: document.getElementById("inputUsername").value,
-    password: CryptoJS.SHA256(document.getElementById("inputPassword").value).toString()
-  };
-}
-
-function getPasswordPlain() {
-  return document.getElementById("inputPassword").value;
-}
-
-function validateLoginForm(values,passwordPlain) {
-  var valid = true;
-
-  if (values.username === "") {
-    $("#inputUsernameFormGroup").addClass("has-error");
-    valid = false;
-  } else {
-    $("#inputUsernameFormGroup").removeClass("has-error");
-  }
-
-  if (passwordPlain === "") {
-    $("#inputPasswordFormGroup").addClass("has-error");
-    valid = false;
-  } else {
-    $("#inputPasswordFormGroup").removeClass("has-error");
-  }
-
-  return valid;
-}
-
-function clickLogin() {
-  var values = getLoginFormValues();
-  if (!validateLoginForm(values, getPasswordPlain())) {
-    return;
-  }
-
-  datastore("POST", "login", values, function (err,res) {
-    if (err) {
-      $("#placeForAlert").addClass("alert alert-warning");
-      $("#placeForAlert").html(err);
+  clickLogin() {
+    var values = this.getLoginFormValues();
+    if (!this.validateLoginForm(values, this.getPasswordPlain())) {
       return;
     }
-    if (res.success) {
-      cache.username = res.username;
-      ctlBlogList.viewBlogList();
-    } else {
-      $("#placeForAlert").addClass("alert alert-warning");
-      $("#placeForAlert").html("Invalid username or password. ");
-    }
-  });
+
+    datastore("POST", "login", values, function (err,res) {
+      if (err) {
+        $("#placeForAlert").addClass("alert alert-warning");
+        $("#placeForAlert").html(err);
+        return;
+      }
+      if (res.success) {
+        this.username = res.username;
+        page.setURL("/");
+        global.viewInitial();
+      } else {
+        $("#placeForAlert").addClass("alert alert-warning");
+        $("#placeForAlert").html("Invalid username or password. ");
+      }
+    }.bind(this));
+  }
+  clickForgotPasswordLink() {
+    page.setURL("/forgotPassword");
+    global.viewInitial();
+  }
+  clickSignupLink() {
+    page.setURL("/signup");
+    global.viewInitial();
+  }
 }
 
-function clickForgotPasswordLink() {
-  page.setURL("/forgotPassword");
-  global.viewInitial();
-}
-
-exports.viewLogin = viewLogin;
-exports.setGlobals = function () {
-  global.clickLogin = clickLogin;
-  global.clickForgotPasswordLink = clickForgotPasswordLink;
-};
+module.exports = Login;

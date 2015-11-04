@@ -1,5 +1,5 @@
 "use strict";
-var ctlLogin = require("./login");
+var Login = require("./login");
 var ctlSignup = require("./signup");
 var Admin = require("./admin");
 var ctlSplash = require("./splash");
@@ -82,7 +82,8 @@ function viewInitial() {
       }
     } else {
       if (location.pathname == "/login") {
-        ctlLogin.viewLogin();
+        let c = new Login("main");
+        c.show();
       } else if (location.pathname == "/signup") {
         ctlSignup.viewSignup();
       } else if (location.pathname == "/forgotPassword") {
@@ -102,7 +103,6 @@ window.onhashchange = function () {
 global.loadAll = loadAll;
 global.viewInitial = viewInitial;
 
-ctlLogin.setGlobals();
 ctlSignup.setGlobals();
 ctlBlogList.setGlobals();
 ctlProfile.setGlobals();

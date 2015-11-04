@@ -1,6 +1,5 @@
 "use strict";
 var view = require("./splash.html");
-var ctlLogin = require("./login");
 var ctlSignup = require("./signup");
 var page = require("../scripts/page");
 
@@ -14,7 +13,8 @@ function clickViewSignup() {
 }
 
 function clickViewLogin() {
-  ctlLogin.viewLogin();
+  page.setURL("/login");
+  global.viewInitial();
 }
 
 exports.viewSplash = viewSplash;

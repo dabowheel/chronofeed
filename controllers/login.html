@@ -2,7 +2,7 @@
   <h1>Grackle Login</h1>
 
   <form>
-    <p><a href="javascript:void(0)" onclick="clickViewSignup();">Not registered yet?</a></p>
+    <p><a href="javascript:void(0)" onclick="component.Login.clickSignupLink();">Not registered yet?</a></p>
     <div class="row">
       <div class="col-sm-5 col-md-4 col-lg-3">
         <div class="form-group" id="inputUsernameFormGroup">
@@ -25,7 +25,7 @@
     </div>
 
     <div class="gr-forgot-password-link" id="forgotPasswordLink">
-      <a href="#" onclick="clickForgotPasswordLink(); return false;">Did you forget your password?</a>
+      <a href="#" onclick="component.Login.clickForgotPasswordLink(); return false;">Did you forget your password?</a>
     </div>
 
     <button class="btn btn-primary" type="button" onclick="clickLogin();" id="loginButton">Login</button>
