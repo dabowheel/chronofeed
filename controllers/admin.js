@@ -1,10 +1,10 @@
 "use strict";
 var view = require("./admin.html");
-var menuView = require("./menu.html");
 var datastore = require("../scripts/datastore");
 var modelUserList = require("../model/userList");
 var page = require("../scripts/page");
 var Component = require("./component");
+var Menu = require("./menu");
 
 class Admin extends Component {
   constructor(containerID) {
@@ -44,11 +44,12 @@ class Admin extends Component {
       }
 
       page.setURL("/admin", "Grackle | Admin");
-      var template = Handlebars.compile(menuView);
-      var menuHTML = template({isAdmin: true});
-      template = Handlebars.compile(view);
-      var adminHTML = template({userList:this.userList, expiredTable:this.expiredTable});
-      callback(null, menuHTML + adminHTML);
+      let menu = new Menu("", false, true);
+      menu.render(function (err,menuView) {
+        let template = Handlebars.compile(view);
+        let adminHTML = template({userList:this.userList, expiredTable:this.expiredTable});
+        callback(null, menuView + adminHTML);
+      }.bind(this));
     }.bind(this));
   }
   clickDeleteUser(_id) {

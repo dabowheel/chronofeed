@@ -8,13 +8,15 @@ class Component {
   }
   afterLoad() {}
   show () {
-    this.render(function (err,view) {
-      if (err) {
-        return;
-      }
-      document.getElementById(this.containerID).innerHTML = view;
-      this.afterLoad();
-    }.bind(this));
+    if (this.containerID) {
+      this.render(function (err,view) {
+        if (err) {
+          return;
+        }
+        document.getElementById(this.containerID).innerHTML = view;
+        this.afterLoad();
+      }.bind(this));
+    }
   }
   global() {
     if (!global.component) {
