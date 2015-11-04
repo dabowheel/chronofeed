@@ -1,24 +1,27 @@
 "use strict";
 var view = require("./splash.html");
-var ctlSignup = require("./signup");
 var page = require("../scripts/page");
+var Component = require("./component");
 
-function viewSplash() {
-  page.setURL("/", "Grackle");
-  document.getElementById("main").innerHTML = view;
+class Splash extends Component {
+  constructor(containerID) {
+    super(containerID);
+    this.global();
+  }
+  render(callback) {
+    callback(null, view);
+  }
+  afterLoad() {
+    page.setURL("/", "Grackle");
+  }
+  clickSignup() {
+    page.setURL("/signup");
+    global.viewInitial();
+  }
+  clickLogin() {
+    page.setURL("/login");
+    global.viewInitial();
+  }
 }
 
-function clickViewSignup() {
-  ctlSignup.viewSignup();
-}
-
-function clickViewLogin() {
-  page.setURL("/login");
-  global.viewInitial();
-}
-
-exports.viewSplash = viewSplash;
-exports.setGlobals = function () {
-  global.clickViewSignup = clickViewSignup;
-  global.clickViewLogin = clickViewLogin;
-};
+module.exports = Splash;

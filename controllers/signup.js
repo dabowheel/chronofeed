@@ -85,7 +85,13 @@ function validateSignupForm(values,passwordPlain) {
   return valid;
 }
 
+function clickLoginLink() {
+  page.setURL("/login");
+  global.viewInitial();
+}
+
 exports.viewSignup = viewSignup;
 exports.setGlobals = function () {
   global.clickSignup = clickSignup;
+  global.clickLoginLink = clickLoginLink;
 };

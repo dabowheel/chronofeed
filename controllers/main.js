@@ -2,7 +2,7 @@
 var Login = require("./login");
 var ctlSignup = require("./signup");
 var Admin = require("./admin");
-var ctlSplash = require("./splash");
+var Splash = require("./splash");
 var ctlBlogList = require("./blogList");
 var ctlBlog = require("./blog");
 var ctlProfile = require("./profile");
@@ -60,7 +60,8 @@ function viewInitial() {
 
   getUsername(function (err) {
     if (err) {
-      ctlSplash.viewSplash();
+      let c = new Splash("main");
+      c.show();
       $("#placeForAlert").addClass("alert alert-warning");
       $("#placeForAlert").html(err);
       return;
@@ -90,7 +91,8 @@ function viewInitial() {
         let c = new ForgotPassword("main");
         c.show();
       } else {
-        ctlSplash.viewSplash();
+        let c = new Splash("main");
+        c.show();
       }
     }
   });
@@ -107,5 +109,4 @@ ctlSignup.setGlobals();
 ctlBlogList.setGlobals();
 ctlProfile.setGlobals();
 ctlBlog.setGlobals();
-ctlSplash.setGlobals();
 ctlVerifyEmail.setGlobals();
