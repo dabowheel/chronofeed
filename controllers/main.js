@@ -1,7 +1,7 @@
 "use strict";
 var ctlLogin = require("./login");
 var ctlSignup = require("./signup");
-var ctlAdmin = require("./admin");
+var Admin = require("./admin");
 var ctlSplash = require("./splash");
 var ctlBlogList = require("./blogList");
 var ctlBlog = require("./blog");
@@ -70,7 +70,9 @@ function viewInitial() {
     if (cache.username) {
       var blogRE = /^\/blog\/(.*)$/;
       if (location.pathname == "/admin") {
-        ctlAdmin.viewAdmin();
+        console.log("route to admin");
+        let admin = new Admin("main");
+        admin.show();
       } else if (location.pathname == "/profile") {
         ctlProfile.viewProfile();
       } else if (location.pathname.match(blogRE)) {
@@ -104,7 +106,6 @@ global.viewInitial = viewInitial;
 ctlLogin.setGlobals();
 ctlMenu.setGlobals();
 ctlSignup.setGlobals();
-ctlAdmin.setGlobals();
 ctlBlogList.setGlobals();
 ctlProfile.setGlobals();
 ctlBlog.setGlobals();

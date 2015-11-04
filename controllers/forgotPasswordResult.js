@@ -4,10 +4,11 @@ var page = require("../scripts/page");
 
 class ForgotPasswordResult extends Component {
   constructor(containerID) {
-    super(view, containerID);
+    super(containerID);
   }
-  beforeLoad() {
+  render(callback) {
     page.setURL("/forgotPasswordResult", "Grackle | Forgot Password Result");
+    callback(null,view);
   }
 }
 

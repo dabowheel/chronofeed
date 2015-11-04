@@ -1,21 +1,26 @@
 "use strict";
 class Component {
-  constructor (view,containerID) {
-    this.view = view;
+  constructor (containerID) {
     this.containerID = containerID;
   }
-  beforeLoad() {}
+  render() {
+    return "";
+  }
   afterLoad() {}
   show () {
-    this.beforeLoad();
-    document.getElementById(this.containerID).innerHTML = this.view;
-    this.afterLoad();
+    this.render(function (err,view) {
+      if (err) {
+        return;
+      }
+      document.getElementById(this.containerID).innerHTML = view;
+      this.afterLoad();
+    }.bind(this));
   }
   global() {
     if (!global.component) {
       global.component = {};
     }
-    global[this.constructor.name] = this;
+    global.component[this.constructor.name] = this;
   }
 }
 

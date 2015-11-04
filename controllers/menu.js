@@ -3,7 +3,7 @@ var datastore = require("../scripts/datastore");
 var ctlBlogList = require("./blogList");
 var ctlSplash = require("./splash");
 var ctlProfile = require("./profile");
-var ctlAdmin = require("./admin");
+var page = require("../scripts/page");
 
 function clickBlogList() {
   ctlBlogList.viewBlogList();
@@ -14,7 +14,9 @@ function clickProfile() {
 }
 
 function clickAdmin() {
-  ctlAdmin.viewAdmin();
+  console.log("click admin");
+  page.setURL("/admin");
+  global.viewInitial();
 }
 
 function clickLogout() {

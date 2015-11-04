@@ -8,11 +8,12 @@ var Component = require("./component");
 
 class ForgotPassword extends Component {
   constructor (containerID) {
-    super(view, containerID);
+    super(containerID);
     this.global();
   }
-  beforeLoad() {
+  render(callback) {
     page.setURL("/forgotPassword","Grackle | Forgot Password");
+    callback(null,view);
   }
   afterLoad() {
     document.getElementById("inputUsername").focus();

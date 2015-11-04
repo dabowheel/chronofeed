@@ -17,13 +17,13 @@
             <td>Reset Password</td>
             <td>{{expiredTable.reset.count}}</td>
             <td>{{expiredTable.reset.expiredCount}}</td>
-            <td><button type="button" class="btn btn-primary gr-row-buttons" onclick="clickCleanupReset();">Cleanup</button></td>
+            <td><button type="button" class="btn btn-primary gr-row-buttons" onclick="component.Admin.clickCleanupReset();">Cleanup</button></td>
           </tr>
           <tr>
             <td>Verify Email Address</td>
             <td>{{expiredTable.verify.count}}</td>
             <td>{{expiredTable.verify.expiredCount}}</td>
-            <td><button type="button" class="btn btn-primary gr-row-buttons" onclick="clickCleanupVerify();">Cleanup</button></td>
+            <td><button type="button" class="btn btn-primary gr-row-buttons" onclick="component.Admin.clickCleanupVerify();">Cleanup</button></td>
           </tr>
         </tbody>
       </table>
@@ -46,7 +46,7 @@
             <td>{{username}}</td>
             <td>{{email}}</td>
             <td>
-              <button type="button" class="btn btn-primary gr-row-buttons" onclick="confirmDeleteUser('{{_id}}');">Delete</button>
+              <button type="button" class="btn btn-primary gr-row-buttons" onclick="component.Admin.clickDeleteUser('{{_id}}');">Delete</button>
             </td>
           </tr>
           {{/each}}
