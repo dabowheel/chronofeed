@@ -25,7 +25,7 @@ function displayBlogList(blogList) {
 }
 
 function getBlogList(callback) {
-  if (cache.blogList) {
+  if (global.component.All.blogList) {
     return callback();
   }
 
@@ -34,9 +34,9 @@ function getBlogList(callback) {
       return callback(err);
     }
 
-    cache.blogList = new modelBlogList.BlogList();
-    cache.blogList.loadObject(res);
-    cache.blogList.sort();
+    global.component.All.blogList = new modelBlogList.BlogList();
+    global.component.All.blogList.loadObject(res);
+    global.component.All.blogList.sort();
     callback();
   });
 }
@@ -50,14 +50,14 @@ function viewBlogList() {
     }
 
     page.setURL("/", "Grackle");
-    displayBlogList(cache.blogList);
+    displayBlogList(global.component.All.blogList);
   });
 }
 
 function addBlog() {
-  var blogInfo = new modelBlog.BlogInfo(0, cache.blogList.getNewTitle(), cache.blogList.getDOMID());
-  cache.blogList.add(blogInfo);
-  displayBlogList(cache.blogList);
+  var blogInfo = new modelBlog.BlogInfo(0, global.component.All.blogList.getNewTitle(), global.component.All.blogList.getDOMID());
+  global.component.All.blogList.add(blogInfo);
+  displayBlogList(global.component.All.blogList);
   datastore("POST", "createBlog", blogInfo.exportObject(), function (err,res) {
     if (err) {
       $("#placeForAlert").addClass("alert alert-warning");
@@ -70,12 +70,12 @@ function addBlog() {
 }
 
 function editBlog(domID) {
-  var blogInfo = cache.blogList.getBlogInfo(domID);
+  var blogInfo = global.component.All.blogList.getBlogInfo(domID);
   ctlBlog.viewBlog(blogInfo._id);
 }
 
 function confirmDeleteBlog(domID) {
-  var blogInfo = cache.blogList.getBlogInfo(domID);
+  var blogInfo = global.component.All.blogList.getBlogInfo(domID);
   $("#deleteHeader").html("Delete " + blogInfo.title);
   document.getElementById("deleteButton").onclick = function () {
     deleteBlog(domID);
@@ -84,8 +84,8 @@ function confirmDeleteBlog(domID) {
 }
 
 function deleteBlog(domID) {
-  var blogInfo = cache.blogList.delete(domID);
-  displayBlogList(cache.blogList);
+  var blogInfo = global.component.All.blogList.delete(domID);
+  displayBlogList(global.component.All.blogList);
   datastore("DELETE", "deleteBlog", blogInfo.exportObject(), function(err,res) {
     if (err) {
       $("#placeForAlert").addClass("alert alert-warning");

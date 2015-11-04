@@ -36,7 +36,7 @@ class Menu extends Component {
         return;
       }
 
-      clearCache();
+      global.clearComponents();
       page.setURL("/");
       global.viewInitial();
     });

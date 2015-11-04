@@ -60,7 +60,7 @@ class Login extends Component {
         return;
       }
       if (res.success) {
-        this.username = res.username;
+        global.component.All.username = res.username;
         page.setURL("/");
         global.viewInitial();
       } else {

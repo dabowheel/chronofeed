@@ -1,6 +1,6 @@
 "use strict";
 var Login = require("./login");
-var ctlSignup = require("./signup");
+var Signup = require("./signup");
 var Admin = require("./admin");
 var Splash = require("./splash");
 var ctlBlogList = require("./blogList");
@@ -12,11 +12,11 @@ var ForgotPassword = require("./forgotPassword");
 var ctlResetPassword = require("./resetPassword");
 require("babel-polyfill");
 
-global.clearCache = function() {
-  global.cache = {};
-  global.cache.blogs = {};
+global.clearComponents = function() {
+  global.component = {};
+  global.component.All = {};
 };
-global.clearCache();
+global.clearComponents();
 
 window.onpopstate = function (e) {
   viewInitial();
@@ -30,7 +30,7 @@ function loadAll() {
 }
 
 function getUsername(callback) {
-  if (cache.username) {
+  if (global.component.All.username) {
     return callback();
   }
 
@@ -39,7 +39,7 @@ function getUsername(callback) {
       return callback(err);
     }
 
-    cache.username = res.username;
+    global.component.All.username = res.username;
     callback();
   });
 }
@@ -67,7 +67,7 @@ function viewInitial() {
       return;
     }
 
-    if (cache.username) {
+    if (global.component.All.username) {
       var blogRE = /^\/blog\/(.*)$/;
       if (location.pathname == "/admin") {
         console.log("route to admin");
@@ -86,7 +86,8 @@ function viewInitial() {
         let c = new Login("main");
         c.show();
       } else if (location.pathname == "/signup") {
-        ctlSignup.viewSignup();
+        let c = new Signup("main");
+        c.show();
       } else if (location.pathname == "/forgotPassword") {
         let c = new ForgotPassword("main");
         c.show();
@@ -105,7 +106,6 @@ window.onhashchange = function () {
 global.loadAll = loadAll;
 global.viewInitial = viewInitial;
 
-ctlSignup.setGlobals();
 ctlBlogList.setGlobals();
 ctlProfile.setGlobals();
 ctlBlog.setGlobals();
