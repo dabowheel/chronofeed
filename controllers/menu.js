@@ -1,8 +1,5 @@
 "use strict";
 var datastore = require("../scripts/datastore");
-var ctlBlogList = require("./blogList");
-var ctlSplash = require("./splash");
-var ctlProfile = require("./profile");
 var page = require("../scripts/page");
 var Component = require("./component");
 var view = require("./menu.html");
@@ -19,10 +16,12 @@ class Menu extends Component {
     callback(null, template(this));
   }
   clickBlogList() {
-    ctlBlogList.viewBlogList();
+    page.setURL("/");
+    global.viewInitial();
   }
   clickProfile() {
-    ctlProfile.viewProfile();
+    page.setURL("/profile");
+    global.viewInitial();
   }
   clickAdmin() {
     console.log("click admin");
@@ -38,8 +37,8 @@ class Menu extends Component {
       }
 
       clearCache();
-      history.pushState("", document.title, window.location.pathname + window.location.search);
-      ctlSplash.viewSplash();
+      page.setURL("/");
+      global.viewInitial();
     });
   }
 }

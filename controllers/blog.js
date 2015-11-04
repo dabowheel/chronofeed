@@ -1,6 +1,6 @@
 "use strict";
 var view = require("./blog.html");
-var menuView = require("./menu.html");
+var Menu = require("./menu");
 var datastore = require("../scripts/datastore");
 var modelBlog = require("../model/blog");
 var modelPost = require("../model/post");
@@ -13,11 +13,12 @@ function displayBlog2HTML(blog,callback) {
     return str.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;").replace(/\n/g,"<br>");
   });
 
-  var template = Handlebars.compile(menuView);
-  var menuHTML = template({});
-  template = Handlebars.compile(view);
-  var blogHTML = template(blog);
-  callback(menuHTML + blogHTML);
+  let menu = new Menu("", false, false);
+  menu.render(function (err, menuView) {
+    let template = Handlebars.compile(view);
+    var blogHTML = template(blog);
+    callback(menuView + blogHTML);
+  });
 }
 
 function onKeypress (e) {

@@ -5,7 +5,6 @@ var Admin = require("./admin");
 var ctlSplash = require("./splash");
 var ctlBlogList = require("./blogList");
 var ctlBlog = require("./blog");
-var ctlMenu = require("./menu");
 var ctlProfile = require("./profile");
 var ctlVerifyEmail = require("./verifyEmail");
 var datastore = require("../scripts/datastore");

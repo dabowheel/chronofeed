@@ -1,6 +1,6 @@
 "use strict";
 var view = require("./profile.html");
-var menuView = require("./menu.html");
+var Menu = require("./menu");
 var datastore = require("../scripts/datastore");
 var page = require("../scripts/page");
 var validate = require("../scripts/validate");
@@ -24,16 +24,15 @@ function getProfile(callback) {
 }
 
 function displayProfile(profile) {
-  var template = Handlebars.compile(menuView);
-  var menuHTML = template({
-    isProfile: true
-  });
-  template = Handlebars.compile(view);
-  var profileHTML = template(profile);
-  document.getElementById("main").innerHTML = menuHTML + profileHTML;
+  let menu = new Menu("", true, false);
+  menu.render(function (err, menuView) {
+    let template = Handlebars.compile(view);
+    var profileHTML = template(profile);
+    document.getElementById("main").innerHTML = menuView + profileHTML;
 
-  validate.listenToFields(["inputEmail"], "saveButton");
-  validate.addReturnPressListener(["inputEmail", "inputPassword"], clickSaveProfile);
+    validate.listenToFields(["inputEmail"], "saveButton");
+    validate.addReturnPressListener(["inputEmail", "inputPassword"], clickSaveProfile);
+  });
 }
 
 function viewProfile() {
