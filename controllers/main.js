@@ -104,7 +104,6 @@ global.loadAll = loadAll;
 global.viewInitial = viewInitial;
 
 ctlLogin.setGlobals();
-ctlMenu.setGlobals();
 ctlSignup.setGlobals();
 ctlBlogList.setGlobals();
 ctlProfile.setGlobals();
