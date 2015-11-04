@@ -6,7 +6,7 @@
   "scripts": {
     "app-watch": "nodemon -w app.js -w datastore app.js",
     "live-reload": "live-reload app.js datastore public --port=1009",
-    "build-watch": "watch-spawn -p controllers/**/* -p model/*.js -p scripts/*.js npm run build",
+    "build-watch": "watch-spawn -p webpack.config.js -p controllers/**/* -p model/*.js -p scripts/*.js npm run build",
     "test-watch": "watch-spawn -p .jshintrc -p *.js -p controllers/**/*.js -p model/**/*.js -p datastore/**/*.js -p scripts/**/*.js npm run test",
     "build": "npm run webpack && npm run uglify",
     "test": "npm run lint && npm run jasmine",

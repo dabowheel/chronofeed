@@ -1,3 +1,4 @@
+"use strict";
 var Component = require("./component");
 var view = require("./forgotPasswordResult.html");
 var page = require("../scripts/page");
