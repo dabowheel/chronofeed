@@ -3,7 +3,7 @@
     <div class="col-md-8 col-lg-8" id="placeForAlert">
     </div>
   </div>
-  <button class="btn btn-primary" onclick="component.BlogList.addBlog();">Add Blog</button>
+  <button class="btn btn-primary" onclick="component.ctlBlogList.addBlog();">Add Blog</button>
   <table class="table table-hover">
     <tbody>
       {{#each list}}
@@ -13,8 +13,8 @@
         </td>
         <td>
           <span style="float:right;">
-            <button class="btn btn-primary" onclick="component.BlogList.editBlog('{{domID}}');">Edit</button>
-            <button class="btn btn-primary" onclick="component.BlogList.confirmDeleteBlog('{{domID}}')">Delete</button>
+            <button class="btn btn-primary" onclick="component.ctlBlogList.editBlog('{{domID}}');">Edit</button>
+            <button class="btn btn-primary" onclick="component.ctlBlogList.confirmDeleteBlog('{{domID}}')">Delete</button>
           </span>
         </td>
       </tr>

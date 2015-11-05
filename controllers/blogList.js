@@ -8,7 +8,7 @@ var page = require("../scripts/page");
 var Component = require("./component");
 var LoadError = require("./loadError");
 
-class BlogList extends Component {
+class ctlBlogList extends Component {
   constructor(containerID) {
     super(containerID);
     this.global();
@@ -87,4 +87,4 @@ class BlogList extends Component {
   }
 }
 
-module.exports = BlogList;
+module.exports = ctlBlogList;

@@ -9,8 +9,8 @@
     <div class="col-md-6 col-lg-6">
       <div class="form-group" id="inputTitleFormGroup">
         <input class="form-control gr-form-control" id="inputTitle" type="text" value="{{title}}"/>
-        <button class="btn btn-primary gr-hotkey" onclick="saveBlogTitleChange();" accesskey="a" id="blogTitleAcceptButton">Accept</button>
-        <button class="btn btn-primary gr-hotkey" onclick="cancelBlogTitleChange()" accesskey="c">Cancel</button>
+        <button class="btn btn-primary gr-hotkey" onclick="component.ctlBlog.saveBlogTitleChange();" accesskey="a" id="blogTitleAcceptButton">Accept</button>
+        <button class="btn btn-primary gr-hotkey" onclick="component.ctlBlog.cancelBlogTitleChange()" accesskey="c">Cancel</button>
       </div>
     </div>
   </div>
@@ -20,13 +20,13 @@
     <div class="col-mid-12 col-lg-12">
       <div class="form-group" id="inputTitleFormGroup">
         <span class="gr-blog-title">{{title}}</span>
-        <button class="btn btn-primary" onclick="editBlogTitle();">Edit Name</button>
+        <button class="btn btn-primary" onclick="component.ctlBlog.editBlogTitle();">Edit Name</button>
       </div>
     </div>
   </div>
   {{/if}}
 
-  <button class="btn btn-primary" onclick="addPost();">Add Post</button>
+  <button class="btn btn-primary" onclick="component.ctlBlog.addPost();">Add Post</button>
   <table class="table table-hover">
     <tbody>
       {{#each postList}}
@@ -45,8 +45,8 @@
             <input class="form-control gr-datetime" id="posttimeonly" type="time" value="{{timeOnly}}"/>
           </div>
           <div class="gr-row-buttons">
-            <button class="btn btn-primary gr-hotkey" onclick="savePostChanges('{{domID}}');" accesskey="a">Accept</button>
-            <button class="btn btn-primary gr-hotkey" onclick="cancelPostChanges('{{domID}}');" accesskey="c">Cancel</button>
+            <button class="btn btn-primary gr-hotkey" onclick="component.ctlBlog.savePostChanges('{{domID}}');" accesskey="a">Accept</button>
+            <button class="btn btn-primary gr-hotkey" onclick="component.ctlBlog.cancelPostChanges('{{domID}}');" accesskey="c">Cancel</button>
           </div>
         </td>
 
@@ -58,8 +58,8 @@
         </td>
         <td>
           <span class="gr-row-buttons">
-            <button class="btn btn-primary" onclick="editPost('{{domID}}');">Edit</button>
-            <button class="btn btn-primary" onclick="deletePost('{{domID}}');">Delete</button>
+            <button class="btn btn-primary" onclick="component.ctlBlog.editPost('{{domID}}');">Edit</button>
+            <button class="btn btn-primary" onclick="component.ctlBlog.deletePost('{{domID}}');">Delete</button>
           </span>
         </td>
         {{/if}}

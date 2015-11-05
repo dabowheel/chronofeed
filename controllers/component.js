@@ -1,4 +1,6 @@
 "use strict";
+let page = require("../scripts/page");
+
 class Component {
   constructor (containerID) {
     this.containerID = containerID;
@@ -26,6 +28,12 @@ class Component {
       global.component = {};
     }
     global.component[this.constructor.name] = this;
+  }
+  getPathComponent() {
+    return global.compPath[decodeURI(location.pathname)];
+  }
+  setPathComponent(c) {
+    global.compPath[decodeURI(location.pathname)] = c;
   }
 }
 

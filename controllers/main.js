@@ -3,7 +3,7 @@ var Login = require("./login");
 var Signup = require("./signup");
 var Admin = require("./admin");
 var Splash = require("./splash");
-var BlogList = require("./blogList");
+var ctlBlogList = require("./blogList");
 var ctlBlog = require("./blog");
 var Profile = require("./profile");
 var VerifyEmail = require("./verifyEmail");
@@ -16,10 +16,15 @@ global.clearComponents = function() {
   global.component = {};
   global.component.All = {};
   global.component.All.blogs = [];
+  global.compPath = {};
 };
 global.clearComponents();
 
 window.onpopstate = function (e) {
+  viewInitial();
+};
+
+window.onhashchange = function () {
   viewInitial();
 };
 
@@ -80,9 +85,10 @@ function viewInitial() {
         c.show();
       } else if (location.pathname.match(blogRE)) {
         var title = decodeURI(location.pathname.match(blogRE)[1]);
-        ctlBlog.viewBlog("",title);
+        let c = new ctlBlog("main", title);
+        c.show();
       } else {
-        let c = new BlogList("main");
+        let c = new ctlBlogList("main");
         c.show();
       }
     } else {
@@ -103,11 +109,5 @@ function viewInitial() {
   });
 }
 
-window.onhashchange = function () {
-  viewInitial();
-};
-
 global.loadAll = loadAll;
 global.viewInitial = viewInitial;
-
-ctlBlog.setGlobals();

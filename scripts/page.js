@@ -6,13 +6,13 @@ function setHash(hash) {
   }
 }
 
-function setURL(url,title) {
+function setURL(url,title,modify) {
   url = encodeURI(url);
   if (url != (location.pathname + location.search)) {
     if (!title) {
       title = document.title;
     }
-    if (url == "/") {
+    if (modify || url == "/") {
       history.replaceState("", title, url + location.search);
     } else {
       history.pushState("", title, url + location.search);
