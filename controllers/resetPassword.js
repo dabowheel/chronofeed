@@ -71,4 +71,4 @@ class ResetPassword extends Component {
   }
 }
 
-exports.ResetPassword = ResetPassword;
+module.exports = ResetPassword;

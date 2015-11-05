@@ -9,7 +9,7 @@ var Profile = require("./profile");
 var VerifyEmail = require("./verifyEmail");
 var datastore = require("../scripts/datastore");
 var ForgotPassword = require("./forgotPassword");
-var ctlResetPassword = require("./resetPassword");
+var ResetPassword = require("./resetPassword");
 require("babel-polyfill");
 
 global.clearComponents = function() {
@@ -54,7 +54,7 @@ function viewInitial() {
 
   var resetPasswordMatch = location.pathname.match(/^\/resetPassword\/(.*)\/(.*)$/);
   if (resetPasswordMatch) {
-    var p = new ctlResetPassword.ResetPassword("main", resetPasswordMatch[1], resetPasswordMatch[2]);
+    var p = new ResetPassword("main", resetPasswordMatch[1], resetPasswordMatch[2]);
     p.show();
     return;
   }
