@@ -38,7 +38,7 @@ class Admin extends Component {
   render(callback) {
     this.getAdmin(function (err) {
       if (err) {
-        let c = new LoadError("main", "Admin");
+        let c = new LoadError("main", "Admin", err);
         callback(err, c);
         return;
       }

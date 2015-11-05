@@ -32,7 +32,7 @@ class ctlBlogList extends Component {
   render(callback) {
     this.getBlogList(function (err) {
       if (err) {
-        let c = new LoadError(this.container);
+        let c = new LoadError(this.container, "", err);
         return callback(err, c);
       }
 
