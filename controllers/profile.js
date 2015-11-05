@@ -7,7 +7,7 @@ var validate = require("../scripts/validate");
 var modelUserList = require("../model/userList");
 
 function getProfile(callback) {
-  if (cache.profile) {
+  if (global.component.All.profile) {
     callback();
     return;
   }
@@ -18,7 +18,7 @@ function getProfile(callback) {
     }
     var user = new modelUserList.User();
     user.loadObject(res);
-    cache.profile = user;
+    global.component.All.profile = user;
     callback();
   });
 }
@@ -45,7 +45,7 @@ function viewProfile() {
     }
 
     page.setURL("/profile");
-    displayProfile(cache.profile);
+    displayProfile(global.component.All.profile);
   });
 }
 
@@ -55,9 +55,8 @@ function getPasswordPlain() {
 
 function getValues() {
   return {
-    username: cache.profile.username,
     email: document.getElementById("inputEmail").value,
-    password: getPasswordPlain().length > 0 ? CryptoJS.SHA256(getPasswordPlain()).toString() : cache.profile.password
+    password: getPasswordPlain().length > 0 ? CryptoJS.SHA256(getPasswordPlain()).toString() : global.component.All.profile.password
   };
 }
 
@@ -99,12 +98,12 @@ function clickSaveProfile() {
     }
 
     for (let name in values) {
-      cache.profile[name] = values[name];
+      global.component.All.profile[name] = values[name];
     }
     let message;
     if (res.checkEmail) {
-      cache.profile.emailVerified = false;
-      displayProfile(cache.profile);
+      global.component.All.profile.emailVerified = false;
+      displayProfile(global.component.All.profile);
       message = "Saved. Check your email for a message to verify your email address.";
     } else {
       message = "Saved.";

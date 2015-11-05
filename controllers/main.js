@@ -6,7 +6,7 @@ var Splash = require("./splash");
 var ctlBlogList = require("./blogList");
 var ctlBlog = require("./blog");
 var ctlProfile = require("./profile");
-var ctlVerifyEmail = require("./verifyEmail");
+var VerifyEmail = require("./verifyEmail");
 var datastore = require("../scripts/datastore");
 var ForgotPassword = require("./forgotPassword");
 var ctlResetPassword = require("./resetPassword");
@@ -47,7 +47,8 @@ function getUsername(callback) {
 function viewInitial() {
   var verifyEmailMatch = location.pathname.match(/^\/verifyEmail\/(.*)\/(.*)$/);
   if (verifyEmailMatch) {
-    ctlVerifyEmail.viewVerifyEmail(verifyEmailMatch[1],verifyEmailMatch[2]);
+    let c = new VerifyEmail("main", verifyEmailMatch[1], verifyEmailMatch[2]);
+    c.show();
     return;
   }
 
@@ -109,4 +110,3 @@ global.viewInitial = viewInitial;
 ctlBlogList.setGlobals();
 ctlProfile.setGlobals();
 ctlBlog.setGlobals();
-ctlVerifyEmail.setGlobals();

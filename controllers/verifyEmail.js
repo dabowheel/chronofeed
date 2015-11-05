@@ -2,32 +2,31 @@
 var datastore = require("../scripts/datastore");
 var page = require("../scripts/page");
 var view = require("./verifyEmail.html");
+var Component = require("./component");
 
-function displayVerifyEmail(verified) {
-  var template = Handlebars.compile(view);
-  document.getElementById("main").innerHTML = template({verified: verified});
-}
-
-function viewVerifyEmail(hash,code) {
-  datastore("GET","verifyEmail/" + hash + "/" + code, null, function (err,res) {
-    var verified = true;
-    if (err) {
-      verified = false;
-    }
-    displayVerifyEmail(verified);
-    if (err) {
+class VerifyEmail extends Component {
+  constructor(containerID,hash,code) {
+    super(containerID);
+    this.hash = hash;
+    this.code = code;
+    this.global();
+  }
+  render(callback) {
+    datastore("GET","verifyEmail/" + this.hash + "/" + this.code, null, function (err,res) {
+      this.error = err;
+      callback(null, view);
+    }.bind(this));
+  }
+  alertLoad() {
+    if (this.error) {
       $("#placeForAlert").addClass("alert alert-warning");
-      $("#placeForAlert").html(err);
+      $("#placeForAlert").html(this.error);
     }
-  });
+  }
+  clickGoHome() {
+    page.setURL("/");
+    global.viewInitial();
+  }
 }
 
-function clickGoHome() {
-  page.setURL("/");
-  global.viewInitial();
-}
-
-exports.viewVerifyEmail = viewVerifyEmail;
-exports.setGlobals = function () {
-  global.clickGoHome = clickGoHome;
-};
+module.exports = VerifyEmail;
