@@ -5,7 +5,7 @@ var datastore = require("../scripts/datastore");
 var modelBlog = require("../model/blog");
 var modelPost = require("../model/post");
 var page = require("../scripts/page");
-var ctlBlogList = require("./blogList");
+var LoadError = require("./loadError");
 var validate = require("../scripts/validate");
 
 function displayBlog2HTML(blog,callback) {
@@ -71,7 +71,8 @@ function getBlog(_id, title, callback) {
 function viewBlog(_id,title) {
   getBlog(_id, title, function (err) {
     if (err) {
-      ctlBlogList.viewBlogList();
+      let c = new LoadError("main",title);
+      c.show();
       return;
     }
     displayBlog(global.component.All.blog);

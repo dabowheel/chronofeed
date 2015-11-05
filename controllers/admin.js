@@ -5,6 +5,7 @@ var modelUserList = require("../model/userList");
 var page = require("../scripts/page");
 var Component = require("./component");
 var Menu = require("./menu");
+var LoadError = require("./loadError");
 
 class Admin extends Component {
   constructor(containerID) {
@@ -37,9 +38,8 @@ class Admin extends Component {
   render(callback) {
     this.getAdmin(function (err) {
       if (err) {
-        $("#placeForAlert").addClass("alert alert-warning");
-        $("#placeForAlert").html(err);
-        callback(err);
+        let c = new LoadError("main", "Admin");
+        callback(err, c);
         return;
       }
 
