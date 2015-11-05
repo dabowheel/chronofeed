@@ -4,7 +4,6 @@ var Menu = require("./menu");
 var datastore = require("../scripts/datastore");
 var modelBlogList = require("../model/blogList");
 var modelBlog = require("../model/blog");
-var ctlBlog = require("./blog");
 var ctlLogin = require("./login");
 var page = require("../scripts/page");
 
@@ -70,7 +69,8 @@ function addBlog() {
 
 function editBlog(domID) {
   var blogInfo = global.component.All.blogList.getBlogInfo(domID);
-  ctlBlog.viewBlog(blogInfo._id);
+  page.setURL("/blog/" + blogInfo.title);
+  global.viewInitial();
 }
 
 function confirmDeleteBlog(domID) {

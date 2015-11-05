@@ -7,6 +7,7 @@ function setHash(hash) {
 }
 
 function setURL(url,title) {
+  url = encodeURI(url);
   if (url != (location.pathname + location.search)) {
     if (!title) {
       title = document.title;
