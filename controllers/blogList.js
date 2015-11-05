@@ -5,98 +5,86 @@ var datastore = require("../scripts/datastore");
 var modelBlogList = require("../model/blogList");
 var modelBlog = require("../model/blog");
 var page = require("../scripts/page");
+var Component = require("./component");
+var LoadError = require("./loadError");
 
-function displayBlogList2HTML(blogList,callback) {
-  let menu = new Menu("", false, false);
-  menu.render(function (err, menuView) {
-    let template = Handlebars.compile(view);
-    var blogListHTML = template(blogList);
-    callback(menuView + blogListHTML);
-  });
-}
-
-function displayBlogList(blogList) {
-  displayBlogList2HTML(blogList, function (html) {
-    document.getElementById("main").innerHTML = html;
-  });
-}
-
-function getBlogList(callback) {
-  if (global.component.All.blogList) {
-    return callback();
+class BlogList extends Component {
+  constructor(containerID) {
+    super(containerID);
+    this.global();
   }
-
-  datastore("GET","readBlogList",null,function (err,res) {
-    if (err) {
-      return callback(err);
+  getBlogList(callback) {
+    if (this.blogList) {
+      return callback();
     }
 
-    global.component.All.blogList = new modelBlogList.BlogList();
-    global.component.All.blogList.loadObject(res);
-    global.component.All.blogList.sort();
-    callback();
-  });
+    datastore("GET","readBlogList",null,function (err,res) {
+      if (err) {
+        return callback(err);
+      }
+
+      this.blogList = new modelBlogList.BlogList();
+      this.blogList.loadObject(res);
+      this.blogList.sort();
+      callback();
+    }.bind(this));
+  }
+  render(callback) {
+    this.getBlogList(function (err) {
+      if (err) {
+        let c = new LoadError(this.container);
+        return callback(err, c);
+      }
+
+      let menu = new Menu("", false, false);
+      menu.render(function (err, menuView) {
+        let template = Handlebars.compile(view);
+        var blogListHTML = template(this.blogList);
+        callback(null, menuView + blogListHTML);
+      }.bind(this));
+    }.bind(this));
+  }
+  afterLoad() {
+    document.title = "Grackle";
+  }
+  addBlog() {
+    var blogInfo = new modelBlog.BlogInfo(0, this.blogList.getNewTitle(), this.blogList.getDOMID());
+    this.blogList.add(blogInfo);
+    this.show();
+    datastore("POST", "createBlog", blogInfo.exportObject(), function (err,res) {
+      if (err) {
+        $("#placeForAlert").addClass("alert alert-warning");
+        $("#placeForAlert").html(err);
+        return;
+      }
+
+      blogInfo._id = res._id;
+    });
+  }
+  editBlog(domID) {
+    var blogInfo = this.blogList.getBlogInfo(domID);
+    page.setURL("/blog/" + blogInfo.title);
+    global.viewInitial();
+  }
+  confirmDeleteBlog(domID) {
+    var blogInfo = this.blogList.getBlogInfo(domID);
+    $("#deleteHeader").html("Delete " + blogInfo.title);
+    document.getElementById("deleteButton").onclick = function () {
+      this.deleteBlog(domID);
+    }.bind(this);
+    $("#deleteModal").modal("show");
+  }
+  deleteBlog(domID) {
+    var blogInfo = this.blogList.delete(domID);
+    this.show();
+    datastore("DELETE", "deleteBlog", blogInfo.exportObject(), function(err,res) {
+      if (err) {
+        $("#placeForAlert").addClass("alert alert-warning");
+        $("#placeForAlert").html(err);
+        return;
+      }
+    });
+  }
 }
 
-function viewBlogList() {
-  getBlogList(function (err) {
-    if (err) {
-      $("#placeForAlert").addClass("alert alert-warning");
-      $("#placeForAlert").html(err);
-      return;
-    }
-
-    page.setURL("/", "Grackle");
-    displayBlogList(global.component.All.blogList);
-  });
-}
-
-function addBlog() {
-  var blogInfo = new modelBlog.BlogInfo(0, global.component.All.blogList.getNewTitle(), global.component.All.blogList.getDOMID());
-  global.component.All.blogList.add(blogInfo);
-  displayBlogList(global.component.All.blogList);
-  datastore("POST", "createBlog", blogInfo.exportObject(), function (err,res) {
-    if (err) {
-      $("#placeForAlert").addClass("alert alert-warning");
-      $("#placeForAlert").html(err);
-      return;
-    }
-
-    blogInfo._id = res._id;
-  });
-}
-
-function editBlog(domID) {
-  var blogInfo = global.component.All.blogList.getBlogInfo(domID);
-  page.setURL("/blog/" + blogInfo.title);
-  global.viewInitial();
-}
-
-function confirmDeleteBlog(domID) {
-  var blogInfo = global.component.All.blogList.getBlogInfo(domID);
-  $("#deleteHeader").html("Delete " + blogInfo.title);
-  document.getElementById("deleteButton").onclick = function () {
-    deleteBlog(domID);
-  };
-  $("#deleteModal").modal("show");
-}
-
-function deleteBlog(domID) {
-  var blogInfo = global.component.All.blogList.delete(domID);
-  displayBlogList(global.component.All.blogList);
-  datastore("DELETE", "deleteBlog", blogInfo.exportObject(), function(err,res) {
-    if (err) {
-      $("#placeForAlert").addClass("alert alert-warning");
-      $("#placeForAlert").html(err);
-      return;
-    }
-  });
-}
-
-exports.viewBlogList = viewBlogList;
-exports.setGlobals = function () {
-  global.addBlog = addBlog;
-  global.editBlog = editBlog;
-  global.deleteBlog = deleteBlog;
-  global.confirmDeleteBlog = confirmDeleteBlog;
-};
+module.exports = BlogList;

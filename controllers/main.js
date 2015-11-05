@@ -3,7 +3,7 @@ var Login = require("./login");
 var Signup = require("./signup");
 var Admin = require("./admin");
 var Splash = require("./splash");
-var ctlBlogList = require("./blogList");
+var BlogList = require("./blogList");
 var ctlBlog = require("./blog");
 var Profile = require("./profile");
 var VerifyEmail = require("./verifyEmail");
@@ -82,7 +82,8 @@ function viewInitial() {
         var title = decodeURI(location.pathname.match(blogRE)[1]);
         ctlBlog.viewBlog("",title);
       } else {
-        ctlBlogList.viewBlogList();
+        let c = new BlogList("main");
+        c.show();
       }
     } else {
       if (location.pathname == "/login") {
@@ -109,5 +110,4 @@ window.onhashchange = function () {
 global.loadAll = loadAll;
 global.viewInitial = viewInitial;
 
-ctlBlogList.setGlobals();
 ctlBlog.setGlobals();
