@@ -4,7 +4,6 @@ var Menu = require("./menu");
 var datastore = require("../scripts/datastore");
 var modelBlogList = require("../model/blogList");
 var modelBlog = require("../model/blog");
-var ctlBlogList = require("./blogList");
 var ctlBlog = require("./blog");
 var ctlLogin = require("./login");
 var page = require("../scripts/page");

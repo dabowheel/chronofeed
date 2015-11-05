@@ -15,6 +15,7 @@ require("babel-polyfill");
 global.clearComponents = function() {
   global.component = {};
   global.component.All = {};
+  global.component.All.blogs = [];
 };
 global.clearComponents();
 

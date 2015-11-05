@@ -33,15 +33,15 @@ function displayBlog(blog) {
     document.getElementById("main").innerHTML = html;
   });
 
-  if (cache.blog.editBlogTitle) {
+  if (global.component.All.blog.editBlogTitle) {
     document.getElementById("inputTitle").onkeypress = onKeypress;
     validate.listenToFields(["inputTitle"], "blogTitleAcceptButton");
   }
 }
 
 function getBlog(_id, title, callback) {
-  if (_id && cache.blogs[_id]) {
-    cache.blog = cache.blogs[_id];
+  if (_id && global.component.All.blogs[_id]) {
+    global.component.All.blog = global.component.All.blogs[_id];
     callback();
     return;
   }
@@ -61,9 +61,9 @@ function getBlog(_id, title, callback) {
       return callback(err);
     }
 
-    cache.blog = new modelBlog.Blog();
-    cache.blog.loadObject(res, true);
-    cache.blogs[cache.blog._id] = cache.blog;
+    global.component.All.blog = new modelBlog.Blog();
+    global.component.All.blog.loadObject(res, true);
+    global.component.All.blogs[global.component.All.blog._id] = global.component.All.blog;
     callback();
   });
 }
@@ -74,13 +74,13 @@ function viewBlog(_id,title) {
       ctlBlogList.viewBlogList();
       return;
     }
-    displayBlog(cache.blog);
+    displayBlog(global.component.All.blog);
   });
 }
 
 function editBlogTitle() {
-  cache.blog.editBlogTitle = true;
-  displayBlog(cache.blog);
+  global.component.All.blog.editBlogTitle = true;
+  displayBlog(global.component.All.blog);
   document.getElementById("inputTitle").select();
 }
 
@@ -90,7 +90,7 @@ function getBlogTitle() {
 
 function saveBlogTitleChange() {
   var title = getBlogTitle();
-  if (title === cache.blog.title) {
+  if (title === global.component.All.blog.title) {
     cancelBlogTitleChange();
     return;
   }
@@ -98,19 +98,19 @@ function saveBlogTitleChange() {
   if (title === "") {
     $("#inputTitleFormGroup").addClass("has-error");
     return;
-  } else if (cache.blogList && cache.blogList.hasTitle(title)) {
+  } else if (global.component.All.blogList && global.component.All.blogList.hasTitle(title)) {
     $("#placeForAlert").addClass("alert alert-warning");
     $("#placeForAlert").html("A blog with this title already exists");
     return;
   }
 
-  cache.blog.title = title;
-  if (cache.blogList) {
-    cache.blogList.updateTitle(cache.blog._id, title);
+  global.component.All.blog.title = title;
+  if (global.component.All.blogList) {
+    global.component.All.blogList.updateTitle(global.component.All.blog._id, title);
   }
   cancelBlogTitleChange();
 
-  var blogInfo = new modelBlog.BlogInfo(cache.blog._id, cache.blog.title);
+  var blogInfo = new modelBlog.BlogInfo(global.component.All.blog._id, global.component.All.blog.title);
   datastore("POST", "saveBlogTitle", blogInfo.exportObject(), function (err, res) {
     if (err) {
       $("#placeForAlert").addClass("alert alert-warning");
@@ -123,15 +123,15 @@ function saveBlogTitleChange() {
 function cancelBlogTitleChange() {
   $("#placeForAlert").removeClass("alert alert-warning");
   $("#placeForAlert").html("");
-  cache.blog.editBlogTitle = false;
-  displayBlog(cache.blog);
+  global.component.All.blog.editBlogTitle = false;
+  displayBlog(global.component.All.blog);
 }
 
 function addPost() {
-  var domID = cache.blog.getDOMID();
-  cache.blog.addPost(new modelPost.Post("", "", "", new Date(), cache.blog._id, domID));
-  cache.blog.editPost(domID);
-  displayBlog(cache.blog);
+  var domID = global.component.All.blog.getDOMID();
+  global.component.All.blog.addPost(new modelPost.Post("", "", "", new Date(), global.component.All.blog._id, domID));
+  global.component.All.blog.editPost(domID);
+  displayBlog(global.component.All.blog);
   document.getElementById("posttitle").select();
 }
 
@@ -154,10 +154,10 @@ function getPost() {
 function savePostChanges(domID) {
   var values = getPost();
   var post = new modelPost.Post(values._id, values.title, values.text, values.date, values.blogID, values.domID);
-  cache.blog.stopEditingPost(domID);
+  global.component.All.blog.stopEditingPost(domID);
   if (post._id) {
-    cache.blog.savePost(domID,post);
-    displayBlog(cache.blog);
+    global.component.All.blog.savePost(domID,post);
+    displayBlog(global.component.All.blog);
     datastore("POST", "updatePost", post.exportObject(), function (err,res) {
       if (err) {
         $("#placeForAlert").addClass("alert alert-warning");
@@ -166,8 +166,8 @@ function savePostChanges(domID) {
       }
     });
   } else {
-    cache.blog.savePost(domID,post);
-    displayBlog(cache.blog);
+    global.component.All.blog.savePost(domID,post);
+    displayBlog(global.component.All.blog);
     datastore("POST", "createPost", post.exportObject(), function (err,res) {
       if (err) {
         $("#placeForAlert").addClass("alert alert-warning");
@@ -176,35 +176,35 @@ function savePostChanges(domID) {
       }
 
       post._id = res._id;
-      displayBlog(cache.blog);
+      displayBlog(global.component.All.blog);
     });
   }
 }
 
 function cancelPostChanges(domID) {
   var values = getPost();
-  var post = cache.blog.getPost(domID);
+  var post = global.component.All.blog.getPost(domID);
   if (post._id) {
-    cache.blog.stopEditingPost(domID);
+    global.component.All.blog.stopEditingPost(domID);
   } else {
-    cache.blog.deletePost(domID);
+    global.component.All.blog.deletePost(domID);
   }
-  displayBlog(cache.blog);
+  displayBlog(global.component.All.blog);
 }
 
 function editPost(domID) {
-  if (!cache.blog.editPost(domID)) {
+  if (!global.component.All.blog.editPost(domID)) {
     $("#placeForAlert").addClass("alert alert-warning");
     $("#placeForAlert").html("could set edit on post");
     return;
   }
-  displayBlog(cache.blog);
+  displayBlog(global.component.All.blog);
   document.getElementById("posttitle").select();
 }
 
 function deletePost(domID) {
-  var post = cache.blog.deletePost(domID);
-  displayBlog(cache.blog);
+  var post = global.component.All.blog.deletePost(domID);
+  displayBlog(global.component.All.blog);
 
   datastore("DELETE", "deletePost", post.exportObject(), function (err,res) {
     if (err) {
