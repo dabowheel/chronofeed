@@ -5,130 +5,124 @@ var datastore = require("../scripts/datastore");
 var page = require("../scripts/page");
 var validate = require("../scripts/validate");
 var modelUserList = require("../model/userList");
+var Component = require("./component");
+var LoadError = require("./loadError");
 
-function getProfile(callback) {
-  if (global.component.All.profile) {
-    callback();
-    return;
+class Profile extends Component {
+  constructor(containerID) {
+    super(containerID);
+    this.global();
   }
-
-  datastore("GET", "getProfile", null, function (err,res) {
-    if (err) {
-      return callback(err);
+  getProfile(callback) {
+    if (this.profile) {
+      callback();
+      return;
     }
-    var user = new modelUserList.User();
-    user.loadObject(res);
-    global.component.All.profile = user;
-    callback();
-  });
-}
 
-function displayProfile(profile) {
-  let menu = new Menu("", true, false);
-  menu.render(function (err, menuView) {
-    let template = Handlebars.compile(view);
-    var profileHTML = template(profile);
-    document.getElementById("main").innerHTML = menuView + profileHTML;
+    datastore("GET", "getProfile", null, function (err,res) {
+      if (err) {
+        return callback(err);
+      }
+      var user = new modelUserList.User();
+      user.loadObject(res);
+      this.profile = user;
+      callback();
+    }.bind(this));
+  }
+  render(callback) {
+    this.getProfile(function (err) {
+      if (err) {
+        let c = new LoadError(this.containerID, "Profile", err);
+        return callback(err, c);
+      }
 
+      let menu = new Menu("", true, false);
+      menu.render(function (err, menuView) {
+        let template = Handlebars.compile(view);
+        var profileHTML = template(this.profile);
+        callback(null, menuView + profileHTML);
+      }.bind(this));
+    }.bind(this));
+  }
+  afterLoad() {
+    document.title = "Grackle | Profile";
     validate.listenToFields(["inputEmail"], "saveButton");
-    validate.addReturnPressListener(["inputEmail", "inputPassword"], clickSaveProfile);
-  });
-}
-
-function viewProfile() {
-  getProfile(function (err) {
-    if (err) {
-      $("#placeForAlert").addClass("alert alert-warning");
-      $("#placeForAlert").html(err);
-      displayProfile({});
-      return;
-    }
-
-    page.setURL("/profile");
-    displayProfile(global.component.All.profile);
-  });
-}
-
-function getPasswordPlain() {
-  return document.getElementById("inputPassword").value;
-}
-
-function getValues() {
-  return {
-    email: document.getElementById("inputEmail").value,
-    password: getPasswordPlain().length > 0 ? CryptoJS.SHA256(getPasswordPlain()).toString() : global.component.All.profile.password
-  };
-}
-
-function validateProfileForm(values, passwordPlain) {
-  var valid = true;
-
-  if (values.email === "") {
-    $("#inputEmailFormGroup").addClass("has-error");
-    valid = false;
-  } else {
-    $("#inputEmailFormGroup").removeClass("has-error");
+    validate.addReturnPressListener(["inputEmail", "inputPassword"], this.clickSave.bind(this));
   }
-
-  if (passwordPlain.length > 0 && passwordPlain.length < 8) {
-    $("#inputPasswordFormGroup").addClass("has-error");
-    $("#placeForAlert").addClass("alert alert-warning");
-    $("#placeForAlert").html("Password length must be at least 8 characters.");
-    valid = false;
-  } else {
-    $("#inputPasswordFormGroup").removeClass("has-error");
-    $("#placeForAlert").removeClass("alert alert-warning");
-    $("#placeForAlert").html("");
+  getPasswordPlain() {
+    return document.getElementById("inputPassword").value;
   }
-
-  return valid;
-}
-
-function clickSaveProfile() {
-  var values = getValues();
-  if (!validateProfileForm(values, getPasswordPlain())) {
-    return;
+  getValues() {
+    return {
+      email: document.getElementById("inputEmail").value,
+      password: this.getPasswordPlain().length > 0 ? CryptoJS.SHA256(this.getPasswordPlain()).toString() : this.profile.password
+    };
   }
+  validateProfileForm(values, passwordPlain) {
+    var valid = true;
 
-  datastore("POST", "saveProfile", values, function (err,res) {
-    if (err) {
-      $("#placeForAlert").addClass("alert alert-warning");
-      $("#placeForAlert").html(err);
-      return;
-    }
-
-    for (let name in values) {
-      global.component.All.profile[name] = values[name];
-    }
-    let message;
-    if (res.checkEmail) {
-      global.component.All.profile.emailVerified = false;
-      displayProfile(global.component.All.profile);
-      message = "Saved. Check your email for a message to verify your email address.";
+    if (values.email === "") {
+      $("#inputEmailFormGroup").addClass("has-error");
+      valid = false;
     } else {
-      message = "Saved.";
+      $("#inputEmailFormGroup").removeClass("has-error");
     }
-    $("#placeForAlert").removeClass("alert alert-warning");
-    $("#placeForAlert").addClass("alert alert-success");
-    $("#placeForAlert").html(message);
-  });
-}
 
-global.clickResendVerification = function () {
-  datastore("GET", "resendVerification", null, function (err,obj) {
-    if (err) {
+    if (passwordPlain.length > 0 && passwordPlain.length < 8) {
+      $("#inputPasswordFormGroup").addClass("has-error");
       $("#placeForAlert").addClass("alert alert-warning");
-      $("#placeForAlert").html(err);
+      $("#placeForAlert").html("Password length must be at least 8 characters.");
+      valid = false;
+    } else {
+      $("#inputPasswordFormGroup").removeClass("has-error");
+      $("#placeForAlert").removeClass("alert alert-warning");
+      $("#placeForAlert").html("");
+    }
+
+    return valid;
+  }
+  clickSave() {
+    var values = this.getValues();
+    if (!this.validateProfileForm(values, this.getPasswordPlain())) {
       return;
     }
 
-    $("#placeForAlert").removeClass("alert-warning");
-    $("#placeForAlert").addClass("alert alert-success");
-    $("#placeForAlert").html("A verfication message was sent to your email address. Check your email to verify that you recieved it.");
-  });
-};
+    datastore("POST", "saveProfile", values, function (err,res) {
+      if (err) {
+        $("#placeForAlert").addClass("alert alert-warning");
+        $("#placeForAlert").html(err);
+        return;
+      }
 
-exports.viewProfile = viewProfile;
-exports.setGlobals = function () {
-  global.clickSaveProfile = clickSaveProfile;
-};
+      for (let name in values) {
+        this.profile[name] = values[name];
+      }
+      let message;
+      if (res.checkEmail) {
+        this.profile.emailVerified = false;
+        this.show();
+        message = "Saved. Check your email for a message to verify your email address.";
+      } else {
+        message = "Saved.";
+      }
+      $("#placeForAlert").removeClass("alert alert-warning");
+      $("#placeForAlert").addClass("alert alert-success");
+      $("#placeForAlert").html(message);
+    }.bind(this));
+  }
+  clickResendVerification() {
+    datastore("GET", "resendVerification", null, function (err,obj) {
+      if (err) {
+        $("#placeForAlert").addClass("alert alert-warning");
+        $("#placeForAlert").html(err);
+        return;
+      }
+
+      $("#placeForAlert").removeClass("alert-warning");
+      $("#placeForAlert").addClass("alert alert-success");
+      $("#placeForAlert").html("A verfication message was sent to your email address. Check your email to verify that you recieved it.");
+    });
+  }
+}
+
+module.exports = Profile;

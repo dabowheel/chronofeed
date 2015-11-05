@@ -5,7 +5,7 @@ var Admin = require("./admin");
 var Splash = require("./splash");
 var ctlBlogList = require("./blogList");
 var ctlBlog = require("./blog");
-var ctlProfile = require("./profile");
+var Profile = require("./profile");
 var VerifyEmail = require("./verifyEmail");
 var datastore = require("../scripts/datastore");
 var ForgotPassword = require("./forgotPassword");
@@ -75,7 +75,8 @@ function viewInitial() {
         let admin = new Admin("main");
         admin.show();
       } else if (location.pathname == "/profile") {
-        ctlProfile.viewProfile();
+        let c = new Profile("main");
+        c.show();
       } else if (location.pathname.match(blogRE)) {
         var title = decodeURI(location.pathname.match(blogRE)[1]);
         ctlBlog.viewBlog("",title);
@@ -108,5 +109,4 @@ global.loadAll = loadAll;
 global.viewInitial = viewInitial;
 
 ctlBlogList.setGlobals();
-ctlProfile.setGlobals();
 ctlBlog.setGlobals();

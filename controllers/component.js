@@ -11,6 +11,9 @@ class Component {
     if (this.containerID) {
       this.render(function (err,view) {
         if (err) {
+          if (view) {
+            view.show();
+          }
           return;
         }
         document.getElementById(this.containerID).innerHTML = view;

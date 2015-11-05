@@ -17,7 +17,7 @@
         <label class="control-label" for="inputEmail" id="labelEmail">Email Address</label>
         <span class="gr-not-verified">Not Verified</span>
         <div class="gr-verify-email">
-          <a href="/profile" onclick="clickResendVerification(); return false;" tabindex="1" title="Resend a verification email">Resend verification?</a>
+          <a href="/profile" onclick="component.Profile.clickResendVerification(); return false;" tabindex="1" title="Resend a verification email">Resend verification?</a>
         </div>
         <input class="form-control" id="inputEmail" tabindex="2" type="text" placeholder="Enter your email address" value="{{email}}">
       </div>
@@ -36,5 +36,5 @@
 
   <div class="col-mid-8 col-lg-8 gr-alert" id="placeForAlert"></div>
 
-  <button class="btn btn-primary" tabindex="4" type="button" onclick="clickSaveProfile();" id="saveButton">Save</button>
+  <button class="btn btn-primary" tabindex="4" type="button" onclick="component.Profile.clickSave();" id="saveButton">Save</button>
 </div>

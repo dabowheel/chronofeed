@@ -153,7 +153,10 @@ exports.saveProfile = function (req,res,next) {
           return next("Another user is already using this email address");
         }
 
-        users.updateOne({_id:new ObjectID(req.session.userID)}, obj, function (err,result) {
+        let updateObj = {
+          $set: obj
+        };
+        users.updateOne({_id:new ObjectID(req.session.userID)}, updateObj, function (err,result) {
           if (err) {
             return next(err);
           }
