@@ -2,7 +2,7 @@
 var Component = require("./component");
 var ctlLogin = require("./login");
 var view = require("./resetPasswordResult.html");
-var page = require("../scripts/page");
+import route from "./route";
 
 class ResetPasswordResult extends Component {
   constructor(containerID) {
@@ -13,8 +13,7 @@ class ResetPasswordResult extends Component {
     callback(null, view);
   }
   goToLogin() {
-    page.setURL("/login");
-    global.viewInitial();
+    route("/login");
   }
 }
 

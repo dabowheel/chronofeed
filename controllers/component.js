@@ -1,9 +1,9 @@
 "use strict";
-let page = require("../scripts/page");
 
 class Component {
-  constructor (containerID) {
+  constructor (containerID,documentTitle) {
     this.containerID = containerID;
+    this.documentTitle = documentTitle;
   }
   render() {
     return "";

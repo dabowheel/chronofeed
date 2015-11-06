@@ -4,14 +4,14 @@ var Menu = require("./menu");
 var datastore = require("../scripts/datastore");
 var modelBlog = require("../model/blog");
 var modelPost = require("../model/post");
-var page = require("../scripts/page");
 var LoadError = require("./loadError");
 var validate = require("../scripts/validate");
 var Component = require("./component");
+import {setURL} from "./route";
 
 class ctlBlog extends Component {
   constructor(containerID,title) {
-    super(containerID);
+    super(containerID, "Grackle | " + title);
     this.title = title;
     this.global();
   }
@@ -85,7 +85,7 @@ class ctlBlog extends Component {
     }
 
     this.blog.title = title;
-    page.setURL("/blog/" + title, "Grackle | " + title, true);
+    setURL("/blog/" + title, "Grackle | " + title, true);
     if (global.component.ctlBlogList) {
       global.component.ctlBlogList.blogList.updateTitle(this.blog._id, title);
     }

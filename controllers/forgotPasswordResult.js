@@ -1,14 +1,12 @@
 "use strict";
 var Component = require("./component");
 var view = require("./forgotPasswordResult.html");
-var page = require("../scripts/page");
 
 class ForgotPasswordResult extends Component {
   constructor(containerID) {
-    super(containerID);
+    super(containerID, "Grackle | Forgot Password Result");
   }
   render(callback) {
-    page.setURL("/forgotPasswordResult", "Grackle | Forgot Password Result");
     callback(null,view);
   }
 }

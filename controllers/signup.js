@@ -1,20 +1,19 @@
 "use strict";
 var view = require("./signup.html");
 var datastore = require("../scripts/datastore");
-var page = require("../scripts/page");
 var validate = require("../scripts/validate");
 var Component = require("./component");
+import route from "./route";
 
 class Signup extends Component {
   constructor(containerID) {
-    super(containerID);
+    super(containerID, "Grackle | Signup");
     this.global();
   }
   render(callback) {
     callback(null, view);
   }
   afterLoad() {
-    page.setURL("/signup","Grackle | Signup");
     document.getElementById("inputUsername").focus();
     validate.addReturnPressListener(["inputUsername", "inputEmail", "inputPassword"], this.clickSignup.bind(this));
     validate.listenToFields(["inputUsername", "inputEmail", "inputPassword"], "signupButton");
@@ -63,8 +62,7 @@ class Signup extends Component {
     return valid;
   }
   clickLoginLink() {
-    page.setURL("/login");
-    global.viewInitial();
+    route("/login");
   }
   clickSignup() {
     var values = this.getSignupFormValues();
@@ -79,8 +77,7 @@ class Signup extends Component {
         $("#placeForAlert").html(err);
       } else {
         global.component.All.username = res.username;
-        page.setURL("/");
-        global.viewInitial();
+        route("/");
       }
     });
   }

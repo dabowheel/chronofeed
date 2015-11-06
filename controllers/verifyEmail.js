@@ -1,8 +1,8 @@
 "use strict";
 var datastore = require("../scripts/datastore");
-var page = require("../scripts/page");
 var view = require("./verifyEmail.html");
 var Component = require("./component");
+import route from "./route";
 
 class VerifyEmail extends Component {
   constructor(containerID,hash,code) {
@@ -24,8 +24,7 @@ class VerifyEmail extends Component {
     }
   }
   clickGoHome() {
-    page.setURL("/");
-    global.viewInitial();
+    route("/");
   }
 }
 

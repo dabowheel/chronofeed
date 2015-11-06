@@ -4,13 +4,13 @@ var Menu = require("./menu");
 var datastore = require("../scripts/datastore");
 var modelBlogList = require("../model/blogList");
 var modelBlog = require("../model/blog");
-var page = require("../scripts/page");
 var Component = require("./component");
 var LoadError = require("./loadError");
+import route from "./route";
 
 class ctlBlogList extends Component {
   constructor(containerID) {
-    super(containerID);
+    super(containerID, "Grackle");
     this.global();
   }
   getBlogList(callback) {
@@ -44,9 +44,6 @@ class ctlBlogList extends Component {
       }.bind(this));
     }.bind(this));
   }
-  afterLoad() {
-    document.title = "Grackle";
-  }
   addBlog() {
     var blogInfo = new modelBlog.BlogInfo(0, this.blogList.getNewTitle(), this.blogList.getDOMID());
     this.blogList.add(blogInfo);
@@ -63,8 +60,7 @@ class ctlBlogList extends Component {
   }
   editBlog(domID) {
     var blogInfo = this.blogList.getBlogInfo(domID);
-    page.setURL("/blog/" + blogInfo.title);
-    global.viewInitial();
+    route("/blog/" + blogInfo.title);
   }
   confirmDeleteBlog(domID) {
     var blogInfo = this.blogList.getBlogInfo(domID);

@@ -1,8 +1,8 @@
 "use strict";
 var datastore = require("../scripts/datastore");
-var page = require("../scripts/page");
 var Component = require("./component");
 var view = require("./menu.html");
+import route from "./route";
 
 class Menu extends Component {
   constructor(containerID,isProfile,isAdmin) {
@@ -16,17 +16,13 @@ class Menu extends Component {
     callback(null, template(this));
   }
   clickBlogList() {
-    page.setURL("/");
-    global.viewInitial();
+    route("/");
   }
   clickProfile() {
-    page.setURL("/profile");
-    global.viewInitial();
+    route("/profile");
   }
   clickAdmin() {
-    console.log("click admin");
-    page.setURL("/admin");
-    global.viewInitial();
+    route("/admin");
   }
   clickLogout() {
     datastore("GET","logout",null, function(err,res) {
@@ -37,8 +33,7 @@ class Menu extends Component {
       }
 
       global.clearComponents();
-      page.setURL("/");
-      global.viewInitial();
+      route("/");
     });
   }
 }

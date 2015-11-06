@@ -1,17 +1,16 @@
 "use strict";
 var view = require("./login.html");
 var datastore = require("../scripts/datastore");
-var page = require("../scripts/page");
 var validate = require("../scripts/validate");
 var Component = require("./component");
+import route from "./route";
 
 class Login extends Component {
   constructor(containerID) {
-    super(containerID);
+    super(containerID, "Grackle | Login");
     this.global();
   }
   render(callback) {
-    page.setURL("/login","Grackle | Login");
     callback(null,view);
   }
   afterLoad() {
@@ -61,8 +60,7 @@ class Login extends Component {
       }
       if (res.success) {
         global.component.All.username = res.username;
-        page.setURL("/");
-        global.viewInitial();
+        route("/");
       } else {
         $("#placeForAlert").addClass("alert alert-warning");
         $("#placeForAlert").html("Invalid username or password. ");
@@ -70,12 +68,10 @@ class Login extends Component {
     }.bind(this));
   }
   clickForgotPasswordLink() {
-    page.setURL("/forgotPassword");
-    global.viewInitial();
+    route("/forgotPassword");
   }
   clickSignupLink() {
-    page.setURL("/signup");
-    global.viewInitial();
+    route("/signup");
   }
 }
 

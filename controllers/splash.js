@@ -1,26 +1,21 @@
 "use strict";
 var view = require("./splash.html");
-var page = require("../scripts/page");
 var Component = require("./component");
+import route from "./route";
 
 class Splash extends Component {
   constructor(containerID) {
-    super(containerID);
+    super(containerID, "Grackle");
     this.global();
   }
   render(callback) {
     callback(null, view);
   }
-  afterLoad() {
-    page.setURL("/", "Grackle");
-  }
   clickSignup() {
-    page.setURL("/signup");
-    global.viewInitial();
+    route("/signup");
   }
   clickLogin() {
-    page.setURL("/login");
-    global.viewInitial();
+    route("/login");
   }
 }
 

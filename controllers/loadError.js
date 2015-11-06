@@ -1,6 +1,6 @@
 let Component = require("./component");
 let view = require("./loadError.html");
-let page = require("../scripts/page");
+import route from "./route";
 
 class LoadError extends Component {
   constructor(containerID,title,error) {
@@ -18,8 +18,7 @@ class LoadError extends Component {
     $("#placeForAlert").html(this.error);
   }
   clickGoHome() {
-    page.setURL("/");
-    global.viewInitial();
+    route("/");
   }
 }
 

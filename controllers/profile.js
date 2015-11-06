@@ -2,7 +2,6 @@
 var view = require("./profile.html");
 var Menu = require("./menu");
 var datastore = require("../scripts/datastore");
-var page = require("../scripts/page");
 var validate = require("../scripts/validate");
 var modelUserList = require("../model/userList");
 var Component = require("./component");
@@ -10,7 +9,7 @@ var LoadError = require("./loadError");
 
 class Profile extends Component {
   constructor(containerID) {
-    super(containerID);
+    super(containerID, "Grackle | Profile");
     this.global();
   }
   getProfile(callback) {

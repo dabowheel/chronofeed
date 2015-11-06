@@ -2,14 +2,13 @@
 var view = require("./admin.html");
 var datastore = require("../scripts/datastore");
 var modelUserList = require("../model/userList");
-var page = require("../scripts/page");
 var Component = require("./component");
 var Menu = require("./menu");
 var LoadError = require("./loadError");
 
 class Admin extends Component {
   constructor(containerID) {
-    super(containerID);
+    super(containerID, "Grackle | Admin");
     this.global();
   }
   getAdmin(callback) {
@@ -43,7 +42,6 @@ class Admin extends Component {
         return;
       }
 
-      page.setURL("/admin", "Grackle | Admin");
       let menu = new Menu("", false, true);
       menu.render(function (err,menuView) {
         let template = Handlebars.compile(view);

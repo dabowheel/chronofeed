@@ -2,13 +2,12 @@
 var validate = require("../scripts/validate");
 var Component = require("./component");
 var datastore = require("../scripts/datastore");
-var ResetPasswordResult = require("./resetPasswordResult");
-var page = require("../scripts/page");
 var view = require("./resetPassword.html");
+import route from "./route";
 
 class ResetPassword extends Component {
   constructor(containerID,hash,code) {
-    super(containerID);
+    super(containerID, "Grackle | ResetPassword");
     this.hash = hash;
     this.code = code;
     this.global();
@@ -64,9 +63,7 @@ class ResetPassword extends Component {
         return;
       }
 
-      page.setURL("/resetPasswordResult");
-      let c = new ResetPasswordResult("main");
-      c.show();
+      route("/resetPasswordResult");
     });
   }
 }
