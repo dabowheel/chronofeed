@@ -14,7 +14,6 @@ var datastore_verify = require("./datastore/verify");
 var datastore_reset = require("./datastore/reset");
 var datastore_expiringDocs = require("./datastore/expiringDocs");
 
-app.use(express.static('public'));
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -24,6 +23,8 @@ app.use(session({
     url: process.env.MONGODB_URL
   })
 }));
+
+app.use(express.static('public'));
 
 function sendPage(req,res,next) {
   res.sendFile(__dirname + "/public/index.html");
@@ -47,6 +48,9 @@ app.use("/datastore", function (req,res,next) {
     }
 
     req.db = db;
+    res.set("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
     next();
   });
 });
