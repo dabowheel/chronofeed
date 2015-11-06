@@ -3,6 +3,7 @@ var view = require("./blog.html");
 var Menu = require("./menu");
 var datastore = require("../scripts/datastore");
 var modelBlog = require("../model/blog");
+var modelBlogList = require("../model/blogList");
 var modelPost = require("../model/post");
 var LoadError = require("./loadError");
 var validate = require("../scripts/validate");
@@ -31,7 +32,16 @@ class ctlBlog extends Component {
 
       this.blog = new modelBlog.Blog();
       this.blog.loadObject(res, true);
-      callback();
+
+      datastore("GET", "readBlogList", null, function (err,res) {
+        if (err) {
+          return callback(err);
+        }
+
+        this.blogList = new modelBlogList.BlogList();
+        this.blogList.loadObject(res);
+        callback();
+      }.bind(this));
     }.bind(this));
   }
   render(callback) {
@@ -78,17 +88,18 @@ class ctlBlog extends Component {
     if (title === "") {
       $("#inputTitleFormGroup").addClass("has-error");
       return;
-    } else if (global.component.ctlBlogList && global.component.ctlBlogList.blogList.hasTitle(title)) {
+    } else if (this.blogList.hasTitle(title)) {
       $("#placeForAlert").addClass("alert alert-warning");
       $("#placeForAlert").html("A blog with this title already exists");
       return;
     }
 
     this.blog.title = title;
-    setURL("/blog/" + title, "Grackle | " + title, true);
+    this.blogList.updateTitle(this.blog._id, title);
     if (global.component.ctlBlogList) {
       global.component.ctlBlogList.blogList.updateTitle(this.blog._id, title);
     }
+    setURL("/blog/" + title, "Grackle | " + title, true);
     this.cancelBlogTitleChange();
 
     var blogInfo = new modelBlog.BlogInfo(this.blog._id, this.blog.title);
