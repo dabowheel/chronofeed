@@ -22,7 +22,7 @@ class ctlBlog extends Component {
       return;
     }
 
-    datastore("POST", "Blog/" + title, null, function (err,res) {
+    datastore("GET", "Blog/" + title, null, function (err,res) {
       if (err) {
         return callback(err);
       }
@@ -91,22 +91,21 @@ class ctlBlog extends Component {
       return;
     }
 
-    this.blog.title = title;
-    this.blogList.updateTitle(this.blog._id, title);
-    if (global.component.ctlBlogList) {
-      global.component.ctlBlogList.blogList.updateTitle(this.blog._id, title);
-    }
-    setURL("/blog/" + title, "Grackle | " + title, true);
-    this.cancelBlogTitleChange();
-
-    var blogInfo = new modelBlog.BlogInfo(this.blog._id, this.blog.title);
-    datastore("POST", "saveBlogTitle", blogInfo.exportObject(), function (err, res) {
+    var blogInfo = new modelBlog.BlogInfo(this.blog._id, title);
+    datastore("PUT", "Blog/" + this.blog.title, blogInfo.exportObject(), function (err, res) {
       if (err) {
         $("#placeForAlert").addClass("alert alert-warning");
         $("#placeForAlert").html(err);
         return;
       }
-    });
+      this.blog.title = title;
+      this.blogList.updateTitle(this.blog._id, title);
+      if (global.component.ctlBlogList) {
+        global.component.ctlBlogList.blogList.updateTitle(this.blog._id, title);
+      }
+      setURL("/blog/" + title, "Grackle | " + title, true);
+      this.cancelBlogTitleChange();
+    }.bind(this));
   }
   cancelBlogTitleChange() {
     $("#placeForAlert").removeClass("alert alert-warning");

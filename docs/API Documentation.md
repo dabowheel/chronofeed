@@ -1,11 +1,10 @@
 # API Documentation
 
-## BlogList
-GET /datstore/BlogList
-### Response
-[Blog](../model/blog.js)
+## [BlogList](../model/blog.js)
+* GET /datstore/BlogList
 
-## Blog
-POST /datastore/Blog/:title
-### Response
-[BlogList](../model/blogList.js)
+## [Blog](../model/blogList.js)
+* GET /datastore/Blog/:title
+* PUT /datastore/Blog
+* PUT /datastore/Blog/:title
+* DELETE /datastore/Blog/:title

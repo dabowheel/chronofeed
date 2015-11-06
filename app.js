@@ -66,11 +66,11 @@ app.post("/datastore/saveProfile", datastore_users.saveProfile);
 app.get("/datastore/resendVerification", datastore_users.resendVerification);
 
 app.get("/datastore/BlogList", datastore_blogs.BlogList);
-app.post("/datastore/createBlog", datastore_blogs.createBlog);
-app.delete("/datastore/deleteBlog", datastore_blogs.deleteBlog);
 
-app.post("/datastore/Blog/:title", datastore_blogs.Blog);
-app.post("/datastore/saveBlogTitle", datastore_blogs.saveBlogTitle);
+app.get("/datastore/Blog/:title", datastore_blogs.readBlog);
+app.put("/datastore/Blog", datastore_blogs.createBlog);
+app.put("/datastore/Blog/:title", datastore_blogs.saveBlog);
+app.delete("/datastore/Blog/:title", datastore_blogs.deleteBlog);
 
 app.post("/datastore/updatePost", datastore_posts.updatePost);
 app.post("/datastore/createPost", datastore_posts.createPost);

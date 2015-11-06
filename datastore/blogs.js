@@ -65,38 +65,36 @@ exports.deleteBlog = function (req,res,next) {
     return next("user is not logged in");
   }
 
-  util.getJSONFromBody(req, function (err,obj) {
+  var blogs = req.db.collection("blogs");
+  let filter = {
+    title: req.api.title,
+    userID: req.session.userID
+  };
+  blogs.findOneAndDelete(filter, function (err, findDeleteResult) {
     if (err) {
       return next(err);
     }
 
-    var blogs = req.db.collection("blogs");
-    blogs.deleteOne({_id:new ObjectID(obj._id),userID:req.session.userID}, function (err, res2) {
-      if (err) {
-        return next(err);
-      }
+    if (findDeleteResult.ok) {
+      var posts = req.db.collection("posts");
+      var filter = {
+        blogID: findDeleteResult.value._id,
+        userID: req.session.userID
+      };
+      posts.deleteMany(filter, function (err,res3) {
+        if (err) {
+          return next(err);
+        }
 
-      if (res2.result.ok) {
-        var posts = req.db.collection("posts");
-        var filter = {
-          blogID: obj._id,
-          userID: req.session.userID
-        };
-        posts.deleteMany(filter, function (err,res3) {
-          if (err) {
-            return next(err);
-          }
-
-          res.end();
-        });
-      } else {
-        next("blog not deleted because the blog was not found");
-      }
-    });
+        res.end();
+      });
+    } else {
+      next("blog not deleted because the blog was not found");
+    }
   });
 };
 
-exports.Blog = function (req,res,next) {
+exports.readBlog = function (req,res,next) {
   if (!req.session.userID) {
     return next("user is not logged in");
   }
@@ -134,7 +132,7 @@ exports.Blog = function (req,res,next) {
   });
 };
 
-exports.saveBlogTitle = function (req,res,next) {
+exports.saveBlog = function (req,res,next) {
   if (!req.session.userID) {
     return next("user is not logged in");
   }
@@ -145,11 +143,15 @@ exports.saveBlogTitle = function (req,res,next) {
     }
 
     var blogs = req.db.collection("blogs");
-    var blogObj = {
-      title: obj.title,
+    var filter = {
+      title: req.api.title,
       userID: req.session.userID
     };
-    blogs.updateOne({_id: new ObjectID(obj._id),userID:req.session.userID}, blogObj, function (err, res2) {
+    delete obj._id;
+    let saveObj = {
+      $set: obj
+    };
+    blogs.updateOne(filter, saveObj, function (err, res2) {
       if (err) {
         return next(err);
       }

@@ -48,7 +48,7 @@ class ctlBlogList extends Component {
     var blogInfo = new modelBlog.BlogInfo(0, this.blogList.getNewTitle(), this.blogList.getDOMID());
     this.blogList.add(blogInfo);
     this.show();
-    datastore("POST", "createBlog", blogInfo.exportObject(), function (err,res) {
+    datastore("PUT", "Blog", blogInfo.exportObject(), function (err,res) {
       if (err) {
         $("#placeForAlert").addClass("alert alert-warning");
         $("#placeForAlert").html(err);
@@ -73,7 +73,7 @@ class ctlBlogList extends Component {
   deleteBlog(domID) {
     var blogInfo = this.blogList.delete(domID);
     this.show();
-    datastore("DELETE", "deleteBlog", blogInfo.exportObject(), function(err,res) {
+    datastore("DELETE", "Blog/" + blogInfo.title, blogInfo.exportObject(), function(err,res) {
       if (err) {
         $("#placeForAlert").addClass("alert alert-warning");
         $("#placeForAlert").html(err);
