@@ -1,6 +1,6 @@
 # API Documentation
 
-## [BlogList](../model/blog.js)
+## [BlogList](../model/blogList.js)
 * GET /datstore/BlogList
 
 ## [Blog](../model/blogList.js)
