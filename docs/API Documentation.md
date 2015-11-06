@@ -1,17 +1,11 @@
 # API Documentation
 
 ## BlogList
-GET /datstore/blogList
+GET /datstore/BlogList
 ### Response
 [Blog](../model/blog.js)
 
 ## Blog
-POST /datastore/blog
-### Body
-```
-{
-  title: <title>
-}
-```
+POST /datastore/Blog/:title
 ### Response
 [BlogList](../model/blogList.js)

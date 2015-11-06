@@ -65,10 +65,11 @@ app.get("/datastore/getProfile", datastore_users.getProfile);
 app.post("/datastore/saveProfile", datastore_users.saveProfile);
 app.get("/datastore/resendVerification", datastore_users.resendVerification);
 
-app.get("/datastore/readBlogList", datastore_blogs.readBlogList);
+app.get("/datastore/BlogList", datastore_blogs.BlogList);
 app.post("/datastore/createBlog", datastore_blogs.createBlog);
 app.delete("/datastore/deleteBlog", datastore_blogs.deleteBlog);
-app.post("/datastore/readBlog", datastore_blogs.readBlog);
+
+app.post("/datastore/Blog/:title", datastore_blogs.Blog);
 app.post("/datastore/saveBlogTitle", datastore_blogs.saveBlogTitle);
 
 app.post("/datastore/updatePost", datastore_posts.updatePost);
@@ -82,6 +83,13 @@ app.get("/datastore/getExpiredTable", datastore_expiringDocs.getExpiredTable);
 app.delete("/datastore/cleanupReset", datastore_reset.cleanupReset);
 app.delete("/datastore/cleanupVerify", datastore_verify.cleanupVerify);
 app.get("/datastore/verifyEmail/:hash/:code", datastore_verify.verifyEmail);
+
+app.param(["title"], function (req,res,next,value) {
+  req.api = {
+    title: value
+  };
+  next();
+});
 app.param(["hash"], function (req,res,next,value) {
   req.verifyHash = value;
   next();

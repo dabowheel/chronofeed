@@ -22,10 +22,7 @@ class ctlBlog extends Component {
       return;
     }
 
-    var filter = {
-      title: title
-    };
-    datastore("POST", "readBlog", filter, function (err,res) {
+    datastore("POST", "Blog/" + title, null, function (err,res) {
       if (err) {
         return callback(err);
       }
@@ -33,7 +30,7 @@ class ctlBlog extends Component {
       this.blog = new modelBlog.Blog();
       this.blog.loadObject(res, true);
 
-      datastore("GET", "readBlogList", null, function (err,res) {
+      datastore("GET", "BlogList", null, function (err,res) {
         if (err) {
           return callback(err);
         }

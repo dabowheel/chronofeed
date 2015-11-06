@@ -18,7 +18,7 @@ class ctlBlogList extends Component {
       return callback();
     }
 
-    datastore("GET","readBlogList",null,function (err,res) {
+    datastore("GET","BlogList",null,function (err,res) {
       if (err) {
         return callback(err);
       }

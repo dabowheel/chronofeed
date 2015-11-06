@@ -1,3 +1,4 @@
+"use strict";
 var util = require("./util");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
@@ -5,7 +6,7 @@ var modelBlogList = require("../model/blogList");
 var modelBlog = require("../model/blog");
 var modelPost = require("../model/post");
 
-exports.readBlogList = function (req,res,next) {
+exports.BlogList = function (req,res,next) {
   if (!req.session.userID) {
     return next("user is not logged in");
   }
@@ -95,45 +96,39 @@ exports.deleteBlog = function (req,res,next) {
   });
 };
 
-exports.readBlog = function (req,res,next) {
+exports.Blog = function (req,res,next) {
   if (!req.session.userID) {
     return next("user is not logged in");
   }
 
-  util.getJSONFromBody(req, function (err,obj) {
+  let filter = {
+    title: req.api.title,
+    userID: req.session.userID
+  };
+  var blogs = req.db.collection("blogs");
+  blogs.findOne(filter, function (err,res2) {
     if (err) {
       return next(err);
     }
 
-    var blogs = req.db.collection("blogs");
-    if (obj._id) {
-      obj._id = new ObjectID(obj._id);
+    if (!res2) {
+      return next("could not find blog");
     }
-    obj.userID = req.session.userID;
-    blogs.findOne(obj, function (err,res2) {
-      if (err) {
-        return next(err);
-      }
 
-      if (!res2) {
-        return next("could not find blog");
-      }
+    var blog = new modelBlog.Blog(res2._id, res2.title);
 
-      var blog = new modelBlog.Blog(res2._id, res2.title);
+    var posts = req.db.collection("posts");
+    posts.find({blogID:blog._id.toString(),userID:req.session.userID}, function (err,res3) {
+      res3.toArray(function (err, list) {
+        if (err) {
+          return next(err);
+        }
 
-      var posts = req.db.collection("posts");
-      posts.find({blogID:blog._id.toString(),userID:req.session.userID}, function (err,res3) {
-        res3.toArray(function (err, list) {
-          if (err) {
-            return next(err);
-          }
-
-          for (obj of list) {
-            var post = new modelPost.Post(obj._id, obj.title, obj.text, new Date(obj.date), obj.blogID);
-            blog.addPost(post);
-          }
-          res.json(blog.exportObject());
-        });
+        for (let obj of list) {
+          var post = new modelPost.Post(obj._id, obj.title, obj.text, new Date(obj.date), obj.blogID);
+          blog.addPost(post);
+        }
+        res.json(blog.exportObject());
       });
     });
   });
