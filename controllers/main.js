@@ -10,6 +10,7 @@ var VerifyEmail = require("./verifyEmail");
 var datastore = require("../scripts/datastore");
 var ForgotPassword = require("./forgotPassword");
 var ResetPassword = require("./resetPassword");
+require("../css/blog.css");
 require("babel-polyfill");
 
 global.clearComponents = function() {
