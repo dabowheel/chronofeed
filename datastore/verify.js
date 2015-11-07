@@ -50,54 +50,56 @@ function sendEmailVerification (host,email,hash,code,callback) {
 
 exports.verifyEmail = function (req,res,next) {
   console.log("verifyEmail");
-  console.log("Verify " + req.verifyHash + " " + req.verifyCode);
-  var verify = req.db.collection("verify");
-  var filter = {
-    hash: req.verifyHash,
-    code: req.verifyCode
-  };
-  verify.findOne(filter, function (err,res2) {
-    if (err) {
-      return next(err);
-    }
-
-    if (!res2) {
-      // already verified
-      res.end();
-      return;
-    }
-
-    var users = req.db.collection("users");
+  util.getJSONFromBody(req, function (err, obj) {
+    console.log("Verify " + obj.hash + " " + obj.code);
+    var verify = req.db.collection("verify");
     var filter = {
-      _id: new ObjectID(res2.userID)
+      hash: obj.hash,
+      code: obj.code
     };
-    users.findOne(filter, function (err,res3) {
+    verify.findOne(filter, function (err,res2) {
       if (err) {
         return next(err);
       }
 
-      if (!res3) {
-        return next("Could not find user");
+      if (!res2) {
+        // already verified
+        res.end();
+        return;
       }
 
-      res3.emailVerified = true;
-      users.updateOne(filter, res3, function (err, res4) {
+      var users = req.db.collection("users");
+      var filter = {
+        _id: new ObjectID(res2.userID)
+      };
+      users.findOne(filter, function (err,res3) {
         if (err) {
           return next(err);
         }
 
-        if (res4.modifiedCount < 1) {
-          return next("could not update user");
+        if (!res3) {
+          return next("Could not find user");
         }
 
-        var filter = {
-          _id: res2._id
-        };
-        verify.deleteOne(filter, function (err,res5) {
+        res3.emailVerified = true;
+        users.updateOne(filter, res3, function (err, res4) {
           if (err) {
             return next(err);
           }
-          res.end();
+
+          if (res4.modifiedCount < 1) {
+            return next("could not update user");
+          }
+
+          var filter = {
+            _id: res2._id
+          };
+          verify.deleteOne(filter, function (err,res5) {
+            if (err) {
+              return next(err);
+            }
+            res.end();
+          });
         });
       });
     });

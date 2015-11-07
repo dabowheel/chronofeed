@@ -59,10 +59,12 @@ app.get("/datastore/session",datastore_session.session);
 app.post("/datastore/signup",datastore_session.signup);
 app.post("/datastore/login",datastore_session.login);
 app.get("/datastore/logout",datastore_session.logout);
+app.post("/datastore/forgotPassword", datastore_reset.forgotPassword);
+app.post("/datastore/resetPassword", datastore_reset.resetPassword);
+app.post("/datastore/verifyEmail", datastore_verify.verifyEmail);
 
-app.get("/datastore/userList", datastore_users.userList);
-app.get("/datastore/getProfile", datastore_users.getProfile);
-app.post("/datastore/saveProfile", datastore_users.saveProfile);
+app.get("/datastore/Profile", datastore_users.getProfile);
+app.put("/datastore/Profile", datastore_users.saveProfile);
 app.get("/datastore/resendVerification", datastore_users.resendVerification);
 
 app.get("/datastore/BlogList", datastore_blogs.BlogList);
@@ -76,26 +78,16 @@ app.post("/datastore/updatePost", datastore_posts.updatePost);
 app.post("/datastore/createPost", datastore_posts.createPost);
 app.delete("/datastore/deletePost", datastore_posts.deletePost);
 
+app.get("/datastore/userList", datastore_users.userList);
 app.delete("/datastore/deleteUser", datastore_users.deleteUser);
-app.post("/datastore/forgotPassword", datastore_reset.forgotPassword);
-app.post("/datastore/resetPassword", datastore_reset.resetPassword);
 app.get("/datastore/getExpiredTable", datastore_expiringDocs.getExpiredTable);
 app.delete("/datastore/cleanupReset", datastore_reset.cleanupReset);
 app.delete("/datastore/cleanupVerify", datastore_verify.cleanupVerify);
-app.get("/datastore/verifyEmail/:hash/:code", datastore_verify.verifyEmail);
 
 app.param(["title"], function (req,res,next,value) {
   req.api = {
     title: value
   };
-  next();
-});
-app.param(["hash"], function (req,res,next,value) {
-  req.verifyHash = value;
-  next();
-});
-app.param(["code"], function (req,res,next,value) {
-  req.verifyCode = value;
   next();
 });
 

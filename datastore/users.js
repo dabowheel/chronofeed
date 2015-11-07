@@ -217,6 +217,10 @@ exports.resendVerification = function (req,res,next) {
       return next(err);
     }
 
+    if (userDoc.emailVerified) {
+      return next("Email addresss was already verified");
+    }
+
     verify.createVerifyInfo(req.get("host"), req.session.userID, userDoc.email, req.db, function (err) {
       if (err) {
         return next(err);

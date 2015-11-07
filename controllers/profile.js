@@ -18,7 +18,7 @@ class Profile extends Component {
       return;
     }
 
-    datastore("GET", "getProfile", null, function (err,res) {
+    datastore("GET", "Profile", null, function (err,res) {
       if (err) {
         return callback(err);
       }
@@ -86,7 +86,7 @@ class Profile extends Component {
       return;
     }
 
-    datastore("POST", "saveProfile", values, function (err,res) {
+    datastore("PUT", "Profile", values, function (err,res) {
       if (err) {
         $("#placeForAlert").addClass("alert alert-warning");
         $("#placeForAlert").html(err);

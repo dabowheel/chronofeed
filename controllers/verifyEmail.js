@@ -12,7 +12,11 @@ class VerifyEmail extends Component {
     this.global();
   }
   render(callback) {
-    datastore("GET","verifyEmail/" + this.hash + "/" + this.code, null, function (err,res) {
+    let obj = {
+      hash: this.hash,
+      code: this.code
+    };
+    datastore("POST","verifyEmail", obj, function (err,res) {
       this.error = err;
       callback(null, view);
     }.bind(this));
