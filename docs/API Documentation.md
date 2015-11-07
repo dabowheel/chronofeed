@@ -86,19 +86,34 @@ The user must be logged in for these calls.
 * GET /datstore/BlogList
 
 ## [Blog](../model/blog.js)
+The user must be logged in for these calls.
 * GET /datastore/Blog/:title
 * PUT /datastore/Blog
 * PUT /datastore/Blog/:title
 * DELETE /datastore/Blog/:title
 
 ## [Post](../model/post.js)
+The user must be logged in for these calls.
 * PUT /datastore/Post
 * PUT /datastore/Post/:id
 * DELETE /datastore/Post/:id
 
 ## Admin
-* GET /datastore/userList
+The user must be logged in for these calls.
+* GET [/datastore/UserList](../model/userList.js)
 * DELETE /datastore/User/:id
 * GET /datastore/ExpiredTable
+```
+{
+  reset: {
+    count: <count>,
+    expiredCount: <expired count>
+  },
+  verify: {
+    count: <count>,
+    expiredCount: <expired count>
+  }
+}
+```
 * DELETE /datastore/ExpiredReset
 * DELETE /datastore/ExpiredVerify
