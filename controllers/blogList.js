@@ -47,6 +47,7 @@ class ctlBlogList extends Component {
   addBlog() {
     var blogInfo = new modelBlog.BlogInfo(0, this.blogList.getNewTitle(), this.blogList.getDOMID());
     this.blogList.add(blogInfo);
+    this.blogList.sort();
     this.show();
     datastore("PUT", "Blog", blogInfo.exportObject(), function (err,res) {
       if (err) {
