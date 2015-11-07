@@ -74,9 +74,9 @@ app.put("/datastore/Blog", datastore_blogs.createBlog);
 app.put("/datastore/Blog/:title", datastore_blogs.saveBlog);
 app.delete("/datastore/Blog/:title", datastore_blogs.deleteBlog);
 
-app.post("/datastore/updatePost", datastore_posts.updatePost);
-app.post("/datastore/createPost", datastore_posts.createPost);
-app.delete("/datastore/deletePost", datastore_posts.deletePost);
+app.put("/datastore/Post", datastore_posts.createPost);
+app.put("/datastore/Post/:id", datastore_posts.updatePost);
+app.delete("/datastore/Post/:id", datastore_posts.deletePost);
 
 app.get("/datastore/userList", datastore_users.userList);
 app.delete("/datastore/deleteUser", datastore_users.deleteUser);
@@ -87,6 +87,13 @@ app.delete("/datastore/cleanupVerify", datastore_verify.cleanupVerify);
 app.param(["title"], function (req,res,next,value) {
   req.api = {
     title: value
+  };
+  next();
+});
+
+app.param(["id"], function (req,res,next,value) {
+  req.api = {
+    id: value
   };
   next();
 });

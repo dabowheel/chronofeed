@@ -90,3 +90,8 @@ The user must be logged in for these calls.
 * PUT /datastore/Blog
 * PUT /datastore/Blog/:title
 * DELETE /datastore/Blog/:title
+
+## [Post](../model/post.js)
+* PUT /datastore/Post
+* PUT /datastore/Post/:id
+* DELETE /datastore/Post/:id

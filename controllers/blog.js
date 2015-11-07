@@ -142,7 +142,7 @@ class ctlBlog extends Component {
     if (post._id) {
       this.blog.savePost(domID,post);
       this.show();
-      datastore("POST", "updatePost", post.exportObject(), function (err,res) {
+      datastore("PUT", "Post/" + post._id, post.exportObject(), function (err,res) {
         if (err) {
           $("#placeForAlert").addClass("alert alert-warning");
           $("#placeForAlert").html(err);
@@ -152,7 +152,7 @@ class ctlBlog extends Component {
     } else {
       this.blog.savePost(domID,post);
       this.show();
-      datastore("POST", "createPost", post.exportObject(), function (err,res) {
+      datastore("PUT", "Post", post.exportObject(), function (err,res) {
         if (err) {
           $("#placeForAlert").addClass("alert alert-warning");
           $("#placeForAlert").html(err);
@@ -187,7 +187,7 @@ class ctlBlog extends Component {
     var post = this.blog.deletePost(domID);
     this.show();
 
-    datastore("DELETE", "deletePost", post.exportObject(), function (err,res) {
+    datastore("DELETE", "Post/" + post._id, null, function (err,res) {
       if (err) {
         $("#placeForAlert").addClass("alert alert-warning");
         $("#placeForAlert").html(err);

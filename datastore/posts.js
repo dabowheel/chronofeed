@@ -18,7 +18,7 @@ exports.updatePost = function (req,res,next) {
     post.loadObject(obj);
     var postObj = post.exportObject(true, true);
     postObj.userID = req.session.userID;
-    posts.updateOne({_id:new ObjectID(post._id),userID:req.session.userID}, postObj, function (err,res2) {
+    posts.updateOne({_id:new ObjectID(req.api.id),userID:req.session.userID}, postObj, function (err,res2) {
       if (err) {
         return next(err);
       }
@@ -63,22 +63,16 @@ exports.deletePost = function (req,res,next) {
     return next("user is not logged in");
   }
 
-  util.getJSONFromBody(req, function (err,obj) {
+  var posts = req.db.collection("posts");
+  posts.deleteOne({_id:new ObjectID(req.api.id),userID:req.session.userID}, function (err,res2) {
     if (err) {
       return next(err);
     }
 
-    var posts = req.db.collection("posts");
-    posts.deleteOne({_id:new ObjectID(obj._id),userID:req.session.userID}, function (err,res2) {
-      if (err) {
-        return next(err);
-      }
+    if (res2.deletedCount < 1) {
+      return next("could not find post");
+    }
 
-      if (res2.deletedCount < 1) {
-        return next("could not find post");
-      }
-
-      res.end();
-    });
+    res.end();
   });
 };
