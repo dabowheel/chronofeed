@@ -35,58 +35,51 @@ exports.deleteUser = function (req,res,next) {
     return next("user is not logged in");
   }
 
-  util.getJSONFromBody(req, function (error, obj) {
-    if (error) {
-      next(error);
+  var users = req.db.collection("users");
+  var filter = {
+    _id: new ObjectID(req.api.id)
+  };
+  users.deleteOne(filter, function (err,result) {
+    if (err) {
+      next(err);
       return;
     }
 
-    var users = req.db.collection("users");
-    var filter = {
-      _id: new ObjectID(obj._id)
-    };
-    users.deleteOne(filter, function (err,result) {
-      if (err) {
-        next(err);
-        return;
-      }
+    if (result.result.ok) {
+      var blogs = req.db.collection("blogs");
+      var filter = {
+        userID: req.api.id
+      };
+      blogs.deleteMany(filter, function (err,res2) {
+        if (err) {
+          return next(err);
+        }
 
-      if (result.result.ok) {
-        var blogs = req.db.collection("blogs");
+        var posts = req.db.collection("posts");
         var filter = {
-          userID: obj._id
+          userID: req.api.id
         };
-        blogs.deleteMany(filter, function (err,res2) {
+        posts.deleteMany(filter, function (err, res3) {
           if (err) {
             return next(err);
           }
 
-          var posts = req.db.collection("posts");
+          var verify = req.db.collection("verify");
           var filter = {
-            userID: obj._id
+            userID: req.api.id
           };
-          posts.deleteMany(filter, function (err, res3) {
+          verify.deleteMany(filter, function (err, res4) {
             if (err) {
               return next(err);
             }
 
-            var verify = req.db.collection("verify");
-            var filter = {
-              userID: obj._id
-            };
-            verify.deleteMany(filter, function (err, res4) {
-              if (err) {
-                return next(err);
-              }
-
-              res.end();
-            });
+            res.end();
           });
         });
-      } else {
-        next("user was not deleted because the user was not found");
-      }
-    });
+      });
+    } else {
+      next("user was not deleted because the user was not found");
+    }
   });
 };
 

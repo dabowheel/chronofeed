@@ -78,11 +78,11 @@ app.put("/datastore/Post", datastore_posts.createPost);
 app.put("/datastore/Post/:id", datastore_posts.updatePost);
 app.delete("/datastore/Post/:id", datastore_posts.deletePost);
 
-app.get("/datastore/userList", datastore_users.userList);
-app.delete("/datastore/deleteUser", datastore_users.deleteUser);
-app.get("/datastore/getExpiredTable", datastore_expiringDocs.getExpiredTable);
-app.delete("/datastore/cleanupReset", datastore_reset.cleanupReset);
-app.delete("/datastore/cleanupVerify", datastore_verify.cleanupVerify);
+app.get("/datastore/UserList", datastore_users.userList);
+app.delete("/datastore/User/:id", datastore_users.deleteUser);
+app.get("/datastore/ExpiredTable", datastore_expiringDocs.getExpiredTable);
+app.delete("/datastore/ExpiredReset", datastore_reset.cleanupReset);
+app.delete("/datastore/ExpiredVerify", datastore_verify.cleanupVerify);
 
 app.param(["title"], function (req,res,next,value) {
   req.api = {

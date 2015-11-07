@@ -16,7 +16,7 @@ class Admin extends Component {
       return callback();
     }
 
-    datastore("GET", "userList", null, function (err,res) {
+    datastore("GET", "UserList", null, function (err,res) {
       if (err) {
         return callback(err);
       }
@@ -24,7 +24,7 @@ class Admin extends Component {
       this.userList = new modelUserList.UserList();
       this.userList.loadObject(res);
 
-      datastore("GET", "getExpiredTable", null, function (err, res) {
+      datastore("GET", "ExpiredTable", null, function (err, res) {
         if (err) {
           return callback(err);
         }
@@ -59,10 +59,7 @@ class Admin extends Component {
     $("#deleteModal").modal("show");
   }
   clickConfirmDeleteUser(_id) {
-    var obj = {
-      _id: _id
-    };
-    datastore("DELETE", "deleteUser", obj, function (err, obj) {
+    datastore("DELETE", "User/" + _id, null, function (err, obj) {
       if (err) {
         $("#placeForAlert").addClass("alert alert-warning");
         $("#placeForAlert").html(err);
@@ -89,10 +86,10 @@ class Admin extends Component {
     };
   }
   clickCleanupReset() {
-    this.makeClickCleanup("cleanupReset", "Reset")();
+    this.makeClickCleanup("ExpiredReset", "Reset")();
   }
   clickCleanupVerify() {
-    this.makeClickCleanup("cleanupVerify", "Verify Email")();
+    this.makeClickCleanup("ExpiredVerify", "Verify Email")();
   }
 }
 

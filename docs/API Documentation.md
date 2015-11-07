@@ -95,3 +95,10 @@ The user must be logged in for these calls.
 * PUT /datastore/Post
 * PUT /datastore/Post/:id
 * DELETE /datastore/Post/:id
+
+## Admin
+* GET /datastore/userList
+* DELETE /datastore/User/:id
+* GET /datastore/ExpiredTable
+* DELETE /datastore/ExpiredReset
+* DELETE /datastore/ExpiredVerify
