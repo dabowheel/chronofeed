@@ -30,6 +30,7 @@ class ctlBlog extends Component {
 
       this.blog = new modelBlog.Blog();
       this.blog.loadObject(res, true);
+      this.blog.sort(true);
 
       datastore("GET", "BlogList", null, function (err,res) {
         if (err) {
@@ -145,6 +146,7 @@ class ctlBlog extends Component {
     this.blog.stopEditingPost(domID);
     if (post._id) {
       this.blog.savePost(domID,post);
+      this.blog.sort(true);
       this.show();
       datastore("PUT", "Post/" + post._id, post.exportObject(), function (err,res) {
         if (err) {
@@ -155,6 +157,7 @@ class ctlBlog extends Component {
       });
     } else {
       this.blog.savePost(domID,post);
+      this.blog.sort(true);
       this.show();
       datastore("PUT", "Post", post.exportObject(), function (err,res) {
         if (err) {
