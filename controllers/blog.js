@@ -9,6 +9,7 @@ var LoadError = require("./loadError");
 var validate = require("../scripts/validate");
 var Component = require("./component");
 import {setURL} from "./route";
+let moment = require("moment");
 
 class ctlBlog extends Component {
   constructor(containerID,title) {
@@ -115,28 +116,27 @@ class ctlBlog extends Component {
   }
   addPost() {
     var domID = this.blog.getDOMID();
-    this.blog.addPost(new modelPost.Post("", "", "", new Date(), this.blog._id, domID));
+    let post = new modelPost.Post("", "", "", new Date(), this.blog._id, domID);
+    this.blog.addPost(post);
     this.blog.editPost(domID);
     this.show();
+    $('#datetimepicker').datetimepicker();
+    $("#datetimepicker").data("DateTimePicker").date(moment(post.date));
     document.getElementById("posttitle").select();
   }
   getPost() {
-    var dateOnly = document.getElementById("postdateonly").value;
-    var timeOnly = document.getElementById("posttimeonly").value;
-    var date = new Date(dateOnly + " " + timeOnly);
     return {
       _id: document.getElementById("postpostid").value,
       title: document.getElementById("posttitle").value,
       text: document.getElementById("posttext").value,
-      date: date,
+      date: new Date($("#datetimepicker").data("DateTimePicker").date().toISOString()),
       blogID: document.getElementById("postblogid").value,
-      dateOnly: dateOnly,
-      timeOnly: timeOnly,
       domID: document.getElementById("postdomid").value
     };
   }
   savePostChanges(domID) {
     var values = this.getPost();
+    console.log(values);
     var post = new modelPost.Post(values._id, values.title, values.text, values.date, values.blogID, values.domID);
     this.blog.stopEditingPost(domID);
     if (post._id) {
@@ -175,12 +175,15 @@ class ctlBlog extends Component {
     this.show();
   }
   editPost(domID) {
-    if (!this.blog.editPost(domID)) {
+    let post = this.blog.editPost(domID);
+    if (!post) {
       $("#placeForAlert").addClass("alert alert-warning");
       $("#placeForAlert").html("could set edit on post");
       return;
     }
     this.show();
+    $('#datetimepicker').datetimepicker();
+    $("#datetimepicker").data("DateTimePicker").date(moment(post.date));
     document.getElementById("posttitle").select();
   }
   deletePost(domID) {

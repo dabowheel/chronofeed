@@ -1,30 +1,63 @@
-var dateUtil = require("./dateUtil");
-
+"use strict";
 function Model() {
+  this.schema = {};
 }
-Model.prototype.schema = {};
-Model.prototype.exportObject = function () {
+Model.prototype.exportObject = function (schema) {
+  if (!schema) {
+    schema = this.schema;
+  }
+
   var ret = {};
-  for (var name in this.schema) {
-    if (this.schema[name] == Date) {
-      ret[name] = dateUtil.toDateString(this[name]);
+  for (let name in schema) {
+    if (this[name].constructor === Array) {
+      ret[name] = [];
+      for (let item of this[name]) {
+        let subObj = this.exportValue(item, schema[name]);
+        ret[name].push(subObj);
+      }
     } else {
-      ret[name] = this[name];
+      ret[name] = this.exportValue(this[name], schema[name]);
     }
   }
   return ret;
 };
-Model.prototype.loadObject = function (obj) {
-  for (var name in this.schema) {
-    if (this.schema[name] == Date) {
-      this[name] = new Date(obj[name]);
-    } else {
-      this[name] = obj[name];
-    }
-  }
-  if (this.postLoad) {
-    this.postLoad();
+Model.prototype.exportValue = function (value,type) {
+  if (type === Date) {
+    return value.toISOString();
+  } else if (value && value.exportObject && value.schema) {
+    return value.exportObject();
+  } else {
+    return value;
   }
 };
+Model.prototype.loadObject = function (obj, schema) {
+  if (!schema) {
+    schema = this.schema;
+  }
+
+  for (var name in schema) {
+    if (obj[name].constructor === Array) {
+      for (let item of obj[name]) {
+        let subObj = this.loadValue(item, schema[name]);
+        this[name].push(subObj);
+      }
+    } else {
+      this[name] = this.loadValue(obj[name], schema[name]);
+    }
+  }
+  this.afterLoad();
+};
+Model.prototype.loadValue = function (value,Type) {
+  if (Type == Date) {
+    return new Date(value);
+  } else if (Type && Type.prototype && Type.prototype.loadObject) {
+    let t = new Type();
+    t.loadObject(value);
+    return t;
+  } else {
+    return value;
+  }
+};
+Model.prototype.afterLoad = function () {};
 
 exports.Model = Model;

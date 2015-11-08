@@ -1,5 +1,4 @@
 var modelUserList = require("../userList");
-var dateUtil = require("../dateUtil");
 
 describe("user", function () {
   var joinedDate = new Date();
@@ -8,7 +7,7 @@ describe("user", function () {
     username: "username",
     email: "email",
     emailVerified: true,
-    joinedDate: dateUtil.toDateString(joinedDate)
+    joinedDate: joinedDate.toISOString()
   };
   var user;
 
@@ -22,7 +21,6 @@ describe("user", function () {
     expect(user.email).toEqual(obj.email);
     expect(user.emailVerified).toEqual(obj.emailVerified);
     expect(user.joinedDate).toEqual(joinedDate);
-    expect(user.joinedDateString).toEqual(obj.joinedDate);
   });
 
   it("should export an object", function () {
@@ -44,14 +42,14 @@ describe("user list", function () {
     username: "username",
     email: "email",
     emailVerified: true,
-    joinedDate: dateUtil.toDateString(joinedDate1)
+    joinedDate: joinedDate1.toISOString()
   };
   var userObj2 = {
     _id: "id2",
     username: "username2",
     email: "email2",
     emailVerified: false,
-    joinedDate: dateUtil.toDateString(joinedDate2)
+    joinedDate: joinedDate2.toISOString()
   };
   var obj = {
     list: [userObj1, userObj2]
@@ -72,14 +70,12 @@ describe("user list", function () {
     expect(user.email).toEqual("email");
     expect(user.emailVerified).toEqual(true);
     expect(user.joinedDate).toEqual(joinedDate1);
-    expect(user.joinedDateString).toEqual(dateUtil.toDateString(joinedDate1));
     user = userList.list[1];
     expect(user._id).toEqual("id2");
     expect(user.username).toEqual("username2");
     expect(user.email).toEqual("email2");
     expect(user.emailVerified).toEqual(false);
     expect(user.joinedDate).toEqual(joinedDate2);
-    expect(user.joinedDateString).toEqual(dateUtil.toDateString(joinedDate2));
   });
 
   it("should load an object", function () {
@@ -91,14 +87,12 @@ describe("user list", function () {
     expect(user.email).toEqual("email");
     expect(user.emailVerified).toEqual(true);
     expect(user.joinedDate).toEqual(joinedDate1);
-    expect(user.joinedDateString).toEqual(dateUtil.toDateString(joinedDate1));
     user = userList.list[1];
     expect(user._id).toEqual("id2");
     expect(user.username).toEqual("username2");
     expect(user.email).toEqual("email2");
     expect(user.emailVerified).toEqual(false);
     expect(user.joinedDate).toEqual(joinedDate2);
-    expect(user.joinedDateString).toEqual(dateUtil.toDateString(joinedDate2));
   });
 
   it("should export an object", function () {

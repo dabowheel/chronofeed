@@ -11,24 +11,19 @@ describe("Blog", function () {
         _id: "id1",
         title: "title1",
         text: "text1",
-        date: date.toString(),
-        blogID: "blogid",
-        domID: "domid"
+        date: date.toISOString(),
+        blogID: "blogid"
       }
     ]
   };
   var blog;
 
   beforeEach(function () {
-    blog = new modelBlog.Blog();
-    blog.loadObject(obj);
+    blog = new modelBlog.Blog("id","title");
+    blog.addPost(new modelPost.Post("id1", "title1", "text1", date, "blogid", "domid"));
   });
 
   it("should be created", function () {
-    var blog = new modelBlog.Blog(obj._id, obj.title);
-    var post = obj.postList[0];
-    blog.addPost(new modelPost.Post(post._id, post.title, post.text, new Date(post.date), post.blogID, post.domID));
-
     expect(blog._id).toEqual(obj._id);
     expect(blog.title).toEqual(obj.title);
     expect(blog.postList[0].exportObject()).toEqual(obj.postList[0]);
@@ -44,15 +39,11 @@ describe("Blog", function () {
   });
 
   it("should set edit post", function () {
-    var blog = new modelBlog.Blog();
-    blog.loadObject(obj);
     blog.editPost("domid");
     expect(blog.postList[0].edit).toEqual(true);
   });
 
   it("should unset edit post", function () {
-    var blog = new modelBlog.Blog();
-    blog.loadObject(obj);
     blog.editPost("domid");
     blog.stopEditingPost("domid");
     expect(blog.postList[0].edit).toEqual(false);

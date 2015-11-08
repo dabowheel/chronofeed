@@ -1,3 +1,4 @@
+"use strict";
 var modelPost = require("./post");
 
 function Blog(_id,title) {
@@ -45,13 +46,13 @@ Blog.prototype.addPost = function (post) {
   this.postList.unshift(post);
 };
 Blog.prototype.editPost = function (domID) {
-  for (var i = 0; i < this.postList.length; i++) {
-    if (this.postList[i].domID == domID) {
-      this.postList[i].edit = true;
-      return true;
+  for (let post of this.postList) {
+    if (post.domID == domID) {
+      post.edit = true;
+      return post;
     }
   }
-  return false;
+  return null;
 };
 Blog.prototype.stopEditingPost = function (domID) {
   for (var i = 0; i < this.postList.length; i++) {
