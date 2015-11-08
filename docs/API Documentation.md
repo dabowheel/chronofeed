@@ -8,7 +8,7 @@ The user doesn't have to logged in for these calls.
    username: <username if logged in, otherwise not set>
 }
 ```
-* GET /datastore/signup
+* POST /datastore/signup
 ```
 {
    username: <username>,
