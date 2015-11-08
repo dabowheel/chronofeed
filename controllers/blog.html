@@ -31,7 +31,7 @@
         {{#if edit}}
         <td colspan="2">
           <input id="postpostid" type="hidden" value="{{_id}}"/>
-          <input id="postdate" type="hidden" value="{{dateString}}"/>
+          <input id="postdate" type="hidden" value="{{dateISOString}}"/>
           <input id="postblogid" type="hidden" value="{{blogID}}"/>
           <input id="postdomid" type="hidden" value="{{domID}}"/>
           <div><strong>Edit</strong></div>
@@ -40,7 +40,7 @@
           <div class="form-group">
             <div class='input-group date' id='datetimepicker'>
               <input type='text' class="form-control" />
-              <span class="input-group-addon">
+              <span class="input-group-addon gr-datetime-btn">
                 <span class="glyphicon glyphicon-calendar"></span>
               </span>
             </div>

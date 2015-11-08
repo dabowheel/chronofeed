@@ -23,9 +23,7 @@ Post.prototype.constructor = Post;
 Post.prototype.afterLoad = function () {
   if (this.date) {
     this.dateString = moment(this.date).format("MMMM Do YYYY, h:mm a");
-    this.dateOnly = moment(this.date).format("YYYY-MM-DD");
-    this.timeOnly = moment(this.date).format("HH:mm:ss");
-    this.ISOString = this.date.toISOString();
+    this.dateISOString = this.date.toISOString();
   }
 };
 

@@ -50,3 +50,7 @@
   position: relative;
   top: -5px;
 }
+
+.gr-datetime-btn {
+  width: auto;
+}

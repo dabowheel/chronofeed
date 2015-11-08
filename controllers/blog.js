@@ -125,11 +125,15 @@ class ctlBlog extends Component {
     document.getElementById("posttitle").select();
   }
   getPost() {
+    let d = $("#datetimepicker").data("DateTimePicker").date();
+    if (!d) {
+      d = moment(document.getElementById("postdate").value);
+    }
     return {
       _id: document.getElementById("postpostid").value,
       title: document.getElementById("posttitle").value,
       text: document.getElementById("posttext").value,
-      date: new Date($("#datetimepicker").data("DateTimePicker").date().toISOString()),
+      date: new Date(d.toISOString()),
       blogID: document.getElementById("postblogid").value,
       domID: document.getElementById("postdomid").value
     };
