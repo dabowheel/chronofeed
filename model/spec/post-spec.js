@@ -1,4 +1,5 @@
 var modelPost = require("../post");
+global.moment = require("../../public/bower_components/moment/moment");
 
 describe("Post", function () {
   var date = new Date();

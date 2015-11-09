@@ -16,6 +16,11 @@ function User(_id,username,email,emailVerified,joinedDate) {
 }
 User.prototype = new model.Model();
 User.prototype.constructor = User;
+User.prototype.afterLoad = function () {
+  if (this.joinedDate) {
+    this.joinedDateOnly = moment(this.joinedDate).format("M/D/YYYY");
+  }
+};
 
 function UserList() {
   this.list = [];
@@ -28,24 +33,6 @@ UserList.prototype.constructor = UserList;
 UserList.prototype.add = function (user) {
   this.list.push(user);
 };
-// UserList.prototype.loadObject = function (obj) {
-//   for (var i = 0; i < obj.list.length; i++) {
-//     var values = obj.list[i];
-//     var user = new User();
-//     user.loadObject(values);
-//     this.add(user);
-//   }
-// };
-// UserList.prototype.exportObject = function () {
-//   var ret = {
-//     list: []
-//   };
-//
-//   for (var user of this.list) {
-//     ret.list.push(user.exportObject());
-//   }
-//   return ret;
-// };
 UserList.prototype.delete = function (_id) {
   for (var i = 0; i < this.list.length; i++) {
     if (this.list[i]._id == _id) {

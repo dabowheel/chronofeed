@@ -9,7 +9,6 @@ var LoadError = require("./loadError");
 var validate = require("../scripts/validate");
 var Component = require("./component");
 import {setURL} from "./route";
-let moment = require("moment");
 
 class ctlBlog extends Component {
   constructor(containerID,title) {
