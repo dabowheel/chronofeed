@@ -13,7 +13,7 @@ function datastore(method,path,obj,callback) {
           try {
             res = JSON.parse(request.responseText);
           } catch(e) {
-            console.log("response err",e);
+            console.log("response",e);
             callback("JSON parse error: " + e);
             return;
           }
@@ -21,7 +21,7 @@ function datastore(method,path,obj,callback) {
           callback(null,res);
         }
       } else {
-        console.log("response err",request.responseText);
+        console.log("response",request.responseText);
         var err = request.responseText;
         if (!err) {
           err = request.statusText;

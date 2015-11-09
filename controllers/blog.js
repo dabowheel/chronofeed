@@ -148,7 +148,9 @@ class ctlBlog extends Component {
       this.blog.savePost(domID,post);
       this.blog.sort(true);
       this.show();
-      datastore("PUT", "Post/" + post._id, post.exportObject(), function (err,res) {
+      let schema = post.unionSchema(post.schema,{});
+      delete schema._id;
+      datastore("PUT", "Post/" + post._id, post.exportObject(schema), function (err,res) {
         if (err) {
           $("#placeForAlert").addClass("alert alert-warning");
           $("#placeForAlert").html(err);
@@ -159,7 +161,9 @@ class ctlBlog extends Component {
       this.blog.savePost(domID,post);
       this.blog.sort(true);
       this.show();
-      datastore("PUT", "Post", post.exportObject(), function (err,res) {
+      let schema = post.unionSchema(post.schema,{});
+      delete schema._id;
+      datastore("PUT", "Post", post.exportObject(schema), function (err,res) {
         if (err) {
           $("#placeForAlert").addClass("alert alert-warning");
           $("#placeForAlert").html(err);
