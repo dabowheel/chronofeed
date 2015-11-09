@@ -1,7 +1,6 @@
 module.exports = {
   entry: [
-    "./controllers/main.js",
-    "./scripts/live-reload.js"
+    "./controllers/main.js"
   ],
   output: {
     path: "public/scripts",
