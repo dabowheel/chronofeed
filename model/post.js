@@ -22,7 +22,7 @@ Post.prototype = new model.Model();
 Post.prototype.constructor = Post;
 Post.prototype.afterLoad = function () {
   if (this.date) {
-    this.dateString = moment(this.date).format("MMMM Do YYYY, h:mm a");
+    this.dateString = moment(this.date).format("MM/DD/YYYY h:mm A");
     this.dateISOString = this.date.toISOString();
   }
 };
