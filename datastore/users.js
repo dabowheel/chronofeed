@@ -73,7 +73,14 @@ exports.deleteUser = function (req,res,next) {
               return next(err);
             }
 
-            res.end();
+            var resetCol = req.db.collection("reset");
+            resetCol.deleteMany(filter, function (err, res5) {
+              if (err) {
+                return next(err);
+              }
+
+              res.end();
+            });
           });
         });
       });
