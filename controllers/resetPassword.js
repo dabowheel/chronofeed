@@ -4,6 +4,7 @@ var Component = require("./component");
 var datastore = require("../scripts/datastore");
 var view = require("./resetPassword.html");
 import route from "./route";
+var sha256 = require("../vendor/sha256");
 
 class ResetPassword extends Component {
   constructor(containerID,hash,code) {
@@ -23,7 +24,7 @@ class ResetPassword extends Component {
   }
   getValues() {
     return {
-      password: CryptoJS.SHA256(this.getPasswordPlain()).toString()
+      password: sha256.hash(this.getPasswordPlain())
     };
   }
   getPasswordPlain() {

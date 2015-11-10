@@ -6,6 +6,7 @@ var validate = require("../scripts/validate");
 var modelUserList = require("../model/userList");
 var Component = require("./component");
 var LoadError = require("./loadError");
+var sha256 = require("../vendor/sha256");
 
 class Profile extends Component {
   constructor(containerID) {
@@ -53,7 +54,7 @@ class Profile extends Component {
   getValues() {
     return {
       email: document.getElementById("inputEmail").value,
-      password: this.getPasswordPlain().length > 0 ? CryptoJS.SHA256(this.getPasswordPlain()).toString() : this.profile.password
+      password: this.getPasswordPlain().length > 0 ? sha256.hash(this.getPasswordPlain()) : this.profile.password
     };
   }
   validateProfileForm(values, passwordPlain) {

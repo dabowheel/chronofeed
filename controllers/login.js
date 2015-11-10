@@ -4,6 +4,7 @@ var datastore = require("../scripts/datastore");
 var validate = require("../scripts/validate");
 var Component = require("./component");
 import route from "./route";
+var sha256 = require("../vendor/sha256");
 
 class Login extends Component {
   constructor(containerID) {
@@ -21,7 +22,7 @@ class Login extends Component {
   getLoginFormValues() {
     return {
       username: document.getElementById("inputUsername").value,
-      password: CryptoJS.SHA256(document.getElementById("inputPassword").value).toString()
+      password: sha256.hash(document.getElementById("inputPassword").value)
     };
   }
   getPasswordPlain() {
