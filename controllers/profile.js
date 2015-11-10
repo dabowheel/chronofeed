@@ -1,5 +1,5 @@
 "use strict";
-var view = require("./profile.html");
+var template = require("./profile.hbs");
 var Menu = require("./menu");
 var datastore = require("../scripts/datastore");
 var validate = require("../scripts/validate");
@@ -37,7 +37,6 @@ class Profile extends Component {
 
       let menu = new Menu("", true, false);
       menu.render(function (err, menuView) {
-        let template = Handlebars.compile(view);
         var profileHTML = template(this.profile);
         callback(null, menuView + profileHTML);
       }.bind(this));

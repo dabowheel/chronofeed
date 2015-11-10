@@ -1,5 +1,5 @@
 "use strict";
-var view = require("./blogList.html");
+var template = require("./blogList.hbs");
 var Menu = require("./menu");
 var datastore = require("../scripts/datastore");
 var modelBlogList = require("../model/blogList");
@@ -38,7 +38,6 @@ class ctlBlogList extends Component {
 
       let menu = new Menu("", false, false);
       menu.render(function (err, menuView) {
-        let template = Handlebars.compile(view);
         var blogListHTML = template(this.blogList);
         callback(null, menuView + blogListHTML);
       }.bind(this));

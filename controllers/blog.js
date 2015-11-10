@@ -1,5 +1,5 @@
 "use strict";
-var view = require("./blog.html");
+var template = require("./blog.hbs");
 var Menu = require("./menu");
 var datastore = require("../scripts/datastore");
 var modelBlog = require("../model/blog");
@@ -50,13 +50,8 @@ class ctlBlog extends Component {
         return callback(err, c);
       }
 
-      Handlebars.registerHelper("encodeText", function (str) {
-        return str.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;").replace(/\n/g,"<br>");
-      });
-
       let menu = new Menu("", false, false);
       menu.render(function (err, menuView) {
-        let template = Handlebars.compile(view);
         var blogHTML = template(this.blog);
         callback(null,menuView + blogHTML);
       }.bind(this));
@@ -141,7 +136,6 @@ class ctlBlog extends Component {
   }
   savePostChanges(domID) {
     var values = this.getPost();
-    console.log(values);
     var post = new modelPost.Post(values._id, values.title, values.text, values.date, values.blogID, values.domID);
     this.blog.stopEditingPost(domID);
     if (post._id) {

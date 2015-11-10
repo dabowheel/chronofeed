@@ -1,5 +1,5 @@
 "use strict";
-var view = require("./admin.html");
+var template = require("./admin.hbs");
 var datastore = require("../scripts/datastore");
 var modelUserList = require("../model/userList");
 var Component = require("./component");
@@ -44,7 +44,6 @@ class Admin extends Component {
 
       let menu = new Menu("", false, true);
       menu.render(function (err,menuView) {
-        let template = Handlebars.compile(view);
         let adminHTML = template({userList:this.userList, expiredTable:this.expiredTable});
         callback(null, menuView + adminHTML);
       }.bind(this));

@@ -11,7 +11,7 @@ class Login extends Component {
     this.global();
   }
   render(callback) {
-    callback(null,view);
+    callback(null, view);
   }
   afterLoad() {
     validate.addReturnPressListener(["inputUsername", "inputPassword"], this.clickLogin.bind(this));

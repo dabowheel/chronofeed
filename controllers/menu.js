@@ -1,7 +1,7 @@
 "use strict";
 var datastore = require("../scripts/datastore");
 var Component = require("./component");
-var view = require("./menu.html");
+var template = require("./menu.hbs");
 import route from "./route";
 
 class Menu extends Component {
@@ -12,7 +12,6 @@ class Menu extends Component {
     this.global();
   }
   render(callback) {
-    let template = Handlebars.compile(view);
     callback(null, template(this));
   }
   clickBlogList() {

@@ -45,7 +45,6 @@ function getComponent(pathname, callback) {
     if (global.component.All.username) {
       var blogRE = /^\/blog\/(.*)$/;
       if (pathname == "/admin") {
-        console.log("route to admin");
         let c = new Admin("main");
         return callback(c);
       } else if (pathname == "/profile") {

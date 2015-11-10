@@ -7,7 +7,7 @@ class ForgotPasswordResult extends Component {
     super(containerID, "Grackle | Forgot Password Result");
   }
   render(callback) {
-    callback(null,view);
+    callback(null, view);
   }
 }
 

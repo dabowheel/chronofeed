@@ -1,5 +1,5 @@
 let Component = require("./component");
-let view = require("./loadError.html");
+let template = require("./loadError.hbs");
 import route from "./route";
 
 class LoadError extends Component {
@@ -10,7 +10,6 @@ class LoadError extends Component {
     this.global();
   }
   render(callback) {
-    let template = Handlebars.compile(view);
     callback(null, template(this));
   }
   afterLoad() {

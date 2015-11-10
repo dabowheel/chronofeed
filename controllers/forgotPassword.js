@@ -11,7 +11,7 @@ class ForgotPassword extends Component {
     this.global();
   }
   render(callback) {
-    callback(null,view);
+    callback(null, view);
   }
   afterLoad() {
     document.getElementById("inputUsername").focus();
