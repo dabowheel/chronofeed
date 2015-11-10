@@ -38,9 +38,6 @@
 .gr-verified {
   color: green;
 }
-@media (min-width: 500px) {
-
-}
 
 .gr-vertical-space {
   height: 10px;
@@ -53,4 +50,20 @@
 
 .gr-datetime-btn {
   width: auto;
+}
+
+.gr-input-group {
+  width: 100%;
+}
+
+@media (min-width: 500px) {
+  .gr-input-group {
+    width: auto;
+  }
+  .gr-form-group {
+    width: auto;
+  }
+  .gr-input-group-addon {
+    width: auto;
+  }
 }

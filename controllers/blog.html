@@ -37,14 +37,21 @@
           <div><strong>Edit</strong></div>
           <div><input class="form-control" id="posttitle" type="text" value="{{title}}"/></div>
           <div><textarea class="form-control" id="posttext" rows="5">{{text}}</textarea></div>
-          <div class="form-group">
-            <div class='input-group date' id='datetimepicker'>
-              <input type='text' class="form-control" />
-              <span class="input-group-addon gr-datetime-btn">
-                <span class="glyphicon glyphicon-calendar"></span>
-              </span>
+
+          <div class="container">
+            <div class="row">
+                <div class="form-group">
+                  <div class='input-group date gr-input-group' id='datetimepicker'>
+                    <input type='text' class="form-control gr-form-group" />
+                    <span class="input-group-addon gr-input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+
           <div class="gr-row-buttons">
             <button class="btn btn-primary gr-hotkey" onclick="component.ctlBlog.savePostChanges('{{domID}}');" accesskey="a">Accept</button>
             <button class="btn btn-primary gr-hotkey" onclick="component.ctlBlog.cancelPostChanges('{{domID}}');" accesskey="c">Cancel</button>
