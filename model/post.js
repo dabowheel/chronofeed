@@ -1,4 +1,6 @@
+"use strict";
 var model = require("./model");
+let moment = require("moment");
 
 function Post(_id,title,text,date,blogID,domID) {
   model.Model.call(this);

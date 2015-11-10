@@ -1,4 +1,6 @@
+"use strict";
 var model = require("./model");
+let moment = require("moment");
 
 function User(_id,username,email,emailVerified,joinedDate) {
   this._id = _id;

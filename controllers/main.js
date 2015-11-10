@@ -1,6 +1,12 @@
 "use strict";
 import route from "./route";
 
+global.Handlebars = require("../node_modules/handlebars/dist/handlebars");
+global.jQuery = require("jquery");
+global.$ = global.jQuery;
+require("../node_modules/bootstrap/dist/js/bootstrap");
+require("../public/bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker");
+
 require("../css/blog.css");
 require("babel-polyfill");
 
