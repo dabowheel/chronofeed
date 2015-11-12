@@ -4,7 +4,7 @@ import Menu from "./menu";
 
 export default class Designer extends Component {
 	constructor(containerID) {
-		super(containerID);
+		super(containerID, "Grackle | Designer");
 		this.global();
 	}
 	render(callback) {
