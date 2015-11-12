@@ -5,10 +5,11 @@ var template = require("./menu.hbs");
 import route from "./route";
 
 class Menu extends Component {
-  constructor(containerID,isProfile,isAdmin) {
+  constructor(containerID,isProfile,isAdmin,isDesigner) {
     super(containerID);
     this.isProfile = isProfile;
     this.isAdmin = isAdmin;
+    this.isDesigner = isDesigner;
     this.global();
   }
   render(callback) {
@@ -34,6 +35,9 @@ class Menu extends Component {
       global.clearComponents();
       route("/");
     });
+  }
+  clickDesigner() {
+    route("/designer");
   }
 }
 

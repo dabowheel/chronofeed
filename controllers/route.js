@@ -10,6 +10,7 @@ var datastore = require("../scripts/datastore");
 var ForgotPassword = require("./forgotPassword");
 var ResetPassword = require("./resetPassword");
 var ResetPasswordResult = require("./resetPasswordResult");
+import Designer from "./designer";
 
 export default function (pathname, replace) {
   getComponent(pathname, function (c) {
@@ -49,6 +50,9 @@ function getComponent(pathname, callback) {
         return callback(c);
       } else if (pathname == "/profile") {
         let c = new Profile("main");
+        return callback(c);
+      } else if (pathname == "/designer") {
+        let c = new Designer("main");
         return callback(c);
       } else if (pathname.match(blogRE)) {
         var title = decodeURI(pathname.match(blogRE)[1]);
