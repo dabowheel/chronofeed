@@ -22,12 +22,14 @@ class Designer extends Component {
   onDragOver(event) {
  		if (event.dataTransfer.types[0] == "text/field") {
     	document.getElementById("dragpoint").innerHTML = "(" + event.clientX + "," + event.clientY + ")";
+    	event.target.style.border = "1px solid blue";
     	event.preventDefault();
   	}
 	}
 	onDragLeave(event) {
   	if (event.dataTransfer.types[0] == "text/field") {
     	document.getElementById("dragpoint").innerHTML = "";
+    	event.target.style.border = "1px solid rgba(0,0,0,0.0)";
   	}
 	}
 
@@ -35,6 +37,8 @@ class Designer extends Component {
   	if(event.dataTransfer.types[0] == "text/field") {
   		var target = document.getElementById("formTarget");
     	target.innerHTML += event.dataTransfer.getData("text/field") + "<br>";
+    	event.target.style.border = "1px solid rgba(0,0,0,0.0)";
+    	event.target.scrollTop = event.target.scrollHeight;
     	event.preventDefault();
   	}
 	}

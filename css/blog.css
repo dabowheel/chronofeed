@@ -68,6 +68,7 @@
   }
 }
 
+/* Designer */
 .gr-designer-form {
   width: 100%;
   height: 100%;
@@ -85,8 +86,9 @@
   flex: 1 1 auto;
 }
 
+/* designer toolbox */
 .gr-toolbox {
-  border-bottom: 1px solid black;
+  border-bottom: 5px solid gray;
 }
 
 .gr-designer-footer {
@@ -97,6 +99,8 @@
   text-align: center;
   font-size: 200%;
   vertical-align: middle;
+  border: 1px solid rgba(0,0,0,0.0);
+  overflow: auto;
 }
 
 .gr-toolbox {
@@ -105,8 +109,8 @@
 
 .gr-toolbox-control {
   margin-left: 10px;
-  margin-bottom: 1px;
   width: 200px;
+  margin-bottom: 10px;
 }
 
 .gr-toolbox-label {
