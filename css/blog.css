@@ -67,3 +67,56 @@
     width: auto;
   }
 }
+
+.gr-designer-form {
+  width: 100%;
+  height: 100%;
+}
+
+.gr-fill-container {
+  height: 100%;
+}
+.gr-fill-parent {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+.gr-fill {
+  flex: 1 1 auto;
+}
+
+.gr-toolbox {
+  border-bottom: 1px solid black;
+}
+
+.gr-designer-footer {
+  border-top: 1px solid black;
+}
+
+.gr-form-help {
+  text-align: center;
+  font-size: 200%;
+  vertical-align: middle;
+}
+
+.gr-toolbox {
+  display: flex;
+}
+
+.gr-toolbox-control {
+  margin-left: 10px;
+  margin-bottom: 1px;
+  width: 200px;
+}
+
+.gr-toolbox-label {
+  text-align: center;
+}
+
+.gr-toolbox-control > input,textarea {
+  cursor: default !important;
+}
+
+.gr-textarea-field {
+  resize: none;
+}

@@ -10,7 +10,7 @@ var datastore = require("../scripts/datastore");
 var ForgotPassword = require("./forgotPassword");
 var ResetPassword = require("./resetPassword");
 var ResetPasswordResult = require("./resetPasswordResult");
-import Designer from "./designer";
+var Designer = require("./designer");
 
 export default function (pathname, replace) {
   getComponent(pathname, function (c) {

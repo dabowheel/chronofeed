@@ -5,15 +5,19 @@ var template = require("./menu.hbs");
 import route from "./route";
 
 class Menu extends Component {
-  constructor(containerID,isProfile,isAdmin,isDesigner) {
+  constructor(containerID,isProfile,isAdmin,isDesigner,noContainer) {
     super(containerID);
-    this.isProfile = isProfile;
-    this.isAdmin = isAdmin;
-    this.isDesigner = isDesigner;
+    this.context = {
+      isProfile: isProfile,
+      isAdmin: isAdmin,
+      isDesigner: isDesigner,
+      noContainer: noContainer
+    };
     this.global();
   }
   render(callback) {
-    callback(null, template(this));
+    var view = template(this.context);
+    callback(null, view);
   }
   clickBlogList() {
     route("/");

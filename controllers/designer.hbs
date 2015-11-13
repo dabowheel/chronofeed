@@ -1,0 +1,36 @@
+<style>
+html,body {
+	height: 100%;
+}
+#main {
+	height: 100%;
+}
+</style>
+
+<div class="container gr-fill-parent">
+	{{{theMenu}}}
+
+	<div class="gr-toolbox">
+
+		<div class="gr-toolbox-control" draggable="true" ondragStart="component.Designer.onDragStart(event,'Text');">
+			<div class="gr-toolbox-label"><label>Text</label></div>
+			<input type="text" class="form-control" disabled />
+		</div>
+
+		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'TextArea');">
+			<div class="gr-toolbox-label"><label>Text Area</label></div>
+			<textarea class="form-control gr-textarea-field" rows="3" cols="20" disabled></textarea>
+		</div>
+
+	</div>
+
+
+	<div class="gr-fill gr-form-help" id="formTarget" ondragover="component.Designer.onDragOver(event);" ondragleave="component.Designer.onDragLeave(event);" ondrop="component.Designer.onDrop(event);">
+	</div>
+
+	<div class="gr-designer-footer">
+		<label>Drag Point: </label>
+		<span id="dragpoint"></span>
+	</div>
+
+</div>
