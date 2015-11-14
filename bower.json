@@ -19,8 +19,9 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap": "~3.3.5",
     "eonasdan-bootstrap-datetimepicker": "~4.17.37",
-    "handlebars": "~4.0.4"
-  }
+    "json-editor": "~0.7.23",
+    "bootstrap": "~3.3.5"
+  },
+  "devDependencies": {}
 }

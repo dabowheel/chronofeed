@@ -1,5 +1,5 @@
 var modelUserList = require("../userList");
-global.moment = require("../../public/bower_components/moment/moment");
+var moment = require("moment");
 
 describe("user", function () {
   var joinedDate = new Date();

@@ -1,11 +1,13 @@
 var Component = require("./component");
 var Menu = require("./menu");
 var designerTemplate = require("./designer.hbs");
+import * as jsonSchema from "../model/jsonSchema";
 
 class Designer extends Component {
 	constructor(containerID) {
 		super(containerID, "Grackle | Designer");
 		this.global();
+    this.schema = new jsonSchema.objectItem("Form");
 	}
 	render(callback) {
 		let menu = new Menu("", false, false, true, true);
@@ -14,6 +16,14 @@ class Designer extends Component {
 			callback(null, view);
 		});
 	}
+  afterLoad() {
+    var form = document.getElementById("formTarget");
+    var options = {
+      theme: "bootstrap3",
+      schema: this.schema.exportObject()
+    };
+    this.editor = new JSONEditor(form,options);
+  }
 	onDragStart(event, fieldName) {
   	var dt = event.dataTransfer;
   	dt.setData("text/field", fieldName);
