@@ -109,8 +109,9 @@
 
 .gr-toolbox-control {
   margin-left: 10px;
-  width: 200px;
+  margin-right: 10px;
   margin-bottom: 10px;
+  max-width: 200px;
 }
 
 .gr-toolbox-label {
@@ -121,6 +122,18 @@
   cursor: default !important;
 }
 
+.gr-toolbox-control > div > input[type=checkbox] {
+  cursor: default !important;
+}
+
 .gr-textarea-field {
   resize: none;
+}
+
+.gr-toolbox-text-center {
+  text-align: center;
+}
+
+.gr-toolbox-font-large {
+  font-size: 50px;
 }

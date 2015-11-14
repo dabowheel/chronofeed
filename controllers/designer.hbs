@@ -22,6 +22,21 @@ html,body {
 			<textarea class="form-control gr-textarea-field" rows="3" cols="20" disabled></textarea>
 		</div>
 
+		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'Number');">
+			<div class="gr-toolbox-label"><label>Number</label></div>
+			<input type="number" class="form-control" disabled />
+		</div>
+
+		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'Checkbox');">
+			<div class="gr-toolbox-label"><label>Checkbox</label></div>
+			<div class="gr-toolbox-text-center"><input type="checkbox" tabindex="-1" onclick="return false;" /></div>
+		</div>
+
+		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'List');">
+			<div class="gr-toolbox-label"><label>List</label></div>
+			<div class="gr-toolbox-text-center"><span class="glyphicon glyphicon-list gr-toolbox-font-large"></span></div>
+		</div>
+
 	</div>
 
 
