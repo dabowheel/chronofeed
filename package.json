@@ -12,6 +12,7 @@
     "test": "npm run lint && npm run jasmine",
     "lint": "npm run jshint && npm run eslint",
     "jshint": "npm run jshint-node && npm run jshint-browser",
+    "unit:test": "npm run lint && npm run test:build && npm run test:copy && npm run jasmine",
     "test:copy": "node_modules/.bin/n-copy --source public/bower_components/moment --destination build/public/bower_components/moment '*.js'",
     "test:build": "node_modules/.bin/babel --presets es2015 model -d build/model",
     "webpack": "node_modules/.bin/webpack",

@@ -1,7 +1,6 @@
 
-class jsonSchemaItem {
+class Item {
 	constructor(title,format,description,defaultValue) {
-		this.type = "object";
 		if (format) {
 			this.format = format;
 		}
@@ -16,6 +15,7 @@ class jsonSchemaItem {
 		}
 	}
 	exportObject() {
+		let ret = JSON.parse(JSON.stringify(this));
 		return JSON.parse(JSON.stringify(this));
 	}
 	toString() {
@@ -23,7 +23,7 @@ class jsonSchemaItem {
 	}
 }
 
-export class jsonSchemaObject extends jsonSchemaItem {
+export class objectItem extends Item {
 	constructor(title,format,description,defaultValue) {
 		super(title, format, description, defaultValue);
 		this.type = "object";
@@ -34,37 +34,38 @@ export class jsonSchemaObject extends jsonSchemaItem {
 	}
 }
 
-export class jsonSchemaString extends jsonSchemaItem {
+export class stringItem extends Item {
 	constructor(title,format,description,defaultValue) {
 		super(title, format, description, defaultValue);
 		this.type = "string";
 	}
 }
 
-export class jsonSchemaNumber extends jsonSchemaItem {
+export class numberItem extends Item {
 	constructor(title, format, description,defaultValue) {
 		super(title, format, description, defaultValue);
 		this.type = "number";
 	}
 }
 
-export class jsonSchemaInteger extends jsonSchemaNumber {
+export class integerItem extends Item {
 	constructor(title,format,description,defaultValue) {
 		super(title, format, description, defaultValue);
 		this.type = "integer";
 	}
 }
 
-export class jsonSchemaBoolean extends jsonSchemaItem {
+export class booleanItem extends Item {
 	constructor(title,format,description,defaultValue) {
 		super(title, format, description, defaultValue);
 		this.type = "boolean";
 	}
 }
 
-export class jsonSchemaArray extends jsonSchemaItem {
+export class arrayItem extends Item {
 	constructor(title,format,description,defaultValue) {
 		super(title, format, description, defaultValue);
+		this.type = "array";
 		this.items = {
 		};
 	}
