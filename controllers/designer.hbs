@@ -12,14 +12,14 @@ html,body {
 
 	<div class="gr-toolbox">
 
-		<div class="gr-toolbox-control" draggable="true" ondragStart="component.Designer.onDragStart(event,'Text');">
-			<div class="gr-toolbox-label"><label>Text</label></div>
+		<div class="gr-toolbox-control" draggable="true" ondragStart="component.Designer.onDragStart(event,'String');">
+			<div class="gr-toolbox-label"><label>String</label></div>
 			<input type="text" class="form-control" disabled />
 		</div>
 
-		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'TextArea');">
-			<div class="gr-toolbox-label"><label>Text Area</label></div>
-			<textarea class="form-control gr-textarea-field" rows="3" cols="20" disabled></textarea>
+		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'Integer');">
+			<div class="gr-toolbox-label"><label>Integer</label></div>
+			<input type="number" class="form-control" disabled />
 		</div>
 
 		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'Number');">
@@ -27,13 +27,19 @@ html,body {
 			<input type="number" class="form-control" disabled />
 		</div>
 
-		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'Checkbox');">
-			<div class="gr-toolbox-label"><label>Checkbox</label></div>
-			<div class="gr-toolbox-text-center"><input type="checkbox" tabindex="-1" onclick="return false;" /></div>
+		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'Boolean');">
+			<div class="gr-toolbox-label"><label>Boolean</label></div>
+			<select class="form-control" disabled>
+  			<option value="undefined"></option>
+  			<option value="1">true</option>
+  			<option value="0">false</option>
+			</select>
+			<div class="gr-toolbox-boolean-cover">
+			</div>
 		</div>
 
-		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'List');">
-			<div class="gr-toolbox-label"><label>List</label></div>
+		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'Array');">
+			<div class="gr-toolbox-label"><label>Array</label></div>
 			<div class="gr-toolbox-text-center"><span class="glyphicon glyphicon-list gr-toolbox-font-large"></span></div>
 		</div>
 

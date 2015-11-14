@@ -137,3 +137,11 @@
 .gr-toolbox-font-large {
   font-size: 50px;
 }
+
+.gr-toolbox-boolean-cover {
+  width: 200px;
+  height: 40px;
+  position: relative;
+  top: -40px;
+  background-color: rgba(0,0,0,0.0);
+}
