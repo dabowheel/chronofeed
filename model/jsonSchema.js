@@ -1,21 +1,74 @@
 
-class jsonSchema {
-	constructor() {
-		this.child = null;
+class jsonSchemaItem {
+	constructor(title,format,description,defaultValue) {
+		this.type = "object";
+		if (format) {
+			this.format = format;
+		}
+		if (title) {
+			this.title = title;
+		}
+		if (description) {
+			this.description = description;
+		}
+		if (defaultValue) {
+			this["default"] = defaultValue;
+		}
 	}
-	append(obj) {
-		this.child = obj;
+	exportObject() {
+		return JSON.parse(JSON.stringify(this));
+	}
+	toString() {
+		return JSON.stringify(this);
 	}
 }
 
-class jsonSchemaObject {
-	constructor(title,description) {
+export class jsonSchemaObject extends jsonSchemaItem {
+	constructor(title,format,description,defaultValue) {
+		super(title, format, description, defaultValue);
 		this.type = "object";
-		this.title = title;
-		this.description = description;
+		this.properties = {};
 	}
-	append(schema) {
-		schema.title = this.title;
-		schema.description = this.description;
+	addProperty(name,prop) {
+		this.properties[name] = prop;
+	}
+}
+
+export class jsonSchemaString extends jsonSchemaItem {
+	constructor(title,format,description,defaultValue) {
+		super(title, format, description, defaultValue);
+		this.type = "string";
+	}
+}
+
+export class jsonSchemaNumber extends jsonSchemaItem {
+	constructor(title, format, description,defaultValue) {
+		super(title, format, description, defaultValue);
+		this.type = "number";
+	}
+}
+
+export class jsonSchemaInteger extends jsonSchemaNumber {
+	constructor(title,format,description,defaultValue) {
+		super(title, format, description, defaultValue);
+		this.type = "integer";
+	}
+}
+
+export class jsonSchemaBoolean extends jsonSchemaItem {
+	constructor(title,format,description,defaultValue) {
+		super(title, format, description, defaultValue);
+		this.type = "boolean";
+	}
+}
+
+export class jsonSchemaArray extends jsonSchemaItem {
+	constructor(title,format,description,defaultValue) {
+		super(title, format, description, defaultValue);
+		this.items = {
+		};
+	}
+	setItems(items) {
+		this.items = items;
 	}
 }
