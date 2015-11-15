@@ -5,58 +5,21 @@ html,body {
 #main {
 	height: 100%;
 }
+.gr-no-margin-bottom {
+	margin-bottom: 0px;
+}
 </style>
 
-<div class="container gr-fill-parent">
-	{{{theMenu}}}
+<div class="container gr-fill-container">
 
-	<div class="gr-toolbox">
+	<div class="gr-fill-parent" id="container">
 
-		<div class="gr-toolbox-control" draggable="true" ondragStart="component.Designer.onDragStart(event,'String');">
-			<div class="gr-toolbox-label"><label>String</label></div>
-			<input type="text" class="form-control" disabled />
-		</div>
+		{{{theMenu}}}
 
-		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'Integer');">
-			<div class="gr-toolbox-label"><label>Integer</label></div>
-			<input type="number" class="form-control" disabled />
-		</div>
+		{{{tabMenu}}}
 
-		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'Number');">
-			<div class="gr-toolbox-label"><label>Number</label></div>
-			<input type="number" class="form-control" disabled />
-		</div>
+		{{{tab}}}
 
-		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'Boolean');">
-			<div class="gr-toolbox-label"><label>Boolean</label></div>
-			<select class="form-control" disabled>
-  			<option value="undefined"></option>
-  			<option value="1">true</option>
-  			<option value="0">false</option>
-			</select>
-			<div class="gr-toolbox-boolean-cover">
-			</div>
-		</div>
-
-		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'Array');">
-			<div class="gr-toolbox-label"><label>Array</label></div>
-			<div class="gr-toolbox-text-center"><span class="glyphicon glyphicon-list gr-toolbox-font-large"></span></div>
-		</div>
-
-		<div class="gr-toolbox-control" draggable="true" ondragstart="component.Designer.onDragStart(event,'Object');">
-			<div class="gr-toolbox-label"><label>Object</label></div>
-			<div class="gr-toolbox-text-center"><span class="icon-codepen gr-toolbox-font-large"></span></div>
-		</div>
-
-	</div>
-
-
-	<div class="gr-fill gr-form-help" id="formTarget" ondragover="component.Designer.onDragOver(event);" ondragleave="component.Designer.onDragLeave(event);" ondrop="component.Designer.onDrop(event);">
-	</div>
-
-	<div class="gr-designer-footer">
-		<label>Drag Point: </label>
-		<span id="dragpoint"></span>
 	</div>
 
 </div>

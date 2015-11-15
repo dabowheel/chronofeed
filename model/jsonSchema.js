@@ -19,7 +19,7 @@ class Item {
 		return JSON.parse(JSON.stringify(this));
 	}
 	toString() {
-		return JSON.stringify(this);
+		return JSON.stringify(this, null, 2);
 	}
 }
 

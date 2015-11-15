@@ -5,13 +5,14 @@ var template = require("./menu.hbs");
 import route from "./route";
 
 class Menu extends Component {
-  constructor(containerID,isProfile,isAdmin,isDesigner,noContainer) {
+  constructor(containerID,isProfile,isAdmin,isDesigner,noContainer,navClass) {
     super(containerID);
     this.context = {
       isProfile: isProfile,
       isAdmin: isAdmin,
       isDesigner: isDesigner,
-      noContainer: noContainer
+      noContainer: noContainer,
+      navClass: navClass
     };
     this.global();
   }

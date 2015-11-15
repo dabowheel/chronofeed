@@ -1,28 +1,67 @@
 var Component = require("./component");
 var Menu = require("./menu");
-var designerTemplate = require("./designer.hbs");
+var template = require("./designer.hbs");
+var tabMenuTemplate = require("./designerTabMenu.hbs");
+var visualTab = require("./designerVisualTab.html");
+var schemaTab = require("./designerSchemaTab.html");
 import * as jsonSchema from "../model/jsonSchema";
+var visualTabEnum = Symbol();
+var schemaTabEnum = Symbol();
 
 class Designer extends Component {
 	constructor(containerID) {
 		super(containerID, "Grackle | Designer");
 		this.global();
-    this.schema = new jsonSchema.objectItem("Form");
+    this.schema = {
+      type: "object",
+      title: "Form",
+      properties: {}
+    };
+    this.value = {};
+    this.tab = visualTabEnum;
 	}
 	render(callback) {
-		let menu = new Menu("", false, false, true, true);
+		let menu = new Menu("", false, false, true, true, " gr-no-margin-bottom");
 		menu.render(function (err, menuView) {
-			var view = designerTemplate({theMenu:menuView});
+      var tabMenuContext = {};
+      var tabView = "";
+      if (this.tab == visualTabEnum) {
+        tabView = visualTab;
+        tabMenuContext.isVisualTab = true;
+      } else if (this.tab == schemaTabEnum) {
+        tabView = schemaTab;
+        tabMenuContext.isSchemaTab = true;
+      }
+			var view = template({theMenu:menuView,tabMenu:tabMenuTemplate(tabMenuContext),tab:tabView});
 			callback(null, view);
-		});
+		}.bind(this));
 	}
   afterLoad() {
-    var form = document.getElementById("formTarget");
-    var options = {
-      theme: "bootstrap3",
-      schema: this.schema.exportObject()
-    };
-    this.editor = new JSONEditor(form,options);
+    if (this.tab == visualTabEnum) {
+      var form = document.getElementById("formTarget");
+      var options = {
+        theme: "bootstrap3",
+        schema: this.schema
+      };
+      this.editor = new JSONEditor(form,options);
+      this.editor.setValue(this.value);
+    } else if (this.tab == schemaTabEnum) {
+      document.getElementById("schemaText").value = JSON.stringify(this.schema, null, 2);
+    }
+  }
+  clickVisualTab() {
+    try {
+      this.schema = JSON.parse(document.getElementById("schemaText").value);
+    }
+    catch (e) {
+    }
+    this.tab = visualTabEnum;
+    this.show();
+  }
+  clickSchemaTab() {
+    this.tab = schemaTabEnum;
+    this.value = this.editor.getValue();
+    this.show();
   }
 	onDragStart(event, fieldName) {
   	var dt = event.dataTransfer;
@@ -31,7 +70,6 @@ class Designer extends Component {
 
   onDragOver(event) {
  		if (event.dataTransfer.types[0] == "text/field") {
-    	document.getElementById("dragpoint").innerHTML = "(" + event.clientX + "," + event.clientY + ")";
     	var target = document.getElementById("formTarget");
     	target.style.border = "1px solid blue";
     	event.preventDefault();
@@ -39,7 +77,6 @@ class Designer extends Component {
 	}
 	onDragLeave(event) {
   	if (event.dataTransfer.types[0] == "text/field") {
-    	document.getElementById("dragpoint").innerHTML = "";
     	var target = document.getElementById("formTarget");
     	target.style.border = "1px solid rgba(0,0,0,0.0)";
   	}

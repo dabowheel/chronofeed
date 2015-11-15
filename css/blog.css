@@ -92,7 +92,9 @@
 }
 
 .gr-designer-footer {
-  border-top: 1px solid black;
+  position: absolute;
+  left: 0px;
+  top: 0px;
 }
 
 .gr-form-help {
@@ -108,9 +110,10 @@
 }
 
 .gr-toolbox-control {
+  margin-top: 20px;
   margin-left: 10px;
   margin-right: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   max-width: 150px;
 }
 
@@ -144,4 +147,8 @@
   position: relative;
   top: -40px;
   background-color: rgba(0,0,0,0.0);
+}
+
+.gr-schema-text {
+  font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
 }
