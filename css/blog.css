@@ -109,7 +109,7 @@
   margin-top: 20px;
   margin-left: 10px;
   margin-right: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   max-width: 150px;
 }
 
@@ -146,5 +146,14 @@
 }
 
 .gr-schema-text {
+  width: 100%;
   font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+}
+
+.gr-no-margin-bottom {
+  margin-bottom: 0px;
+}
+
+.gr-alert {
+  margin-bottom: 0px;
 }

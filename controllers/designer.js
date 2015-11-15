@@ -31,11 +31,15 @@ class Designer extends Component {
       },
       "defaultProperties": ["name", "count", "unit"]
     };
-    this.value = null;
+    this.value = {
+      name: "",
+      count: 0,
+      unit: ""
+    };
     this.tab = visualTabEnum;
 	}
 	render(callback) {
-		let menu = new Menu("", false, false, true, true, " gr-no-margin-bottom");
+		let menu = new Menu("", false, false, true, false, " gr-no-margin-bottom");
 		menu.render(function (err, menuView) {
       var tabMenuContext = {};
       var tabView = "";
@@ -55,11 +59,14 @@ class Designer extends Component {
       var form = document.getElementById("formTarget");
       var options = {
         theme: "bootstrap3",
-        schema: this.schema
+        schema: this.schema,
+        startval: this.value
       };
-      this.editor = new JSONEditor(form,options);
-      if (this.value) {
-        this.editor.setValue(this.value);        
+      try {
+        this.editor = new JSONEditor(form,options);
+      } catch (err) {
+        $("#placeForAlert").addClass("alert alert-warning gr-alert");
+        $("#placeForAlert").html(err);
       }
     } else if (this.tab == schemaTabEnum) {
       document.getElementById("schemaText").value = JSON.stringify(this.schema, null, 2);
