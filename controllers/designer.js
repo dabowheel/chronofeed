@@ -15,9 +15,23 @@ class Designer extends Component {
     this.schema = {
       type: "object",
       title: "Form",
-      properties: {}
+      properties: {
+        name: {
+          type: "string",
+          title: "Name"
+        },
+        count: {
+          type: "integer",
+          title: "Count"
+        },
+        unit: {
+          type: "string",
+          title: "Unit"
+        }
+      },
+      "defaultProperties": ["name", "count", "unit"]
     };
-    this.value = {};
+    this.value = null;
     this.tab = visualTabEnum;
 	}
 	render(callback) {
@@ -44,7 +58,9 @@ class Designer extends Component {
         schema: this.schema
       };
       this.editor = new JSONEditor(form,options);
-      this.editor.setValue(this.value);
+      if (this.value) {
+        this.editor.setValue(this.value);        
+      }
     } else if (this.tab == schemaTabEnum) {
       document.getElementById("schemaText").value = JSON.stringify(this.schema, null, 2);
     }
