@@ -68,6 +68,9 @@ class Designer extends Component {
         $("#placeForAlert").addClass("alert alert-warning gr-alert");
         $("#placeForAlert").html(err);
       }
+      if (this.editor) {
+        this.addControlListeners(this.editor.root);
+      }
     } else if (this.tab == schemaTabEnum) {
       document.getElementById("schemaText").value = JSON.stringify(this.schema, null, 2);
     }
@@ -90,30 +93,35 @@ class Designer extends Component {
   	var dt = event.dataTransfer;
   	dt.setData("text/field", fieldName);
 	}
+  addControlListeners(editor) {
+    console.log("add listeners to", editor.path);
 
-  onDragOver(event) {
- 		if (event.dataTransfer.types[0] == "text/field") {
-    	var target = document.getElementById("formTarget");
-    	target.style.border = "1px solid blue";
-    	event.preventDefault();
-  	}
-	}
-	onDragLeave(event) {
-  	if (event.dataTransfer.types[0] == "text/field") {
-    	var target = document.getElementById("formTarget");
-    	target.style.border = "1px solid rgba(0,0,0,0.0)";
-  	}
-	}
+    editor.container.ondragover = function (event) {
+      if (event.dataTransfer.types[0] == "text/field") {
+        editor.container.style.backgroundColor = "green";
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
 
-	onDrop(event) {
-  	if(event.dataTransfer.types[0] == "text/field") {
-  		var target = document.getElementById("formTarget");
-    	target.innerHTML += event.dataTransfer.getData("text/field") + "<br>";
-    	target.style.border = "1px solid rgba(0,0,0,0.0)";
-    	target.scrollTop = event.target.scrollHeight;
-    	event.preventDefault();
-  	}
-	}
+    editor.container.ondragleave = function (event) {
+      if (event.dataTransfer.types[0] == "text/field") {
+        editor.container.style.backgroundColor = "";
+      }
+    };
+
+    editor.container.ondrop = function (event) {
+      if (event.dataTransfer.types[0] == "text/field") {
+        editor.container.style.backgroundColor = "";
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
+
+    for (let key in editor.editors) {
+      this.addControlListeners(editor.editors[key]);
+    }
+  }
 }
 
 module.exports = Designer;
