@@ -139,7 +139,7 @@ class Designer extends Component {
     let rect = container.getBoundingClientRect();
     sep.style.height = "20px";
     sep.style.width = rect.width + "px";
-    sep.style.backgroundColor = "gray";
+    sep.style.backgroundColor = "rgba(128,128,128,0.5)";
     sep.style.position = "absolute";
     sep.style.left = rect.left + "px";
     if (this.claculatePlacement(event, rect) === abovePlacementEnum) {

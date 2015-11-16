@@ -158,3 +158,6 @@
   margin-bottom: 0px;
 }
 
+.gr-designer-seperator {
+  pointer-events: none;
+}
