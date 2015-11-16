@@ -96,14 +96,14 @@ class Designer extends Component {
   	dt.setData("text/field", fieldName);
 	}
   onDragEnd(event) {
-    this.unHighlightSeperator();
+    this.unHighlightSeparator();
   }
   addControlListeners(editor) {
     console.log("add listeners to", editor.path);
 
     editor.container.ondragover = function (event) {
       if (event.dataTransfer.types[0] == "text/field") {
-        this.highlightSeperator(event,editor.container);
+        this.highlightSeparator(event,editor.container);
         event.preventDefault();
         event.stopPropagation();
       }
@@ -134,8 +134,8 @@ class Designer extends Component {
       return belowPlacementEnum;
     }
   }
-  highlightSeperator(event,container) {
-    let sep = document.getElementById("seperator");
+  highlightSeparator(event,container) {
+    let sep = document.getElementById("separator");
     let rect = container.getBoundingClientRect();
     sep.style.height = "20px";
     sep.style.width = rect.width + "px";
@@ -148,8 +148,8 @@ class Designer extends Component {
       sep.style.top = (rect.bottom - 10) + "px";
     }
   }
-  unHighlightSeperator() {
-    let sep = document.getElementById("seperator");
+  unHighlightSeparator() {
+    let sep = document.getElementById("separator");
     sep.style.height = "";
     sep.style.width = "";
     sep.style.backgroundColor = "";
