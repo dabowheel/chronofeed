@@ -10,6 +10,17 @@ var schemaTabEnum = Symbol();
 const abovePlacementEnum = "above";
 const belowPlacementEnum = "below";
 
+class Highlight {
+  constructor(before,after,inside) {
+    this.before = before;
+    this.after = after;
+    this.inside = inside;
+  }
+  any() {
+    return this.before || this.after || this.inside;
+  }
+}
+
 class Designer extends Component {
 	constructor(containerID) {
 		super(containerID, "Grackle | Designer");
@@ -72,7 +83,7 @@ class Designer extends Component {
         $("#placeForAlert").html(err);
       }
       if (this.editor) {
-        this.addControlListeners(this.editor.root);
+        this.addControlListeners(null, this.editor.root);
       }
     } else if (this.tab == schemaTabEnum) {
       document.getElementById("schemaText").value = JSON.stringify(this.schema, null, 2);
@@ -99,39 +110,48 @@ class Designer extends Component {
   onDragEnd(event) {
     this.unHighlightSeparator();
   }
-  addControlListeners(editor) {
+  addControlListeners(parent,editor) {
     console.log("add listeners to", editor.path);
 
-    editor.container.ondragover = function (event) {
-      if (event.dataTransfer.types[0] == "text/field") {
-        this.highlightSeparator(event,editor.container);
-        this.drag[editor.path] = true;
-        event.preventDefault();
-        event.stopPropagation();
-      }
-    }.bind(this);
+    let highlight = new Highlight();
+    if (parent && parent.schema.type == "object") {
+      highlight.before = true;
+      highlight.after = true;
+    }
+    if ((editor.schema.type == "object" || editor.schema.type == "array") && Object.keys(editor.editors).length <= 0) {
+      highlight.inside = true;
+    }
+    editor.highlight = highlight;
 
-    editor.container.ondragleave = function (event) {
-      if (event.dataTransfer.types[0] == "text/field") {
-        delete this.drag[editor.path];
-        if (Object.keys(this.drag).length <= 0) {
-          let rect = this.editor.root.container.getBoundingClientRect();
-          if ((event.clientY <= rect.top) || (event.clientY >= rect.bottom)) {
+    if (highlight.any()) {
+      editor.container.ondragover = function (event) {
+        if (event.dataTransfer.types[0] == "text/field") {
+          this.highlightSeparator(event, editor.container, editor.highlight);
+          this.drag[editor.path] = true;
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }.bind(this);
+
+      editor.container.ondragleave = function (event) {
+        if (event.dataTransfer.types[0] == "text/field") {
+          delete this.drag[editor.path];
+          if (Object.keys(this.drag).length <= 0) {
             this.unHighlightSeparator();
           }
         }
-      }
-    }.bind(this);
+      }.bind(this);
 
-    editor.container.ondrop = function (event) {
-      if (event.dataTransfer.types[0] == "text/field") {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-    };
+      editor.container.ondrop = function (event) {
+        if (event.dataTransfer.types[0] == "text/field") {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      };
+    }
 
     for (let key in editor.editors) {
-      this.addControlListeners(editor.editors[key]);
+      this.addControlListeners(editor, editor.editors[key]);
     }
   }
   // calculate if placement should be above or below container
@@ -143,18 +163,24 @@ class Designer extends Component {
       return belowPlacementEnum;
     }
   }
-  highlightSeparator(event,container) {
-    let sep = document.getElementById("separator");
-    let rect = container.getBoundingClientRect();
-    sep.style.height = "20px";
-    sep.style.width = rect.width + "px";
-    sep.style.backgroundColor = "rgba(128,128,128,0.5)";
-    sep.style.position = "absolute";
-    sep.style.left = rect.left + "px";
-    if (this.claculatePlacement(event, rect) === abovePlacementEnum) {
-      sep.style.top = (rect.top - 10) + "px";
-    } else {
-      sep.style.top = (rect.bottom - 10) + "px";
+  highlightSeparator(event,container,highlight) {
+    if (highlight.before && highlight.after && highlight.inside) {
+
+    } else if (highlight.before && highlight.after) {
+      let sep = document.getElementById("separator");
+      let rect = container.getBoundingClientRect();
+      sep.style.height = "20px";
+      sep.style.width = rect.width + "px";
+      sep.style.backgroundColor = "rgba(128,128,128,0.5)";
+      sep.style.position = "absolute";
+      sep.style.left = rect.left + "px";
+      if (this.claculatePlacement(event, rect) === abovePlacementEnum) {
+        sep.style.top = (rect.top - 10) + "px";
+      } else {
+        sep.style.top = (rect.bottom - 10) + "px";
+      }
+    } else if (highlight.inside) {
+
     }
   }
   unHighlightSeparator() {
