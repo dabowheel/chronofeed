@@ -7,8 +7,10 @@ var schemaTab = require("./designerSchemaTab.html");
 import * as jsonSchema from "../model/jsonSchema";
 var visualTabEnum = Symbol();
 var schemaTabEnum = Symbol();
-const abovePlacementEnum = "above";
-const belowPlacementEnum = "below";
+const placementNoneEnum = "";
+const placementAboveEnum = "above";
+const placementBelowEnum = "below";
+const placementInsideEnum = "inside";
 
 class Highlight {
   constructor(before,after,inside) {
@@ -83,7 +85,7 @@ class Designer extends Component {
         $("#placeForAlert").html(err);
       }
       if (this.editor) {
-        this.addControlListeners(null, this.editor.root);
+        this.addControlListeners(this.editor.root);
       }
     } else if (this.tab == schemaTabEnum) {
       document.getElementById("schemaText").value = JSON.stringify(this.schema, null, 2);
@@ -108,25 +110,18 @@ class Designer extends Component {
   	dt.setData("text/field", fieldName);
 	}
   onDragEnd(event) {
+    this.drag = {};
     this.unHighlightSeparator();
   }
-  addControlListeners(parent,editor) {
-    console.log("add listeners to", editor.path);
+  // add drag and drop listeners
+  addControlListeners(editor) {
+    if (editor.schema.type == "object" || ((editor.schema.type == "array") && (Object.keys(editor.editors).length === 0))) {
+      console.log("add listeners to", editor.path);
 
-    let highlight = new Highlight();
-    if (parent && parent.schema.type == "object") {
-      highlight.before = true;
-      highlight.after = true;
-    }
-    if ((editor.schema.type == "object" || editor.schema.type == "array") && Object.keys(editor.editors).length <= 0) {
-      highlight.inside = true;
-    }
-    editor.highlight = highlight;
-
-    if (highlight.any()) {
       editor.container.ondragover = function (event) {
         if (event.dataTransfer.types[0] == "text/field") {
-          this.highlightSeparator(event, editor.container, editor.highlight);
+          let {placement, child} = this.calculatePlacement(editor,event);
+          this.highlight(placement, editor.container.getBoundingClientRect(), child ? child.container.getBoundingClientRect() : null);
           this.drag[editor.path] = true;
           event.preventDefault();
           event.stopPropagation();
@@ -136,8 +131,9 @@ class Designer extends Component {
       editor.container.ondragleave = function (event) {
         if (event.dataTransfer.types[0] == "text/field") {
           delete this.drag[editor.path];
-          if (Object.keys(this.drag).length <= 0) {
-            this.unHighlightSeparator();
+          if (Object.keys(this.drag).length === 0) {
+            if (!this.inContainer(event, editor.container))
+              this.unHighlightSeparator();
           }
         }
       }.bind(this);
@@ -151,36 +147,92 @@ class Designer extends Component {
     }
 
     for (let key in editor.editors) {
-      this.addControlListeners(editor, editor.editors[key]);
+      this.addControlListeners(editor.editors[key]);
     }
   }
   // calculate if placement should be above or below container
-  claculatePlacement(event,rect) {
-    let middleY = ((rect.bottom - rect.top) / 2) + rect.top;
-    if (event.clientY < middleY) {
-      return abovePlacementEnum;
+  calculatePlacement(editor,event) {
+    let placement = placementNoneEnum;
+    let child = null;
+
+    // array with no child
+    if (editor.schema.type == "array" && Object.keys(editor.editors).length === 0) {
+      placement = placementInsideEnum;
+    // object with no children
+    } else if (editor.schema.type == "object" && Object.keys(editor.editors).length === 0) {
+      placement = placementInsideEnum;
+    // object with children
+    } else if (editor.schema.type == "object") {
+      // find child event is in
+      for (let key in editor.editors) {
+        if (this.inContainer(event, editor.editors[key].container)) {
+          child = editor.editors[key];
+          break;
+        }
+      }
+      // otherwise, find child closest to event
+      if (!child) {
+        let minDist = 0.0;
+        let minChild = null;
+        for (let key in editor.editors) {
+          let d = this.getDistance(event, editor.editors[key].container);
+          if ((minChild === null) || (d < minDist)) {
+            minDist = d;
+            minChild = editor.editors[key];
+          }
+        }
+        child = minChild;
+      }
+
+      let rect = child.container.getBoundingClientRect();
+      let middleY = ((rect.bottom - rect.top) / 2) + rect.top;
+      if (event.clientY < middleY) {
+        placement = placementAboveEnum;
+      } else {
+        placement = placementBelowEnum;
+      }
+    }
+
+    return {
+      placement: placement,
+      child: child
+    };
+  }
+  inContainer(event,container) {
+    let rect = container.getBoundingClientRect();
+    if (event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom) {
+      return true;
     } else {
-      return belowPlacementEnum;
+      return false;
     }
   }
-  highlightSeparator(event,container,highlight) {
-    if (highlight.before && highlight.after && highlight.inside) {
+  getDistance(event,container) {
+    // middle of container
+    let rect = container.getBoundingClientRect();
+    let containerX = (rect.right - rect.left) / 2 + rect.left;
+    let containerY = (rect.bottom - rect.top) / 2 + rect.top;
+    return Math.sqrt(Math.pow(event.clientX - containerX, 2) + Math.pow(event.clientY - containerY, 2));
+  }
+  highlight(placement,parentRect,childRect) {
+    let sep = document.getElementById("separator");
+    sep.style.backgroundColor = "rgba(128,128,128,0.5)";
+    sep.style.position = "absolute";
+    sep.style.left = parentRect.left + "px";
+    sep.style.width = parentRect.width + "px";
 
-    } else if (highlight.before && highlight.after) {
-      let sep = document.getElementById("separator");
-      let rect = container.getBoundingClientRect();
-      sep.style.height = "20px";
-      sep.style.width = rect.width + "px";
-      sep.style.backgroundColor = "rgba(128,128,128,0.5)";
-      sep.style.position = "absolute";
-      sep.style.left = rect.left + "px";
-      if (this.claculatePlacement(event, rect) === abovePlacementEnum) {
-        sep.style.top = (rect.top - 10) + "px";
-      } else {
-        sep.style.top = (rect.bottom - 10) + "px";
-      }
-    } else if (highlight.inside) {
-
+    switch (placement) {
+      case placementInsideEnum:
+        sep.style.top = parentRect.top + "px";
+        sep.style.height = parentRect.height + "px";
+        break;
+      case placementAboveEnum:
+        sep.style.height = "20px";
+        sep.style.top = (childRect.top - 10) + "px";
+        break;
+      case placementBelowEnum:
+        sep.style.height = "20px";
+        sep.style.top = (childRect.bottom - 10) + "px";
+        break;
     }
   }
   unHighlightSeparator() {
