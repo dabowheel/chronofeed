@@ -39,6 +39,7 @@ class Designer extends Component {
       unit: ""
     };
     this.tab = visualTabEnum;
+    this.drag = {};
 	}
 	render(callback) {
 		let menu = new Menu("", false, false, true, false, " gr-no-margin-bottom");
@@ -104,6 +105,7 @@ class Designer extends Component {
     editor.container.ondragover = function (event) {
       if (event.dataTransfer.types[0] == "text/field") {
         this.highlightSeparator(event,editor.container);
+        this.drag[editor.path] = true;
         event.preventDefault();
         event.stopPropagation();
       }
@@ -111,8 +113,15 @@ class Designer extends Component {
 
     editor.container.ondragleave = function (event) {
       if (event.dataTransfer.types[0] == "text/field") {
+        delete this.drag[editor.path];
+        if (Object.keys(this.drag).length <= 0) {
+          let rect = this.editor.root.container.getBoundingClientRect();
+          if ((event.clientY <= rect.top) || (event.clientY >= rect.bottom)) {
+            this.unHighlightSeparator();
+          }
+        }
       }
-    };
+    }.bind(this);
 
     editor.container.ondrop = function (event) {
       if (event.dataTransfer.types[0] == "text/field") {
