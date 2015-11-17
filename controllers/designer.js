@@ -38,6 +38,7 @@ class Designer extends Component {
     this.tab = visualTabEnum;
     this.dataTransferType = DATA_TRANSFER_TYPE_DEFAULT;
     this.scrollTop = 0;
+    this.addedPath = "";
 	}
 	render(callback) {
 		let menu = new Menu("", false, false, true, false, " gr-no-margin-bottom");
@@ -64,7 +65,10 @@ class Designer extends Component {
         schema: this.schema,
         startval: this.value,
         disable_edit_json: true,
-        disable_properties: true
+        disable_properties: true,
+        disable_array_add: true,
+        disable_array_delete: true,
+        disable_array_reorder: true
       };
       try {
         this.editor = new JSONEditor(form,options);
@@ -75,7 +79,7 @@ class Designer extends Component {
       if (this.editor) {
         this.addControlListeners(this.editor.root);
         document.getElementById("formScroll").scrollTop = this.scrollTop;
-        //this.editor.disable();
+        this.scrollToAddedItem();
       }
     } else if (this.tab == schemaTabEnum) {
       document.getElementById("schemaText").value = JSON.stringify(this.schema, null, 2);
@@ -295,6 +299,7 @@ class Designer extends Component {
     console.log("itemSchema",itemSchema);
     if (parentSchema.type == "object") {
       let name = this.getNewPropertyName(parentSchema.properties,type);
+      this.addedPath = editor.path + "." + name;
       if (!parentSchema.properties) {
         parentSchema.properties = {};
       }
@@ -323,12 +328,18 @@ class Designer extends Component {
       }
     } else if (parentSchema.type == "array") {
       parentSchema.items = itemSchema;
+      this.addedPath = editor.path + ".0";
     }
     console.log("schema",schema);
     this.schema = schema;
     this.value = this.getInitialValue(schema);
     this.scrollTop = document.getElementById("formScroll").scrollTop;
     this.show();
+  }
+  scrollToAddedItem() {
+    if (this.addedPath) {
+      this.editor.editors[this.addedPath].container.scrollIntoView();
+    }
   }
   getNewPropertyName(properties,type) {
     for (let i = 1; ; i ++) {

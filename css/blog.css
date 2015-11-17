@@ -144,6 +144,13 @@
   resize: none;
 }
 
+#schemaText {
+  padding-left: 0px;
+  padding-right: 0px;
+  resize: none;
+  font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;  
+}
+
 .gr-toolbox-text-center {
   text-align: center;
 }
