@@ -52,7 +52,6 @@ class Designer extends Component {
       unit: ""
     };
     this.tab = visualTabEnum;
-    this.drag = {};
 	}
 	render(callback) {
 		let menu = new Menu("", false, false, true, false, " gr-no-margin-bottom");
@@ -117,33 +116,41 @@ class Designer extends Component {
   addControlListeners(editor) {
     if (editor.schema.type == "object" || ((editor.schema.type == "array") && (Object.keys(editor.editors).length === 0))) {
       console.log("add listeners to", editor.path);
+      editor.dragging = 0;
 
       editor.container.ondragover = function (event) {
         if (event.dataTransfer.types[0] == "text/field") {
           let {placement, child} = this.calculatePlacement(editor,event);
           this.highlight(placement, editor.container.getBoundingClientRect(), child ? child.container.getBoundingClientRect() : null);
-          this.drag[editor.path] = true;
           event.preventDefault();
           event.stopPropagation();
         }
       }.bind(this);
 
+      editor.container.ondragenter = function(event) {
+        if (event.dataTransfer.types[0] == "text/field") {
+          editor.dragging++;
+        }
+        editor.container.ondragover(event);
+      }.bind(this);
+
       editor.container.ondragleave = function (event) {
         if (event.dataTransfer.types[0] == "text/field") {
-          delete this.drag[editor.path];
-          if (Object.keys(this.drag).length === 0) {
-            if (!this.inContainer(event, editor.container))
-              this.unHighlightSeparator();
+          editor.dragging--;
+          if (editor.dragging <= 0) {
+            this.unHighlightSeparator();
           }
         }
       }.bind(this);
 
       editor.container.ondrop = function (event) {
         if (event.dataTransfer.types[0] == "text/field") {
+          editor.dragging = 0;
+          this.unHighlightSeparator();
           event.preventDefault();
           event.stopPropagation();
         }
-      };
+      }.bind(this);
     }
 
     for (let key in editor.editors) {
