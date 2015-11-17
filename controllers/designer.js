@@ -5,12 +5,14 @@ var tabMenuTemplate = require("./designerTabMenu.hbs");
 var visualTab = require("./designerVisualTab.html");
 var schemaTab = require("./designerSchemaTab.html");
 import * as jsonSchema from "../model/jsonSchema";
-var visualTabEnum = Symbol();
-var schemaTabEnum = Symbol();
+const visualTabEnum = "visual";
+const schemaTabEnum = "schema";
 const placementNoneEnum = "";
 const placementAboveEnum = "above";
 const placementBelowEnum = "below";
 const placementInsideEnum = "inside";
+const DATA_TRANSFER_TYPE_DEFAULT = "text/plain";
+const DATA_TRANSFER_TYPE_IE = "Text";
 
 class Highlight {
   constructor(before,after,inside) {
@@ -52,6 +54,7 @@ class Designer extends Component {
       unit: ""
     };
     this.tab = visualTabEnum;
+    this.dataTransferType = DATA_TRANSFER_TYPE_DEFAULT;
 	}
 	render(callback) {
 		let menu = new Menu("", false, false, true, false, " gr-no-margin-bottom");
@@ -75,7 +78,9 @@ class Designer extends Component {
       var options = {
         theme: "bootstrap3",
         schema: this.schema,
-        startval: this.value
+        startval: this.value,
+        disable_edit_json: true,
+        disable_properties: true
       };
       try {
         this.editor = new JSONEditor(form,options);
@@ -85,6 +90,7 @@ class Designer extends Component {
       }
       if (this.editor) {
         this.addControlListeners(this.editor.root);
+        //this.editor.disable();
       }
     } else if (this.tab == schemaTabEnum) {
       document.getElementById("schemaText").value = JSON.stringify(this.schema, null, 2);
@@ -106,7 +112,12 @@ class Designer extends Component {
   }
 	onDragStart(event, fieldName) {
   	var dt = event.dataTransfer;
-  	dt.setData("text/field", fieldName);
+    try {
+    	dt.setData(this.dataTransferType, fieldName);
+    } catch (e) {
+      this.dataTransferType = DATA_TRANSFER_TYPE_IE;
+      dt.setData(this.dataTransferType, fieldName);
+    }
 	}
   onDragEnd(event) {
     this.drag = {};
@@ -119,7 +130,7 @@ class Designer extends Component {
       editor.dragging = 0;
 
       editor.container.ondragover = function (event) {
-        if (event.dataTransfer.types[0] == "text/field") {
+        if (event.dataTransfer.types[0] == this.dataTransferType) {
           let {placement, child} = this.calculatePlacement(editor,event);
           this.highlight(placement, editor.container.getBoundingClientRect(), child ? child.container.getBoundingClientRect() : null);
           event.preventDefault();
@@ -128,14 +139,14 @@ class Designer extends Component {
       }.bind(this);
 
       editor.container.ondragenter = function(event) {
-        if (event.dataTransfer.types[0] == "text/field") {
+        if (event.dataTransfer.types[0] == this.dataTransferType) {
           editor.dragging++;
         }
         editor.container.ondragover(event);
       }.bind(this);
 
       editor.container.ondragleave = function (event) {
-        if (event.dataTransfer.types[0] == "text/field") {
+        if (event.dataTransfer.types[0] == this.dataTransferType) {
           editor.dragging--;
           if (editor.dragging <= 0) {
             this.unHighlightSeparator();
@@ -144,7 +155,7 @@ class Designer extends Component {
       }.bind(this);
 
       editor.container.ondrop = function (event) {
-        if (event.dataTransfer.types[0] == "text/field") {
+        if (event.dataTransfer.types[0] == this.dataTransferType) {
           editor.dragging = 0;
           this.unHighlightSeparator();
           event.preventDefault();
