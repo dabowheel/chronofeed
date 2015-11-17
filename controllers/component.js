@@ -23,6 +23,7 @@ class Component {
       }.bind(this));
     }
   }
+  leave() {}
   global() {
     if (!global.component) {
       global.component = {};

@@ -98,6 +98,12 @@ class Designer extends Component {
     this.tab = schemaTabEnum;
     this.value = this.editor.getValue();
     this.show();
+    this.resizeSchemaText();
+  }
+  resizeSchemaText() {
+    let el = document.getElementById("schemaText");
+    let rect = el.getBoundingClientRect();
+    el.style.height = el.parentElement.offsetHeight - 6 + "px";
   }
   getInitialValue(schema) {
     switch (schema.type) {

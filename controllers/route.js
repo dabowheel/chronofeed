@@ -14,6 +14,10 @@ var Designer = require("./designer");
 
 export default function (pathname, replace) {
   getComponent(pathname, function (c) {
+    if (global.component.current) {
+      global.component.current.leave();
+    }
+    global.component.current = c;
     setURL(pathname, c.documentTitle, replace);
     c.show();
   });
