@@ -14,17 +14,6 @@ const placementInsideEnum = "inside";
 const DATA_TRANSFER_TYPE_DEFAULT = "text/plain";
 const DATA_TRANSFER_TYPE_IE = "Text";
 
-class Highlight {
-  constructor(before,after,inside) {
-    this.before = before;
-    this.after = after;
-    this.inside = inside;
-  }
-  any() {
-    return this.before || this.after || this.inside;
-  }
-}
-
 class Designer extends Component {
 	constructor(containerID) {
 		super(containerID, "Grackle | Designer");
@@ -39,6 +28,7 @@ class Designer extends Component {
     this.dataTransferType = DATA_TRANSFER_TYPE_DEFAULT;
     this.scrollTop = 0;
     this.addedPath = "";
+    this.objectNames = {};
 	}
 	render(callback) {
 		let menu = new Menu("", false, false, true, false, " gr-no-margin-bottom");
@@ -148,6 +138,10 @@ class Designer extends Component {
     if (editor.schema.type == "object" || ((editor.schema.type == "array") && (editor.rows.length === 0))) {
       console.log("add listeners to", editor.path);
       editor.dragging = 0;
+
+      if (editor.schema.type == "object") {
+        this.getObjectNames(editor.schema);
+      }
 
       editor.container.ondragover = function (event) {
         if (event.dataTransfer.types[0] == this.dataTransferType) {
@@ -350,7 +344,7 @@ class Designer extends Component {
   getNewPropertyName(properties,type) {
     for (let i = 1; ; i ++) {
       let name = type + i;
-      if (!properties || !properties.hasOwnProperty(name)) {
+      if (!this.objectNames.hasOwnProperty(name)) {
         return name;
       }
     }
@@ -366,6 +360,11 @@ class Designer extends Component {
       }
     }
     return schema;
+  }
+  getObjectNames(schema) {
+    for (let name in schema.properties) {
+      this.objectNames[name] = true;
+    }
   }
 }
 
