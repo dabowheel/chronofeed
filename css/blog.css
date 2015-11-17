@@ -100,6 +100,18 @@
 .gr-designer-form {
 }
 
+#formTarget {
+}
+
+.gr-scroll-y {
+  overflow-y:auto;
+}
+
+#formTarget .row {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
 #formTarget input {
   cursor: default;
 }

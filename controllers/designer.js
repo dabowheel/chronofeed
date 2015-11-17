@@ -31,30 +31,13 @@ class Designer extends Component {
 		this.global();
     this.schema = {
       type: "object",
-      title: "Form",
-      properties: {
-        name: {
-          type: "string",
-          title: "Name"
-        },
-        count: {
-          type: "integer",
-          title: "Count"
-        },
-        unit: {
-          type: "string",
-          title: "Unit"
-        }
-      },
-      "defaultProperties": ["name", "count", "unit"]
+      title: "Form"
     };
-    this.value = {
-      name: "",
-      count: 0,
-      unit: ""
-    };
+    this.value = this.getInitialValue(this.schema);
+    console.log("this.value",this.value);
     this.tab = visualTabEnum;
     this.dataTransferType = DATA_TRANSFER_TYPE_DEFAULT;
+    this.scrollTop = 0;
 	}
 	render(callback) {
 		let menu = new Menu("", false, false, true, false, " gr-no-margin-bottom");
@@ -73,6 +56,7 @@ class Designer extends Component {
 		}.bind(this));
 	}
   afterLoad() {
+    $("#main").addClass("gr-fill-parent");
     if (this.tab == visualTabEnum) {
       var form = document.getElementById("formTarget");
       var options = {
@@ -90,6 +74,7 @@ class Designer extends Component {
       }
       if (this.editor) {
         this.addControlListeners(this.editor.root);
+        document.getElementById("formScroll").scrollTop = this.scrollTop;
         //this.editor.disable();
       }
     } else if (this.tab == schemaTabEnum) {
@@ -110,6 +95,31 @@ class Designer extends Component {
     this.value = this.editor.getValue();
     this.show();
   }
+  getInitialValue(schema) {
+    switch (schema.type) {
+      case "string":
+        return "";
+      case "integer":
+        return 0;
+      case "number":
+       return 0;
+      case "boolean":
+        return false;
+      case "array":
+        if (schema.items) {
+          return [this.getInitialValue(schema.items)];
+        } else {
+          return [];
+        }
+        break;
+      case "object":
+        let ret = {};
+        for (let key in schema.properties) {
+          ret[key] = this.getInitialValue(schema.properties[key]);
+        }
+        return ret;
+    }
+  }
 	onDragStart(event, fieldName) {
   	var dt = event.dataTransfer;
     try {
@@ -125,7 +135,7 @@ class Designer extends Component {
   }
   // add drag and drop listeners
   addControlListeners(editor) {
-    if (editor.schema.type == "object" || ((editor.schema.type == "array") && (Object.keys(editor.editors).length === 0))) {
+    if (editor.schema.type == "object" || ((editor.schema.type == "array") && (editor.rows.length === 0))) {
       console.log("add listeners to", editor.path);
       editor.dragging = 0;
 
@@ -158,15 +168,26 @@ class Designer extends Component {
         if (event.dataTransfer.types[0] == this.dataTransferType) {
           editor.dragging = 0;
           this.unHighlightSeparator();
+          let {placement, child} = this.calculatePlacement(editor, event);
+          let data = event.dataTransfer.getData(this.dataTransferType);
+          this.addItem(data,editor,placement,child);
           event.preventDefault();
           event.stopPropagation();
         }
       }.bind(this);
     }
 
-    for (let key in editor.editors) {
-      this.addControlListeners(editor.editors[key]);
+    if (editor.schema.type == "object") {
+      for (let key in editor.editors) {
+        this.addControlListeners(editor.editors[key]);
+      }
+    } else if (editor.schema.type == "array") {
+      if (editor.rows[0]) {
+        this.addControlListeners(editor.rows[0]);
+      }
     }
+
+
   }
   // calculate if placement should be above or below container
   calculatePlacement(editor,event) {
@@ -174,7 +195,7 @@ class Designer extends Component {
     let child = null;
 
     // array with no child
-    if (editor.schema.type == "array" && Object.keys(editor.editors).length === 0) {
+    if (editor.schema.type == "array" && (!editor.editors || Object.keys(editor.editors).length === 0)) {
       placement = placementInsideEnum;
     // object with no children
     } else if (editor.schema.type == "object" && Object.keys(editor.editors).length === 0) {
@@ -261,6 +282,73 @@ class Designer extends Component {
     sep.style.position = "";
     sep.style.left = "";
     sep.style.top = "";
+  }
+  addItem(type,editor,placement,child) {
+    let schema = JSON.parse(JSON.stringify(this.editor.schema));
+    let parentSchema = this.getSchema(schema,editor.path);
+    console.log("placement",placement);
+    console.log("child.path", child ? child.path : "");
+    console.log("parentSchema",parentSchema);
+    let itemSchema = {
+      type: type
+    };
+    console.log("itemSchema",itemSchema);
+    if (parentSchema.type == "object") {
+      let name = this.getNewPropertyName(parentSchema.properties,type);
+      if (!parentSchema.properties) {
+        parentSchema.properties = {};
+      }
+      parentSchema.properties[name] = itemSchema;
+      if (child) {
+        let childOrder = editor.property_order.length;
+        for (let i = 0; i < editor.property_order.length; i++) {
+          console.log("compare",editor.property_order[i],child.key);
+          if (editor.property_order[i] == child.key) {
+            childOrder = i;
+            break;
+          }
+        }
+        console.log("childOrder",childOrder);
+        let new_property_order = editor.property_order.splice(0);
+        console.log("new_property_order",new_property_order);
+        if (placement == placementAboveEnum) {
+          new_property_order.splice(childOrder, 0, name);
+        } else {
+          new_property_order.splice(childOrder+1, 0, name);
+        }
+        console.log("new_property_order",new_property_order);
+        for (let i = 0; i < new_property_order.length; i++) {
+          parentSchema.properties[new_property_order[i]].propertyOrder = i;
+        }
+      }
+    } else if (parentSchema.type == "array") {
+      parentSchema.items = itemSchema;
+    }
+    console.log("schema",schema);
+    this.schema = schema;
+    this.value = this.getInitialValue(schema);
+    this.scrollTop = document.getElementById("formScroll").scrollTop;
+    this.show();
+  }
+  getNewPropertyName(properties,type) {
+    for (let i = 1; ; i ++) {
+      let name = type + i;
+      if (!properties || !properties.hasOwnProperty(name)) {
+        return name;
+      }
+    }
+  }
+  getSchema(schema,path) {
+    let pathArray = path.split(".");
+    for (let i = 1; i < pathArray.length; i++) {
+      if (schema.type == "object") {
+        let name = pathArray[i];
+        schema = schema.properties[name];
+      } else if (schema.type == "array") {
+        schema = schema.items;
+      }
+    }
+    return schema;
   }
 }
 
