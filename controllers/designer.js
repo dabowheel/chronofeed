@@ -47,8 +47,9 @@ class Designer extends Component {
 	}
   beforeLoad() {
     this.value = this.getInitialValue(this.schema);
-    if (this.editor) {
-      this.scrollTop = document.getElementById("formScroll").scrollTop;
+    let formScroll = document.getElementById("formScroll");
+    if (formScroll) {
+      this.scrollTop = formScroll.scrollTop;
     }
   }
   afterLoad() {
@@ -143,7 +144,9 @@ class Designer extends Component {
   }
   // add drag and drop listeners
   addControlListeners(editor) {
-    this.addEditControl(editor.schema, editor.path, editor.container);
+    if (editor.path != "root") {
+      this.addEditControl(editor, editor.schema, editor.path, editor.container);
+    }
 
     if (editor.schema.type == "object" || ((editor.schema.type == "array") && (editor.rows.length === 0))) {
       editor.dragging = 0;
@@ -207,7 +210,7 @@ class Designer extends Component {
 
 
   }
-  addEditControl(schema,path,container) {
+  addEditControl(editor,schema,path,container) {
     let edit = document.createElement("button");
     edit.classList.add("btn");    // can't use multiple arguments with IE browser
     edit.classList.add("btn-default");
@@ -215,14 +218,14 @@ class Designer extends Component {
     edit.innerHTML = "<span class='glyphicon glyphicon-edit' title='edit'></span>";
     edit.onclick = function (event) {
       console.log("edit",path);
-    };
+      this.clickEditControl(editor);
+    }.bind(this);
     let deleteBtn = document.createElement("button");
     deleteBtn.classList.add("btn");
     deleteBtn.classList.add("btn-default");
     deleteBtn.classList.add("btn-xs");
     deleteBtn.innerHTML = "<span class='glyphicon glyphicon-remove' title='delete'></span>";
     deleteBtn.onclick = function (event) {
-      console.log("delete",path);
       this.clickDeleteControl(path);
     }.bind(this);
     let btnGroup = document.createElement("div");
@@ -255,6 +258,15 @@ class Designer extends Component {
         }
         break;
     }
+  }
+  clickEditControl(editor) {
+    let title = editor.schema.title;
+    if (!title) {
+      let pathArray = editor.path.split(".");
+      title = pathArray.pop();
+    }
+    document.getElementById("editModalTitle").innerHTML = "Edit " + title;
+    $('#editModal').modal();
   }
   clickDeleteControl(path) {
     let pathArray = path.split(".");
