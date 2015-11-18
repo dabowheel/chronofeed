@@ -133,11 +133,12 @@ class Designer extends Component {
     }
 	}
   onDragEnd(event) {
-    this.drag = {};
     this.unHighlightSeparator();
   }
   // add drag and drop listeners
   addControlListeners(editor) {
+    this.addEditControl(editor.schema, editor.path, editor.container);
+
     if (editor.schema.type == "object" || ((editor.schema.type == "array") && (editor.rows.length === 0))) {
       editor.dragging = 0;
 
@@ -150,6 +151,9 @@ class Designer extends Component {
       editor.container.ondragover = function (event) {
         if (event.dataTransfer.types[0] == this.dataTransferType) {
           let {placement, child} = this.calculatePlacement(editor,event);
+          if (child && !this.isControlVisible(child.container)) {
+            child.container.scrollIntoView();
+          }
           this.highlight(placement, editor.container.getBoundingClientRect(), child ? child.container.getBoundingClientRect() : null);
           event.preventDefault();
           event.stopPropagation();
@@ -196,6 +200,50 @@ class Designer extends Component {
     }
 
 
+  }
+  addEditControl(schema,path,container) {
+    let edit = document.createElement("button");
+    edit.classList.add("btn");    // can't use multiple arguments with IE browser
+    edit.classList.add("btn-primary");
+    edit.classList.add("btn-xs");
+    edit.innerHTML = "Edit";
+    edit.onclick = function (event) {
+      console.log("edit",path);
+    };
+    let deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("btn");
+    deleteBtn.classList.add("btn-primary");
+    deleteBtn.classList.add("btn-xs");
+    deleteBtn.innerHTML = "Delete";
+    deleteBtn.onclick = function (event) {
+      console.log("delete",path);
+    };
+    switch (schema.type) {
+      case "object":
+      case "array":
+        for (let child of container.children) {
+          if (child.tagName == "H3") {
+            child.appendChild(edit);
+            child.appendChild(deleteBtn);
+            break;
+          }
+        }
+        break;
+      case "string":
+      case "integer":
+      case "number":
+      case "boolean":
+        edit.style.marginLeft = "10px";
+        for (let child of container.children) {
+          for (let child2 of child.children) {
+            if (child2.tagName == "LABEL") {
+              child2.appendChild(edit);
+              child2.appendChild(deleteBtn);
+            }
+          }
+        }
+        break;
+    }
   }
   // gives an area in container where the use can drop an item
   addBottomDropTarget(container) {
@@ -340,7 +388,7 @@ class Designer extends Component {
   scrollToAddedItem() {
     if (this.addedPath) {
       let container = this.editor.editors[this.addedPath].container;
-      if (!this.isElementInViewport(container)) {
+      if (!this.isControlVisible(container)) {
         container.scrollIntoView();
       }
     }
@@ -354,6 +402,14 @@ class Designer extends Component {
       rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
       rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
     );
+  }
+  isControlVisible(container) {
+    return this.isElementInScrollArea(container, document.getElementById("formScroll"));
+  }
+  isElementInScrollArea (el, scrollArea) {
+    let scrollRect = scrollArea.getBoundingClientRect();
+    let rect = el.getBoundingClientRect();
+    return rect.top >= scrollRect.top && rect.bottom <= scrollRect.bottom;
   }
   getNewPropertyName(properties,type) {
     for (let i = 1; ; i ++) {
