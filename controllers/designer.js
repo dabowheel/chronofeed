@@ -57,7 +57,8 @@ class Designer extends Component {
         disable_properties: true,
         disable_array_add: true,
         disable_array_delete: true,
-        disable_array_reorder: true
+        disable_array_reorder: true,
+        disable_collapse: true
       };
       try {
         this.editor = new JSONEditor(form,options);
