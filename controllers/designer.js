@@ -45,6 +45,12 @@ class Designer extends Component {
 			callback(null, view);
 		}.bind(this));
 	}
+  beforeLoad() {
+    this.value = this.getInitialValue(this.schema);
+    if (this.editor) {
+      this.scrollTop = document.getElementById("formScroll").scrollTop;
+    }
+  }
   afterLoad() {
     $("#main").addClass("gr-fill-parent");
     if (this.tab == visualTabEnum) {
@@ -217,7 +223,8 @@ class Designer extends Component {
     deleteBtn.innerHTML = "<span class='glyphicon glyphicon-remove' title='delete'></span>";
     deleteBtn.onclick = function (event) {
       console.log("delete",path);
-    };
+      this.clickDeleteControl(path);
+    }.bind(this);
     let btnGroup = document.createElement("div");
     btnGroup.classList.add("btn-group");
     btnGroup.setAttribute("role","group");
@@ -248,6 +255,18 @@ class Designer extends Component {
         }
         break;
     }
+  }
+  clickDeleteControl(path) {
+    let pathArray = path.split(".");
+    let name = pathArray.pop();
+    let parentPath = pathArray.join(".");
+    let schema = this.getSchema(this.schema, parentPath);
+    if (schema.type == "object") {
+      delete schema.properties[name];
+    } else if (schema.type == "array") {
+      delete schema.items;
+    }
+    this.show();
   }
   // gives an area in container where the use can drop an item
   addBottomDropTarget(container) {
@@ -385,8 +404,6 @@ class Designer extends Component {
       this.addedPath = editor.path + ".0";
     }
     this.schema = schema;
-    this.value = this.getInitialValue(schema);
-    this.scrollTop = document.getElementById("formScroll").scrollTop;
     this.show();
   }
   scrollToAddedItem() {
@@ -395,6 +412,7 @@ class Designer extends Component {
       if (!this.isControlVisible(container)) {
         container.scrollIntoView();
       }
+      this.addedPath = "";
     }
   }
   isElementInViewport (el) {

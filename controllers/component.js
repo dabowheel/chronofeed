@@ -8,6 +8,7 @@ class Component {
   render() {
     return "";
   }
+  beforeLoad() {}
   afterLoad() {}
   show () {
     if (this.containerID) {
@@ -18,6 +19,7 @@ class Component {
           }
           return;
         }
+        this.beforeLoad();
         document.getElementById(this.containerID).innerHTML = view;
         this.afterLoad();
       }.bind(this));
