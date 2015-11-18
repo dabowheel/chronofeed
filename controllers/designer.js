@@ -204,27 +204,32 @@ class Designer extends Component {
   addEditControl(schema,path,container) {
     let edit = document.createElement("button");
     edit.classList.add("btn");    // can't use multiple arguments with IE browser
-    edit.classList.add("btn-primary");
+    edit.classList.add("btn-default");
     edit.classList.add("btn-xs");
-    edit.innerHTML = "Edit";
+    edit.innerHTML = "<span class='glyphicon glyphicon-edit' title='edit'></span>";
     edit.onclick = function (event) {
       console.log("edit",path);
     };
     let deleteBtn = document.createElement("button");
     deleteBtn.classList.add("btn");
-    deleteBtn.classList.add("btn-primary");
+    deleteBtn.classList.add("btn-default");
     deleteBtn.classList.add("btn-xs");
-    deleteBtn.innerHTML = "Delete";
+    deleteBtn.innerHTML = "<span class='glyphicon glyphicon-remove' title='delete'></span>";
     deleteBtn.onclick = function (event) {
       console.log("delete",path);
     };
+    let btnGroup = document.createElement("div");
+    btnGroup.classList.add("btn-group");
+    btnGroup.setAttribute("role","group");
+    btnGroup.appendChild(edit);
+    btnGroup.appendChild(deleteBtn);
+
     switch (schema.type) {
       case "object":
       case "array":
         for (let child of container.children) {
           if (child.tagName == "H3") {
-            child.appendChild(edit);
-            child.appendChild(deleteBtn);
+            child.appendChild(btnGroup);
             break;
           }
         }
@@ -237,8 +242,7 @@ class Designer extends Component {
         for (let child of container.children) {
           for (let child2 of child.children) {
             if (child2.tagName == "LABEL") {
-              child2.appendChild(edit);
-              child2.appendChild(deleteBtn);
+              child2.appendChild(btnGroup);
             }
           }
         }
