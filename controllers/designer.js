@@ -23,7 +23,6 @@ class Designer extends Component {
       title: "Form"
     };
     this.value = this.getInitialValue(this.schema);
-    console.log("this.value",this.value);
     this.tab = visualTabEnum;
     this.dataTransferType = DATA_TRANSFER_TYPE_DEFAULT;
     this.scrollTop = 0;
@@ -136,12 +135,13 @@ class Designer extends Component {
   // add drag and drop listeners
   addControlListeners(editor) {
     if (editor.schema.type == "object" || ((editor.schema.type == "array") && (editor.rows.length === 0))) {
-      console.log("add listeners to", editor.path);
       editor.dragging = 0;
 
       if (editor.schema.type == "object") {
         this.getObjectNames(editor.schema);
       }
+
+      this.addBottomDropTarget(editor.container);
 
       editor.container.ondragover = function (event) {
         if (event.dataTransfer.types[0] == this.dataTransferType) {
@@ -192,6 +192,12 @@ class Designer extends Component {
     }
 
 
+  }
+  // gives an area in container where the use can drop an item
+  addBottomDropTarget(container) {
+    let t = document.createElement("div");
+    t.style.height = "10px";
+    container.appendChild(t);
   }
   // calculate if placement should be above or below container
   calculatePlacement(editor,event) {
@@ -290,13 +296,9 @@ class Designer extends Component {
   addItem(type,editor,placement,child) {
     let schema = JSON.parse(JSON.stringify(this.editor.schema));
     let parentSchema = this.getSchema(schema,editor.path);
-    console.log("placement",placement);
-    console.log("child.path", child ? child.path : "");
-    console.log("parentSchema",parentSchema);
     let itemSchema = {
       type: type
     };
-    console.log("itemSchema",itemSchema);
     if (parentSchema.type == "object") {
       let name = this.getNewPropertyName(parentSchema.properties,type);
       this.addedPath = editor.path + "." + name;
@@ -307,21 +309,17 @@ class Designer extends Component {
       if (child) {
         let childOrder = editor.property_order.length;
         for (let i = 0; i < editor.property_order.length; i++) {
-          console.log("compare",editor.property_order[i],child.key);
           if (editor.property_order[i] == child.key) {
             childOrder = i;
             break;
           }
         }
-        console.log("childOrder",childOrder);
         let new_property_order = editor.property_order.splice(0);
-        console.log("new_property_order",new_property_order);
         if (placement == placementAboveEnum) {
           new_property_order.splice(childOrder, 0, name);
         } else {
           new_property_order.splice(childOrder+1, 0, name);
         }
-        console.log("new_property_order",new_property_order);
         for (let i = 0; i < new_property_order.length; i++) {
           parentSchema.properties[new_property_order[i]].propertyOrder = i;
         }
@@ -330,7 +328,6 @@ class Designer extends Component {
       parentSchema.items = itemSchema;
       this.addedPath = editor.path + ".0";
     }
-    console.log("schema",schema);
     this.schema = schema;
     this.value = this.getInitialValue(schema);
     this.scrollTop = document.getElementById("formScroll").scrollTop;
