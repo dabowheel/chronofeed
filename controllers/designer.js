@@ -79,8 +79,11 @@ class Designer extends Component {
     try {
       this.schema = JSON.parse(document.getElementById("schemaText").value);
     }
-    catch (e) {
+    catch (err) {
+      $("#placeForAlert").addClass("alert alert-warning gr-alert");
+      $("#placeForAlert").html(err);
     }
+    this.value = this.getInitialValue(this.schema);
     this.tab = visualTabEnum;
     this.show();
   }
@@ -336,8 +339,21 @@ class Designer extends Component {
   }
   scrollToAddedItem() {
     if (this.addedPath) {
-      this.editor.editors[this.addedPath].container.scrollIntoView();
+      let container = this.editor.editors[this.addedPath].container;
+      if (!this.isElementInViewport(container)) {
+        container.scrollIntoView();
+      }
     }
+  }
+  isElementInViewport (el) {
+    var rect = el.getBoundingClientRect();
+
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+    );
   }
   getNewPropertyName(properties,type) {
     for (let i = 1; ; i ++) {
