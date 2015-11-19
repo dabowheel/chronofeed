@@ -28,6 +28,8 @@ class Designer extends Component {
     this.scrollTop = 0;
     this.addedPath = "";
     this.objectNames = {};
+    this.nearTopEdgeTime = 0;
+    this.nearBottomEdgeTime = 0;
 	}
 	render(callback) {
 		let menu = new Menu("", false, false, true, false, " gr-no-margin-bottom");
@@ -159,13 +161,18 @@ class Designer extends Component {
 
       editor.container.ondragover = function (event) {
         if (event.dataTransfer.types[0] == this.dataTransferType) {
+          this.nearEdgeScroll(event);
+
           let {placement, child} = this.calculatePlacement(editor,event);
-          if (child && !this.isControlVisible(child.container)) {
-            child.container.scrollIntoView();
+          let childRect = child ? child.container.getBoundingClientRect() : null;
+          let highlightRect = this.calculateHighlight(placement, editor.container.getBoundingClientRect(), childRect);
+          let formScroll = document.getElementById("formScroll");
+          let formScrollRect = formScroll.getBoundingClientRect();
+          if (this.rectContainsRect(formScrollRect, highlightRect)) {
+            this.highlight(highlightRect);
+            event.preventDefault();
+            event.stopPropagation();
           }
-          this.highlight(placement, editor.container.getBoundingClientRect(), child ? child.container.getBoundingClientRect() : null);
-          event.preventDefault();
-          event.stopPropagation();
         }
       }.bind(this);
 
@@ -209,6 +216,62 @@ class Designer extends Component {
     }
 
 
+  }
+  nearEdgeScroll(event) {
+    const SCROLL_INCREMENT = 10;
+    const NEAR_EDGE_DISTANCE = 25;
+    const NEAR_EDGE_WAIT_TIME_MS = 1500;
+    const edgeTopEnum = "top";
+    const edgeBottomEnum = "bottom";
+
+    let formScroll = document.getElementById("formScroll");
+    let formScrollRect = formScroll.getBoundingClientRect();
+    let now = (new Date()).getTime();
+
+    if (event.clientY - formScrollRect.top <= NEAR_EDGE_DISTANCE) {
+      if (!this.nearTopEdgeTime || (this.nearTopEdgeTime && formScroll.scrollTop == this.nearTopEdgeScrollTop)) {
+        if (!this.nearTopEdgeTime) {
+          this.nearTopEdgeTime = now;
+          this.nearTopEdgeScrollTop = formScroll.scrollTop;
+        }
+        if ((now - this.nearTopEdgeTime) >= NEAR_EDGE_WAIT_TIME_MS) {
+          // scroll up
+          if ((formScroll.scrollTop - SCROLL_INCREMENT) < 0) {
+            formScroll.scrollTop = 0;
+          } else {
+            formScroll.scrollTop -= SCROLL_INCREMENT;
+          }
+          this.nearTopEdgeScrollTop = formScroll.scrollTop;
+        }
+      } else {
+        this.nearTopEdgeTime = 0;
+        this.nearTopEdgeScrollTop = 0;
+      }
+    } else if (formScrollRect.bottom - event.clientY <= NEAR_EDGE_DISTANCE) {
+      if (!this.nearBottomEdgeTime || (this.nearBottomEdgeTime && formScroll.scrollTop == this.nearBottomEdgeScrollTop)) {
+        if (!this.nearBottomEdgeTime) {
+          this.nearBottomEdgeTime = now;
+          this.nearBottomEdgeScrollTop = formScroll.scrollTop;
+        }
+        if ((now - this.nearBottomEdgeTime) >= NEAR_EDGE_WAIT_TIME_MS) {
+          // scroll down
+          if (formScroll.scrollTop + SCROLL_INCREMENT > formScroll.scrollHeight) {
+            formScroll.scrollTop = formScroll.scrollHeight;
+          } else {
+            formScroll.scrollTop += SCROLL_INCREMENT;
+          }
+          this.nearBottomEdgeScrollTop = formScroll.scrollTop;
+        }
+      } else {
+        this.nearBottomEdgeTime = 0;
+        this.nearBottomEdgeScrollTop = 0;
+      }
+    } else {
+      this.nearTopEdgeTime = 0;
+      this.nearTopEdgeScrollTop = 0;
+      this.nearBottomEdgeTime = 0;
+      this.nearBottomEdgeScrollTop = 0;
+    }
   }
   addEditControl(editor,schema,path,container) {
     let edit = document.createElement("button");
@@ -349,27 +412,39 @@ class Designer extends Component {
     let containerY = (rect.bottom - rect.top) / 2 + rect.top;
     return Math.sqrt(Math.pow(event.clientX - containerX, 2) + Math.pow(event.clientY - containerY, 2));
   }
-  highlight(placement,parentRect,childRect) {
-    let sep = document.getElementById("separator");
-    sep.style.backgroundColor = "rgba(128,128,128,0.5)";
-    sep.style.position = "absolute";
-    sep.style.left = parentRect.left + "px";
-    sep.style.width = parentRect.width + "px";
+  calculateHighlight(placement,parentRect,childRect) {
+    let ret = {};
+    ret.left = parentRect.left;
+    ret.width = parentRect.width;
 
     switch (placement) {
       case placementInsideEnum:
-        sep.style.top = parentRect.top + "px";
-        sep.style.height = parentRect.height + "px";
+        ret.top = parentRect.top;
+        ret.height = parentRect.height;
         break;
       case placementAboveEnum:
-        sep.style.height = "20px";
-        sep.style.top = (childRect.top - 10) + "px";
+        ret.height = 20;
+        ret.top = childRect.top - 10;
         break;
       case placementBelowEnum:
-        sep.style.height = "20px";
-        sep.style.top = (childRect.bottom - 10) + "px";
+        ret.height = 20;
+        ret.top = childRect.bottom - 10;
         break;
     }
+    ret.right = ret.left + ret.width;
+    ret.bottom = ret.top + ret.height;
+    ret.middleX = ret.left + (ret.right - ret.left) / 2;
+    ret.middleY = ret.top + (ret.bottom - ret.top) / 2;
+    return ret;
+  }
+  highlight(rect) {
+    let sep = document.getElementById("separator");
+    sep.style.backgroundColor = "rgba(128,128,128,0.5)";
+    sep.style.position = "absolute";
+    sep.style.left = rect.left + "px";
+    sep.style.top = rect.top + "px";
+    sep.style.width = rect.width + "px";
+    sep.style.height = rect.height + "px";
   }
   unHighlightSeparator() {
     let sep = document.getElementById("separator");
@@ -420,12 +495,22 @@ class Designer extends Component {
   }
   scrollToAddedItem() {
     if (this.addedPath) {
-      let container = this.editor.editors[this.addedPath].container;
-      if (!this.isControlVisible(container)) {
-        container.scrollIntoView();
+      let control = this.editor.editors[this.addedPath].container;
+      let controlRect = control.getBoundingClientRect();
+      let formScroll = document.getElementById("formScroll");
+      let formScrollRect = formScroll.getBoundingClientRect();
+      // scroll into view;
+      if (!this.rectContainsRect(formScrollRect, controlRect)) {
+        if (controlRect.top < formScrollRect.top) {
+          // scroll up
+          formScroll.scrollTop -= formScrollRect.top - controlRect.top;
+        } else if (controlRect.bottom > formScrollRect.bottom) {
+          // scroll down
+          formScroll.scrollTop += controlRect.bottom - formScrollRect.bottom;
+        }
       }
       this.addedPath = "";
-    }
+      }
   }
   isElementInViewport (el) {
     var rect = el.getBoundingClientRect();
@@ -437,13 +522,20 @@ class Designer extends Component {
       rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
     );
   }
+  scrollAndAdjustHightlight(highlightRect) {
+    let formScrollRect = document.getElementById("formScroll").getBoundingClientRect();
+    return highlightRect;
+  }
   isControlVisible(container) {
     return this.isElementInScrollArea(container, document.getElementById("formScroll"));
   }
-  isElementInScrollArea (el, scrollArea) {
+  isElementInScrollArea(el, scrollArea) {
     let scrollRect = scrollArea.getBoundingClientRect();
     let rect = el.getBoundingClientRect();
     return rect.top >= scrollRect.top && rect.bottom <= scrollRect.bottom;
+  }
+  rectContainsRect(rect1,rect2) {
+    return rect2.top >= rect1.top && rect2.bottom <= rect1.bottom;    
   }
   getNewPropertyName(properties,type) {
     for (let i = 1; ; i ++) {
