@@ -5,6 +5,7 @@ var tabMenuTemplate = require("./designerTabMenu.hbs");
 var visualTab = require("./designerVisualTab.html");
 var schemaTab = require("./designerSchemaTab.html");
 import * as jsonSchema from "../model/jsonSchema";
+var validate = require("../scripts/validate");
 const visualTabEnum = "visual";
 const schemaTabEnum = "schema";
 const placementNoneEnum = "";
@@ -214,8 +215,6 @@ class Designer extends Component {
         this.addControlListeners(editor.rows[0]);
       }
     }
-
-
   }
   nearEdgeScroll(event) {
     const SCROLL_INCREMENT = 10;
@@ -322,14 +321,100 @@ class Designer extends Component {
         break;
     }
   }
-  clickEditControl(editor) {
+  clickEditControl(editor) {    
     let title = editor.schema.title;
-    if (!title) {
-      let pathArray = editor.path.split(".");
-      title = pathArray.pop();
+    let pathArray = editor.path.split(".");
+    let propertyName = pathArray.pop();
+    let parentPath = pathArray.join(".");
+    let parentEditor = this.editor.editors[parentPath];
+
+    if (parentEditor.schema.type == "array") {
+      title = title.match(/(.*) 1/)[1];
     }
+
+    document.getElementById("editModalTitle").innerHTML = "Edit " + (title ? title : propertyName);
+    document.getElementById("inputType").value = editor.schema.type;
+
+    let inputTitle = document.getElementById("inputTitle");
+    inputTitle.value = title ? title : "";
+    inputTitle.oninput = function (event) {
+      this.onTitleInput(editor);
+    }.bind(this);
+
+    if (parentEditor.schema.type == "object") {
+      let inputPropertyName = document.getElementById("inputPropertyName");
+      inputPropertyName.value = propertyName;
+      inputPropertyName.onchange = function (event) {
+        this.onPropertyNameChange();
+      }.bind(this);
+      this.originalPropertyName = propertyName;
+      this.propertyNameChanged = false;
+    } else {
+      document.getElementById("inputPropertyNameFormGroup").style.display = "none";
+    }
+    document.getElementById("inputDescription").value = editor.schema.description ? editor.schema.description : "";
+    document.getElementById("inputFormat").value = editor.schema.format ? editor.schema.format : "";
+
+    validate.listenToFields(["inputPropertyName"], "editAccept");
+    validate.addReturnPressListener(["inputTitle", "inputPropertyName", "inputDescription", "inputFormat"], function (event) {
+      this.clickAcceptEdit(editor);
+    }.bind(this));
+    document.getElementById("editAccept").onclick = function (event) {
+      this.clickAcceptEdit(editor);
+    }.bind(this);
+
+    $('#editModal').modal({
+      keyboard: true,
+      show: true
+    });
+
+    inputTitle.select();
+  }
+  onTitleInput(editor) {
+    let title = document.getElementById("inputTitle").value.trim();
+
     document.getElementById("editModalTitle").innerHTML = "Edit " + title;
-    $('#editModal').modal();
+
+    let pathArray = editor.path.split(".");
+    let propertyName = pathArray.pop();
+    let parentPath = pathArray.join(".");
+    let parentEditor = this.editor.editors[parentPath];
+    if (parentEditor.schema.type == "object" && !this.propertyNameChanged) {
+      document.getElementById("inputPropertyName").value = title.toLowerCase().replace(/ /g,"");
+    }
+  }
+  onPropertyNameChange() {
+    let propertyName = document.getElementById("inputPropertyName").value.trim();
+    if (propertyName && propertyName != this.originalPropertyName) {
+      this.propertyNameChanged = true;
+    }
+  }
+  getEditValues() {
+    return {
+      title: document.getElementById("inputTitle").value,
+      propertyName: document.getElementById("inputPropertyName").value,
+      description: document.getElementById("inputDescription").value,
+      format: document.getElementById("inputFormat").value
+    };
+  }
+  clickAcceptEdit(editor) {
+    let schema = this.getSchema(this.schema, editor.path);
+    let values = this.getEditValues();
+    schema.title = values.title;
+    schema.description = values.description;
+    schema.format = values.format;
+
+    let pathArray = editor.path.split(".");
+    let name = pathArray.pop();
+    let parentPath = pathArray.join(".");
+    let parentSchema = this.getSchema(this.schema, parentPath);
+    if (parentSchema.type == "object") {
+      delete parentSchema.properties[name];
+      parentSchema.properties[values.propertyName] = schema;
+    }
+
+    $("#editModal").modal("hide");
+    this.show();
   }
   clickDeleteControl(path) {
     let pathArray = path.split(".");

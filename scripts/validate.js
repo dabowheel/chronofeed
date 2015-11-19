@@ -2,7 +2,8 @@
 
 function fieldsAreValid(fieldList) {
   for (var id of fieldList) {
-    if (document.getElementById(id).value === "") {
+    let field = document.getElementById(id);
+    if (field.value === "" && field.parentElement.style.display != "none") {
       return false;
     }
   }
