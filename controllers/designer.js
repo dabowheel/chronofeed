@@ -31,6 +31,7 @@ class Designer extends Component {
     this.objectNames = {};
     this.nearTopEdgeTime = 0;
     this.nearBottomEdgeTime = 0;
+    this.dragData = "";
 	}
 	render(callback) {
 		let menu = new Menu("", false, false, true, false, " gr-no-margin-bottom");
@@ -141,9 +142,11 @@ class Designer extends Component {
       this.dataTransferType = DATA_TRANSFER_TYPE_IE;
       dt.setData(this.dataTransferType, fieldName);
     }
+    this.dragData = fieldName;
 	}
   onDragEnd(event) {
     this.unHighlightSeparator();
+    this.dragData = "";
   }
   // add drag and drop listeners
   addControlListeners(editor) {
@@ -167,6 +170,9 @@ class Designer extends Component {
           this.nearEdgeScroll(event);
 
           let {placement, child} = this.calculatePlacement(editor,event);
+          if (!this.isItemType(this.dragData) && !this.isDragPath(this.dragData, editor, child)) {
+            return;
+          }
           let childRect = child ? child.container.getBoundingClientRect() : null;
           let highlightRect = this.calculateHighlight(placement, editor.container.getBoundingClientRect(), childRect);
           let formScroll = document.getElementById("formScroll");
@@ -226,6 +232,7 @@ class Designer extends Component {
       return;
     }
 
+    editor.container.setAttribute("draggable",true);
     editor.container.ondragstart = function (event) {
       var dt = event.dataTransfer;
       try {
@@ -234,11 +241,13 @@ class Designer extends Component {
         this.dataTransferType = DATA_TRANSFER_TYPE_IE;
         dt.setData(this.dataTransferType, editor.path);
       }
-    };
+      this.dragData = editor.path;
+    }.bind(this);
 
     editor.container.ondragend = function (event) {
+      this.dragData = "";
       this.unHighlightSeparator();
-    };
+    }.bind(this);
   }
   isItemType(type) {
     switch(type) {
@@ -251,6 +260,35 @@ class Designer extends Component {
         return true;
     }
     return false;
+  }
+  isDragPath(path, editor, child) {
+    if (!this.editor.editors[path]) {
+      return false;
+    }
+
+    if (path == "root") {
+      return false;
+    }
+
+    if (this.pathContainsPath(editor.path, path)) {
+      return false;
+    }
+
+    if (child && (path == child.path)) {
+      return false;
+    }
+
+    return true;
+  }
+  pathContainsPath(path1,path2) {
+    let pathArray1 = path1.split(".");
+    let pathArray2 = path2.split(".");
+    for (let i in pathArray2) {
+      if (pathArray2[i] != pathArray1[i]) {
+        return false;
+      }
+    }
+    return true;
   }
   nearEdgeScroll(event) {
     const SCROLL_INCREMENT = 10;
@@ -315,7 +353,6 @@ class Designer extends Component {
     edit.classList.add("btn-xs");
     edit.innerHTML = "<span class='glyphicon glyphicon-edit' title='edit'></span>";
     edit.onclick = function (event) {
-      console.log("edit",path);
       this.clickEditControl(editor);
     }.bind(this);
     if (schema.type == "string" || schema.type == "integer" || schema.type == "number" || schema.type == "boolean") {
