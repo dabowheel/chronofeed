@@ -199,8 +199,11 @@ class Designer extends Component {
         if (event.dataTransfer.types[0] == this.dataTransferType) {
           editor.dragging = 0;
           this.unHighlightSeparator();
-          let {placement, child} = this.calculatePlacement(editor, event);
           let data = event.dataTransfer.getData(this.dataTransferType);
+          if (!this.isItemType(data)) {
+            return;
+          }
+          let {placement, child} = this.calculatePlacement(editor, event);
           this.addItem(data,editor,placement,child);
           event.preventDefault();
           event.stopPropagation();
@@ -236,6 +239,18 @@ class Designer extends Component {
     editor.container.ondragend = function (event) {
       this.unHighlightSeparator();
     };
+  }
+  isItemType(type) {
+    switch(type) {
+      case "string":
+      case "integer":
+      case "number":
+      case "boolean":
+      case "array":
+      case "object":
+        return true;
+    }
+    return false;
   }
   nearEdgeScroll(event) {
     const SCROLL_INCREMENT = 10;
