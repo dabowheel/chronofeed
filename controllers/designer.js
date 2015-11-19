@@ -151,6 +151,8 @@ class Designer extends Component {
       this.addEditControl(editor, editor.schema, editor.path, editor.container);
     }
 
+    this.makeDraggable(editor);
+
     if (editor.schema.type == "object" || ((editor.schema.type == "array") && (editor.rows.length === 0))) {
       editor.dragging = 0;
 
@@ -215,6 +217,25 @@ class Designer extends Component {
         this.addControlListeners(editor.rows[0]);
       }
     }
+  }
+  makeDraggable(editor) {
+    if (editor.path == "root") {
+      return;
+    }
+
+    editor.container.ondragstart = function (event) {
+      var dt = event.dataTransfer;
+      try {
+        dt.setData(this.dataTransferType, editor.path);
+      } catch (e) {
+        this.dataTransferType = DATA_TRANSFER_TYPE_IE;
+        dt.setData(this.dataTransferType, editor.path);
+      }
+    };
+
+    editor.container.ondragend = function (event) {
+      this.unHighlightSeparator();
+    };
   }
   nearEdgeScroll(event) {
     const SCROLL_INCREMENT = 10;
@@ -282,6 +303,9 @@ class Designer extends Component {
       console.log("edit",path);
       this.clickEditControl(editor);
     }.bind(this);
+    if (schema.type == "string" || schema.type == "integer" || schema.type == "number" || schema.type == "boolean") {
+      edit.style.marginLeft = "10px";
+    }
     let deleteBtn = document.createElement("button");
     deleteBtn.classList.add("btn");
     deleteBtn.classList.add("btn-default");
@@ -296,13 +320,16 @@ class Designer extends Component {
     btnGroup.appendChild(edit);
     btnGroup.appendChild(deleteBtn);
 
-    switch (schema.type) {
+    let header = this.getHeader(editor);
+    header.appendChild(btnGroup);
+  }
+  getHeader(editor) {
+    switch (editor.schema.type) {
       case "object":
       case "array":
-        for (let child of container.children) {
+        for (let child of editor.container.children) {
           if (child.tagName == "H3") {
-            child.appendChild(btnGroup);
-            break;
+            return child;
           }
         }
         break;
@@ -310,16 +337,16 @@ class Designer extends Component {
       case "integer":
       case "number":
       case "boolean":
-        edit.style.marginLeft = "10px";
-        for (let child of container.children) {
+        for (let child of editor.container.children) {
           for (let child2 of child.children) {
             if (child2.tagName == "LABEL") {
-              child2.appendChild(btnGroup);
+              return child2;
             }
           }
         }
         break;
     }
+    return null;
   }
   clickEditControl(editor) {    
     let title = editor.schema.title;
