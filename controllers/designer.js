@@ -428,6 +428,7 @@ class Designer extends Component {
       }.bind(this);
       this.originalPropertyName = propertyName;
       this.propertyNameChanged = false;
+      document.getElementById("inputPropertyNameFormGroup").style.display = "";
     } else {
       document.getElementById("inputPropertyNameFormGroup").style.display = "none";
     }
