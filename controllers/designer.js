@@ -81,6 +81,7 @@ class Designer extends Component {
         this.addControlListeners(this.editor.root);
         document.getElementById("formScroll").scrollTop = this.scrollTop;
         this.scrollToAddedItem();
+        this.disableDropInInput();
       }
     } else if (this.tab == schemaTabEnum) {
       document.getElementById("schemaText").value = JSON.stringify(this.schema, null, 2);
@@ -226,6 +227,18 @@ class Designer extends Component {
         this.addControlListeners(editor.rows[0]);
       }
     }
+  }
+  disableDropInInput() {
+    for (let el of document.getElementsByTagName("input")) {
+      el.ondragover = this.disableDrop;
+      el.ondragenter = this.disableDrop;
+    }
+  }
+  disableDrop(event) {
+    event.dataTransfer.dropEffect = "none";
+    event.preventDefault();
+    event.stopPropagation();
+    return false;
   }
   makeDraggable(editor) {
     if (editor.path == "root") {
