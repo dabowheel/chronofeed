@@ -32,6 +32,7 @@ class Designer extends Component {
     this.nearTopEdgeTime = 0;
     this.nearBottomEdgeTime = 0;
     this.dragData = "";
+    this.enableDebug = false;
 	}
 	render(callback) {
 		let menu = new Menu("", false, false, true, false, " gr-no-margin-bottom");
@@ -207,11 +208,18 @@ class Designer extends Component {
           editor.dragging = 0;
           this.unHighlightSeparator();
           let data = event.dataTransfer.getData(this.dataTransferType);
-          if (!this.isItemType(data)) {
+          let {placement, child} = this.calculatePlacement(editor, event);
+          if (this.isItemType(data)) {
+            let itemSchema = {
+              type: data
+            };
+            let propertyName = this.getNewPropertyName(itemSchema.type);
+            this.addItem(itemSchema, propertyName, editor, placement, child);
+          } else if (this.isDragPath(data, editor, placement, child)) {
+            this.moveItem(data, editor, placement, child);
+          } else {
             return;
           }
-          let {placement, child} = this.calculatePlacement(editor, event);
-          this.addItem(data,editor,placement,child);
           event.preventDefault();
           event.stopPropagation();
         }
@@ -255,6 +263,7 @@ class Designer extends Component {
         dt.setData(this.dataTransferType, editor.path);
       }
       this.dragData = editor.path;
+      event.stopPropagation();
     }.bind(this);
 
     editor.container.ondragend = function (event) {
@@ -274,20 +283,29 @@ class Designer extends Component {
     }
     return false;
   }
+  debug(message) {
+    if (this.enableDebug) {
+      $("#placeForAlert").addClass("alert alert-info");
+      $("#placeForAlert").html(message);
+    }
+  }
   isDragPath(sourcePath,destEditor,placement,child) {
     // check if a valid path
     if (!this.editor.editors[sourcePath]) {
+      this.debug("not a valid path: " + sourcePath);
       return false;
     }
 
     // source should not move to decendant of source
     if (this.pathContainsPath(destEditor.path, sourcePath)) {
+      this.debug("dest path " + destEditor.path + " contains source path " + sourcePath);
       return false;
     }
 
     if (child) {
       // source should not move to before or after source
       if (sourcePath == child.path) {
+        this.debug("sourcePath " + sourcePath + " equals child.path " + child.path);
         return false;
       }
 
@@ -296,14 +314,17 @@ class Designer extends Component {
       if ((parentPath == destEditor.path)) {
         let [prev,next] = this.getSiblings(destEditor, name);
         if (child.path == prev && placement == placementAfterEnum) {
+          this.debug("child path " + child.path + " after");
           return false;
         }
         if (child.path == next && placement == placementBeforeEnum) {
+          this.debug("child path " + child.path + " before");
           return false;
         }
       }
     }
 
+    this.debug("good move");
     return true;
   }
   pathContainsPath(path1,path2) {
@@ -667,32 +688,30 @@ class Designer extends Component {
     sep.style.left = "";
     sep.style.top = "";
   }
-  addItem(type,editor,placement,child) {
-    let schema = JSON.parse(JSON.stringify(this.editor.schema));
-    let parentSchema = this.getSchema(schema,editor.path);
-    let itemSchema = {
-      type: type
-    };
+  addItem(itemSchema,propertyName,destEditor,placement,child) {
+    let parentSchema = this.getSchema(this.schema, destEditor.path);
     if (parentSchema.type == "object") {
-      let name = this.getNewPropertyName(parentSchema.properties,type);
-      this.addedPath = editor.path + "." + name;
+      if (parentSchema.properties && parentSchema.properties.hasOwnProperty(propertyName)) {
+        propertyName = this.getNewPropertyName(itemSchema.type);
+      }
+      this.addedPath = destEditor.path + "." + propertyName;
       if (!parentSchema.properties) {
         parentSchema.properties = {};
       }
-      parentSchema.properties[name] = itemSchema;
+      parentSchema.properties[propertyName] = itemSchema;
       if (child) {
-        let childOrder = editor.property_order.length;
-        for (let i = 0; i < editor.property_order.length; i++) {
-          if (editor.property_order[i] == child.key) {
+        let childOrder = destEditor.property_order.length;
+        for (let i = 0; i < destEditor.property_order.length; i++) {
+          if (destEditor.property_order[i] == child.key) {
             childOrder = i;
             break;
           }
         }
-        let new_property_order = editor.property_order.splice(0);
+        let new_property_order = destEditor.property_order.splice(0);
         if (placement == placementBeforeEnum) {
-          new_property_order.splice(childOrder, 0, name);
+          new_property_order.splice(childOrder, 0, propertyName);
         } else {
-          new_property_order.splice(childOrder+1, 0, name);
+          new_property_order.splice(childOrder+1, 0, propertyName);
         }
         for (let i = 0; i < new_property_order.length; i++) {
           parentSchema.properties[new_property_order[i]].propertyOrder = i;
@@ -700,10 +719,37 @@ class Designer extends Component {
       }
     } else if (parentSchema.type == "array") {
       parentSchema.items = itemSchema;
-      this.addedPath = editor.path + ".0";
+      this.addedPath = destEditor.path + ".0";
     }
-    this.schema = schema;
     this.show();
+  }
+  moveItem(sourcePath,destEditor,placement,child) {
+    let [parentPath,propertyName] = this.pathPop(sourcePath);
+    let parentEditor = this.editor.editors[parentPath];
+    let parentSchema = this.getSchema(this.schema, parentPath);
+    let itemSchema = this.deleteItem(parentEditor, parentSchema, propertyName);
+    if (parentSchema.type == "array" && destEditor.schema.type == "object") {
+      propertyName = this.getNewPropertyName(itemSchema.type);
+    }
+    this.addItem(itemSchema, propertyName, destEditor, placement, child);
+    this.show();
+  }
+  deleteItem(parentEditor,parentSchema,propertyName) {
+    let ret = null;
+    if (parentSchema.type == "object") {
+      ret = parentSchema.properties[propertyName];
+      delete parentSchema.properties[propertyName];
+      for (let i = 0; i < parentEditor.property_order.length; i++) {
+        if (parentEditor.property_order[i] == propertyName) {
+          parentEditor.property_order.splice(i,1);
+          break;
+        }
+      }
+    } else if (parentSchema.type == "array") {
+      ret = parentSchema.items;
+      delete parentSchema.items;
+    }
+    return ret;
   }
   scrollToAddedItem() {
     if (this.addedPath) {
@@ -749,7 +795,7 @@ class Designer extends Component {
   rectContainsRect(rect1,rect2) {
     return rect2.top >= rect1.top && rect2.bottom <= rect1.bottom;    
   }
-  getNewPropertyName(properties,type) {
+  getNewPropertyName(type) {
     for (let i = 1; ; i ++) {
       let name = type + i;
       if (!this.objectNames.hasOwnProperty(name)) {
