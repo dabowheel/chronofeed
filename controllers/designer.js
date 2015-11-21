@@ -9,8 +9,8 @@ var validate = require("../scripts/validate");
 const visualTabEnum = "visual";
 const schemaTabEnum = "schema";
 const placementNoneEnum = "";
-const placementAboveEnum = "above";
-const placementBelowEnum = "below";
+const placementBeforeEnum = "before";
+const placementAfterEnum = "after`";
 const placementInsideEnum = "inside";
 const DATA_TRANSFER_TYPE_DEFAULT = "text/plain";
 const DATA_TRANSFER_TYPE_IE = "Text";
@@ -171,7 +171,7 @@ class Designer extends Component {
           this.nearEdgeScroll(event);
 
           let {placement, child} = this.calculatePlacement(editor,event);
-          if (!this.isItemType(this.dragData) && !this.isDragPath(this.dragData, editor, child)) {
+          if (!this.isItemType(this.dragData) && !this.isDragPath(this.dragData, editor, placement, child)) {
             return;
           }
           let childRect = child ? child.container.getBoundingClientRect() : null;
@@ -274,21 +274,34 @@ class Designer extends Component {
     }
     return false;
   }
-  isDragPath(path, editor, child) {
-    if (!this.editor.editors[path]) {
+  isDragPath(sourcePath,destEditor,placement,child) {
+    // check if a valid path
+    if (!this.editor.editors[sourcePath]) {
       return false;
     }
 
-    if (path == "root") {
+    // source should not move to decendant of source
+    if (this.pathContainsPath(destEditor.path, sourcePath)) {
       return false;
     }
 
-    if (this.pathContainsPath(editor.path, path)) {
-      return false;
-    }
+    if (child) {
+      // source should not move to before or after source
+      if (sourcePath == child.path) {
+        return false;
+      }
 
-    if (child && (path == child.path)) {
-      return false;
+      // should not place after previous sibling or before next sibling
+      let [parentPath,name] = this.pathPop(sourcePath);
+      if ((parentPath == destEditor.path)) {
+        let [prev,next] = this.getSiblings(destEditor, name);
+        if (child.path == prev && placement == placementAfterEnum) {
+          return false;
+        }
+        if (child.path == next && placement == placementBeforeEnum) {
+          return false;
+        }
+      }
     }
 
     return true;
@@ -302,6 +315,27 @@ class Designer extends Component {
       }
     }
     return true;
+  }
+  pathPop(path) {
+    let pathArray = path.split(".");
+    let name = pathArray.pop();
+    return [pathArray.join("."), name];
+  }
+  getSiblings(editor,name) {
+    let prev = "";
+    let next = "";
+    for (let i = 0; i < editor.property_order.length; i++) {
+      if (editor.property_order[i] == name) {
+        if (editor.property_order[i-1]) {
+          prev = editor.path + "." + editor.property_order[i-1];
+        }
+        if (editor.property_order[i+1]) {
+          next = editor.path + "." + editor.property_order[i+1];
+        }
+        return [prev, next];
+      }
+    }
+    return [prev, next];
   }
   nearEdgeScroll(event) {
     const SCROLL_INCREMENT = 10;
@@ -564,9 +598,9 @@ class Designer extends Component {
       let rect = child.container.getBoundingClientRect();
       let middleY = ((rect.bottom - rect.top) / 2) + rect.top;
       if (event.clientY < middleY) {
-        placement = placementAboveEnum;
+        placement = placementBeforeEnum;
       } else {
-        placement = placementBelowEnum;
+        placement = placementAfterEnum;
       }
     }
 
@@ -600,11 +634,11 @@ class Designer extends Component {
         ret.top = parentRect.top;
         ret.height = parentRect.height;
         break;
-      case placementAboveEnum:
+      case placementBeforeEnum:
         ret.height = 20;
         ret.top = childRect.top - 10;
         break;
-      case placementBelowEnum:
+      case placementAfterEnum:
         ret.height = 20;
         ret.top = childRect.bottom - 10;
         break;
@@ -655,7 +689,7 @@ class Designer extends Component {
           }
         }
         let new_property_order = editor.property_order.splice(0);
-        if (placement == placementAboveEnum) {
+        if (placement == placementBeforeEnum) {
           new_property_order.splice(childOrder, 0, name);
         } else {
           new_property_order.splice(childOrder+1, 0, name);
