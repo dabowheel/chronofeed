@@ -9,8 +9,8 @@ var validate = require("../scripts/validate");
 const visualTabEnum = "visual";
 const schemaTabEnum = "schema";
 const placementNoneEnum = "";
-const placementAboveEnum = "above";
-const placementBelowEnum = "below";
+const placementBeforeEnum = "before";
+const placementAfterEnum = "after`";
 const placementInsideEnum = "inside";
 const DATA_TRANSFER_TYPE_DEFAULT = "text/plain";
 const DATA_TRANSFER_TYPE_IE = "Text";
@@ -31,6 +31,8 @@ class Designer extends Component {
     this.objectNames = {};
     this.nearTopEdgeTime = 0;
     this.nearBottomEdgeTime = 0;
+    this.dragData = "";
+    this.enableDebug = false;
 	}
 	render(callback) {
 		let menu = new Menu("", false, false, true, false, " gr-no-margin-bottom");
@@ -80,6 +82,7 @@ class Designer extends Component {
         this.addControlListeners(this.editor.root);
         document.getElementById("formScroll").scrollTop = this.scrollTop;
         this.scrollToAddedItem();
+        this.disableDropInInput();
       }
     } else if (this.tab == schemaTabEnum) {
       document.getElementById("schemaText").value = JSON.stringify(this.schema, null, 2);
@@ -141,15 +144,19 @@ class Designer extends Component {
       this.dataTransferType = DATA_TRANSFER_TYPE_IE;
       dt.setData(this.dataTransferType, fieldName);
     }
+    this.dragData = fieldName;
 	}
   onDragEnd(event) {
     this.unHighlightSeparator();
+    this.dragData = "";
   }
   // add drag and drop listeners
   addControlListeners(editor) {
     if (editor.path != "root") {
       this.addEditControl(editor, editor.schema, editor.path, editor.container);
     }
+
+    this.makeDraggable(editor);
 
     if (editor.schema.type == "object" || ((editor.schema.type == "array") && (editor.rows.length === 0))) {
       editor.dragging = 0;
@@ -165,6 +172,9 @@ class Designer extends Component {
           this.nearEdgeScroll(event);
 
           let {placement, child} = this.calculatePlacement(editor,event);
+          if (!this.isItemType(this.dragData) && !this.isDragPath(this.dragData, editor, placement, child)) {
+            return;
+          }
           let childRect = child ? child.container.getBoundingClientRect() : null;
           let highlightRect = this.calculateHighlight(placement, editor.container.getBoundingClientRect(), childRect);
           let formScroll = document.getElementById("formScroll");
@@ -198,11 +208,18 @@ class Designer extends Component {
           editor.dragging = 0;
           this.unHighlightSeparator();
           let data = event.dataTransfer.getData(this.dataTransferType);
-          if (!this.isItemType(data)) {
+          let {placement, child} = this.calculatePlacement(editor, event);
+          if (this.isItemType(data)) {
+            let itemSchema = {
+              type: data
+            };
+            let propertyName = this.getNewPropertyName(itemSchema.type);
+            this.addItem(itemSchema, propertyName, editor, placement, child);
+          } else if (this.isDragPath(data, editor, placement, child)) {
+            this.moveItem(data, editor, placement, child);
+          } else {
             return;
           }
-          let {placement, child} = this.calculatePlacement(editor, event);
-          this.addItem(data,editor,placement,child);
           event.preventDefault();
           event.stopPropagation();
         }
@@ -219,6 +236,41 @@ class Designer extends Component {
       }
     }
   }
+  disableDropInInput() {
+    for (let el of document.getElementsByTagName("input")) {
+      el.ondragover = this.disableDrop;
+      el.ondragenter = this.disableDrop;
+    }
+  }
+  disableDrop(event) {
+    event.dataTransfer.dropEffect = "none";
+    event.preventDefault();
+    event.stopPropagation();
+    return false;
+  }
+  makeDraggable(editor) {
+    if (editor.path == "root") {
+      return;
+    }
+
+    editor.container.setAttribute("draggable",true);
+    editor.container.ondragstart = function (event) {
+      var dt = event.dataTransfer;
+      try {
+        dt.setData(this.dataTransferType, editor.path);
+      } catch (e) {
+        this.dataTransferType = DATA_TRANSFER_TYPE_IE;
+        dt.setData(this.dataTransferType, editor.path);
+      }
+      this.dragData = editor.path;
+      event.stopPropagation();
+    }.bind(this);
+
+    editor.container.ondragend = function (event) {
+      this.dragData = "";
+      this.unHighlightSeparator();
+    }.bind(this);
+  }
   isItemType(type) {
     switch(type) {
       case "string":
@@ -230,6 +282,81 @@ class Designer extends Component {
         return true;
     }
     return false;
+  }
+  debug(message) {
+    if (this.enableDebug) {
+      $("#placeForAlert").addClass("alert alert-info");
+      $("#placeForAlert").html(message);
+    }
+  }
+  isDragPath(sourcePath,destEditor,placement,child) {
+    // check if a valid path
+    if (!this.editor.editors[sourcePath]) {
+      this.debug("not a valid path: " + sourcePath);
+      return false;
+    }
+
+    // source should not move to decendant of source
+    if (this.pathContainsPath(destEditor.path, sourcePath)) {
+      this.debug("dest path " + destEditor.path + " contains source path " + sourcePath);
+      return false;
+    }
+
+    if (child) {
+      // source should not move to before or after source
+      if (sourcePath == child.path) {
+        this.debug("sourcePath " + sourcePath + " equals child.path " + child.path);
+        return false;
+      }
+
+      // should not place after previous sibling or before next sibling
+      let [parentPath,name] = this.pathPop(sourcePath);
+      if ((parentPath == destEditor.path)) {
+        let [prev,next] = this.getSiblings(destEditor, name);
+        if (child.path == prev && placement == placementAfterEnum) {
+          this.debug("child path " + child.path + " after");
+          return false;
+        }
+        if (child.path == next && placement == placementBeforeEnum) {
+          this.debug("child path " + child.path + " before");
+          return false;
+        }
+      }
+    }
+
+    this.debug("good move");
+    return true;
+  }
+  pathContainsPath(path1,path2) {
+    let pathArray1 = path1.split(".");
+    let pathArray2 = path2.split(".");
+    for (let i in pathArray2) {
+      if (pathArray2[i] != pathArray1[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+  pathPop(path) {
+    let pathArray = path.split(".");
+    let name = pathArray.pop();
+    return [pathArray.join("."), name];
+  }
+  getSiblings(editor,name) {
+    let prev = "";
+    let next = "";
+    for (let i = 0; i < editor.property_order.length; i++) {
+      if (editor.property_order[i] == name) {
+        if (editor.property_order[i-1]) {
+          prev = editor.path + "." + editor.property_order[i-1];
+        }
+        if (editor.property_order[i+1]) {
+          next = editor.path + "." + editor.property_order[i+1];
+        }
+        return [prev, next];
+      }
+    }
+    return [prev, next];
   }
   nearEdgeScroll(event) {
     const SCROLL_INCREMENT = 10;
@@ -294,9 +421,11 @@ class Designer extends Component {
     edit.classList.add("btn-xs");
     edit.innerHTML = "<span class='glyphicon glyphicon-edit' title='edit'></span>";
     edit.onclick = function (event) {
-      console.log("edit",path);
       this.clickEditControl(editor);
     }.bind(this);
+    if (schema.type == "string" || schema.type == "integer" || schema.type == "number" || schema.type == "boolean") {
+      edit.style.marginLeft = "10px";
+    }
     let deleteBtn = document.createElement("button");
     deleteBtn.classList.add("btn");
     deleteBtn.classList.add("btn-default");
@@ -311,13 +440,16 @@ class Designer extends Component {
     btnGroup.appendChild(edit);
     btnGroup.appendChild(deleteBtn);
 
-    switch (schema.type) {
+    let header = this.getHeader(editor);
+    header.appendChild(btnGroup);
+  }
+  getHeader(editor) {
+    switch (editor.schema.type) {
       case "object":
       case "array":
-        for (let child of container.children) {
+        for (let child of editor.container.children) {
           if (child.tagName == "H3") {
-            child.appendChild(btnGroup);
-            break;
+            return child;
           }
         }
         break;
@@ -325,16 +457,16 @@ class Designer extends Component {
       case "integer":
       case "number":
       case "boolean":
-        edit.style.marginLeft = "10px";
-        for (let child of container.children) {
+        for (let child of editor.container.children) {
           for (let child2 of child.children) {
             if (child2.tagName == "LABEL") {
-              child2.appendChild(btnGroup);
+              return child2;
             }
           }
         }
         break;
     }
+    return null;
   }
   clickEditControl(editor) {    
     let title = editor.schema.title;
@@ -487,9 +619,9 @@ class Designer extends Component {
       let rect = child.container.getBoundingClientRect();
       let middleY = ((rect.bottom - rect.top) / 2) + rect.top;
       if (event.clientY < middleY) {
-        placement = placementAboveEnum;
+        placement = placementBeforeEnum;
       } else {
-        placement = placementBelowEnum;
+        placement = placementAfterEnum;
       }
     }
 
@@ -523,11 +655,11 @@ class Designer extends Component {
         ret.top = parentRect.top;
         ret.height = parentRect.height;
         break;
-      case placementAboveEnum:
+      case placementBeforeEnum:
         ret.height = 20;
         ret.top = childRect.top - 10;
         break;
-      case placementBelowEnum:
+      case placementAfterEnum:
         ret.height = 20;
         ret.top = childRect.bottom - 10;
         break;
@@ -556,32 +688,30 @@ class Designer extends Component {
     sep.style.left = "";
     sep.style.top = "";
   }
-  addItem(type,editor,placement,child) {
-    let schema = JSON.parse(JSON.stringify(this.editor.schema));
-    let parentSchema = this.getSchema(schema,editor.path);
-    let itemSchema = {
-      type: type
-    };
+  addItem(itemSchema,propertyName,destEditor,placement,child) {
+    let parentSchema = this.getSchema(this.schema, destEditor.path);
     if (parentSchema.type == "object") {
-      let name = this.getNewPropertyName(parentSchema.properties,type);
-      this.addedPath = editor.path + "." + name;
+      if (parentSchema.properties && parentSchema.properties.hasOwnProperty(propertyName)) {
+        propertyName = this.getNewPropertyName(itemSchema.type);
+      }
+      this.addedPath = destEditor.path + "." + propertyName;
       if (!parentSchema.properties) {
         parentSchema.properties = {};
       }
-      parentSchema.properties[name] = itemSchema;
+      parentSchema.properties[propertyName] = itemSchema;
       if (child) {
-        let childOrder = editor.property_order.length;
-        for (let i = 0; i < editor.property_order.length; i++) {
-          if (editor.property_order[i] == child.key) {
+        let childOrder = destEditor.property_order.length;
+        for (let i = 0; i < destEditor.property_order.length; i++) {
+          if (destEditor.property_order[i] == child.key) {
             childOrder = i;
             break;
           }
         }
-        let new_property_order = editor.property_order.splice(0);
-        if (placement == placementAboveEnum) {
-          new_property_order.splice(childOrder, 0, name);
+        let new_property_order = destEditor.property_order.splice(0);
+        if (placement == placementBeforeEnum) {
+          new_property_order.splice(childOrder, 0, propertyName);
         } else {
-          new_property_order.splice(childOrder+1, 0, name);
+          new_property_order.splice(childOrder+1, 0, propertyName);
         }
         for (let i = 0; i < new_property_order.length; i++) {
           parentSchema.properties[new_property_order[i]].propertyOrder = i;
@@ -589,10 +719,37 @@ class Designer extends Component {
       }
     } else if (parentSchema.type == "array") {
       parentSchema.items = itemSchema;
-      this.addedPath = editor.path + ".0";
+      this.addedPath = destEditor.path + ".0";
     }
-    this.schema = schema;
     this.show();
+  }
+  moveItem(sourcePath,destEditor,placement,child) {
+    let [parentPath,propertyName] = this.pathPop(sourcePath);
+    let parentEditor = this.editor.editors[parentPath];
+    let parentSchema = this.getSchema(this.schema, parentPath);
+    let itemSchema = this.deleteItem(parentEditor, parentSchema, propertyName);
+    if (parentSchema.type == "array" && destEditor.schema.type == "object") {
+      propertyName = this.getNewPropertyName(itemSchema.type);
+    }
+    this.addItem(itemSchema, propertyName, destEditor, placement, child);
+    this.show();
+  }
+  deleteItem(parentEditor,parentSchema,propertyName) {
+    let ret = null;
+    if (parentSchema.type == "object") {
+      ret = parentSchema.properties[propertyName];
+      delete parentSchema.properties[propertyName];
+      for (let i = 0; i < parentEditor.property_order.length; i++) {
+        if (parentEditor.property_order[i] == propertyName) {
+          parentEditor.property_order.splice(i,1);
+          break;
+        }
+      }
+    } else if (parentSchema.type == "array") {
+      ret = parentSchema.items;
+      delete parentSchema.items;
+    }
+    return ret;
   }
   scrollToAddedItem() {
     if (this.addedPath) {
@@ -638,7 +795,7 @@ class Designer extends Component {
   rectContainsRect(rect1,rect2) {
     return rect2.top >= rect1.top && rect2.bottom <= rect1.bottom;    
   }
-  getNewPropertyName(properties,type) {
+  getNewPropertyName(type) {
     for (let i = 1; ; i ++) {
       let name = type + i;
       if (!this.objectNames.hasOwnProperty(name)) {
