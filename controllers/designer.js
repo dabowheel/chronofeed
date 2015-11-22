@@ -545,9 +545,32 @@ class Designer extends Component {
       format: document.getElementById("inputFormat").value
     };
   }
+  editModalValidate(values,path,schema) {
+    console.log("schema.type",schema.type);
+    console.log("values.propertyName",values.propertyName);
+    console.log("this.originalPropertyName",this.originalPropertyName);
+    console.log("schema.properties",schema.properties);
+    let [parentPath, propertyName] = this.pathPop(path);
+    let parentSchema = this.getSchema(this.schema, parentPath);
+
+    if (parentSchema.type == "object") {
+      if (values.propertyName != propertyName) {
+        if (parentSchema.properties.hasOwnProperty(values.propertyName)) {
+          $("#editModalPlaceForAlert").addClass("alert alert-danger");
+          $("#editModalPlaceForAlert").html("Another item with this property name already exists.");
+          return false;
+        }
+      }
+    }
+    return true;
+  }
   clickAcceptEdit(editor) {
     let schema = this.getSchema(this.schema, editor.path);
     let values = this.getEditValues();
+
+    if (!this.editModalValidate(values, editor.path, schema)) {
+      return;
+    }
     schema.title = values.title;
     schema.description = values.description;
     schema.format = values.format;
