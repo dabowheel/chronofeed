@@ -33,6 +33,7 @@ class Designer extends Component {
     this.nearBottomEdgeTime = 0;
     this.dragData = "";
     this.enableDebug = false;
+    this.extendEditorTheme();
 	}
 	render(callback) {
 		let menu = new Menu("", false, false, true, false, " gr-no-margin-bottom");
@@ -62,7 +63,7 @@ class Designer extends Component {
     if (this.tab == visualTabEnum) {
       var form = document.getElementById("formTarget");
       var options = {
-        theme: "bootstrap3",
+        theme: "grackle",
         schema: this.schema,
         startval: this.value,
         disable_edit_json: true,
@@ -82,11 +83,28 @@ class Designer extends Component {
         this.addControlListeners(this.editor.root);
         document.getElementById("formScroll").scrollTop = this.scrollTop;
         this.scrollToAddedItem();
-        this.disableDropInInput();
       }
     } else if (this.tab == schemaTabEnum) {
       document.getElementById("schemaText").value = JSON.stringify(this.schema, null, 2);
     }
+  }
+  extendEditorTheme() {
+    JSONEditor.defaults.themes.grackle = JSONEditor.defaults.themes.bootstrap3.extend({
+      getTextareaInput: function () {
+        let el = this._super();
+        el.style.height = "300px";
+        el.style.resize = "none";
+        el.ondragover = component.Designer.disableDrop;
+        el.ondragenter = component.Designer.disableDrop;
+        return el;
+      },
+      getFormInputField(type) {
+        let el = this._super(type);
+        el.ondragover = component.Designer.disableDrop;
+        el.ondragenter = component.Designer.disableDrop;
+        return el;
+      }
+    });
   }
   clickVisualTab() {
     try {
@@ -234,12 +252,6 @@ class Designer extends Component {
       if (editor.rows[0]) {
         this.addControlListeners(editor.rows[0]);
       }
-    }
-  }
-  disableDropInInput() {
-    for (let el of document.getElementsByTagName("input")) {
-      el.ondragover = this.disableDrop;
-      el.ondragenter = this.disableDrop;
     }
   }
   disableDrop(event) {
