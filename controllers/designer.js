@@ -4,6 +4,7 @@ var template = require("./designer.hbs");
 var tabMenuTemplate = require("./designerTabMenu.hbs");
 var visualTab = require("./designerVisualTab.html");
 var schemaTab = require("./designerSchemaTab.html");
+var editModalView = require("./designerEditModal.html");
 import * as jsonSchema from "../model/jsonSchema";
 var validate = require("../scripts/validate");
 const visualTabEnum = "visual";
@@ -40,14 +41,21 @@ class Designer extends Component {
 		menu.render(function (err, menuView) {
       var tabMenuContext = {};
       var tabView = "";
+      var modalView = "";
       if (this.tab == visualTabEnum) {
+        modalView = editModalView;
         tabView = visualTab;
         tabMenuContext.isVisualTab = true;
       } else if (this.tab == schemaTabEnum) {
         tabView = schemaTab;
         tabMenuContext.isSchemaTab = true;
       }
-			var view = template({theMenu:menuView,tabMenu:tabMenuTemplate(tabMenuContext),tab:tabView});
+			var view = template({
+        theMenu:menuView,
+        tabMenu:tabMenuTemplate(tabMenuContext),
+        modal: modalView,
+        tab:tabView
+      });
 			callback(null, view);
 		}.bind(this));
 	}
