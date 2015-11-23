@@ -35,6 +35,7 @@ class Designer extends Component {
     this.dragData = "";
     this.enableDebug = false;
     this.extendEditorTheme();
+    this.editEnumList = [];
 	}
 	render(callback) {
 		let menu = new Menu("", false, false, true, false, " gr-no-margin-bottom");
@@ -523,6 +524,21 @@ class Designer extends Component {
     document.getElementById("inputDescription").value = editor.schema.description ? editor.schema.description : "";
     document.getElementById("inputFormat").value = editor.schema.format ? editor.schema.format : "";
 
+    // enum
+    if (editor.schema.type == "string") {
+      document.getElementById("inputEnumFormGroup").style.display = "";
+      this.editEnumList = editor.schema.enum;
+      if (!this.editEnumList || !this.editEnumList.push) {
+        this.editEnumList = [];
+      }
+      this.setEnumTable();
+      validate.addReturnPressListener(["inputEnum"], function () {
+        this.clickAddEnum();
+      }.bind(this));
+    } else {
+      document.getElementById("inputEnumFormGroup").style.display="none";
+    }
+
     validate.listenToFields(["inputPropertyName"], "editAccept");
     validate.addReturnPressListener(["inputTitle", "inputPropertyName", "inputDescription", "inputFormat"], function (event) {
       this.clickAcceptEdit(editor);
@@ -557,6 +573,58 @@ class Designer extends Component {
       this.propertyNameChanged = true;
     }
   }
+  clickAddEnum() {
+    let inputEnum = document.getElementById("inputEnum");
+    let value = inputEnum.value;
+    if (value) {
+      this.editEnumList.push(value);
+      this.setEnumTable();
+      inputEnum.value = "";
+    }
+  }
+  setEnumTable() {
+    let enumTable = document.getElementById("enumTable");
+    while(enumTable.firstChild) {
+      enumTable.removeChild(enumTable.firstChild);
+    }
+    enumTable.appendChild(this.createEnumTable());    
+  }
+  createEnumTable() {
+    let table = document.createElement("table");
+    table.classList.add("table");
+    table.classList.add("table-bordered");
+    table.classList.add("table-hover");
+    let tbody = document.createElement("tbody");
+    for (let i in this.editEnumList) {
+      let value = this.editEnumList[i];
+      let tr = document.createElement("tr");
+      let td = document.createElement("td");
+      td.innerHTML = value;
+      let deleteBtn = document.createElement("button");
+      deleteBtn.classList.add("btn");
+      deleteBtn.classList.add("btn-default");
+      deleteBtn.classList.add("btn-xs");
+      deleteBtn.classList.add("gr-row-buttons");
+      deleteBtn.setAttribute("type","button");
+      deleteBtn.setAttribute("title","delete");
+      deleteBtn.onclick = function () {
+        this.clickDeleteEnum(i);
+      }.bind(this);
+      let icon = document.createElement("span");
+      icon.classList.add("glyphicon");
+      icon.classList.add("glyphicon-remove");
+      deleteBtn.appendChild(icon);
+      td.appendChild(deleteBtn);
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+    return table;
+  }
+  clickDeleteEnum(i) {
+    this.editEnumList.splice(i,1);
+    this.setEnumTable();
+  }
   getEditValues() {
     return {
       title: document.getElementById("inputTitle").value,
@@ -566,10 +634,6 @@ class Designer extends Component {
     };
   }
   editModalValidate(values,path,schema) {
-    console.log("schema.type",schema.type);
-    console.log("values.propertyName",values.propertyName);
-    console.log("this.originalPropertyName",this.originalPropertyName);
-    console.log("schema.properties",schema.properties);
     let [parentPath, propertyName] = this.pathPop(path);
     let parentSchema = this.getSchema(this.schema, parentPath);
 
@@ -594,6 +658,11 @@ class Designer extends Component {
     schema.title = values.title;
     schema.description = values.description;
     schema.format = values.format;
+    if (schema.type == "string") {
+      if (this.editEnumList.length) {
+        schema.enum = this.editEnumList;
+      }
+    }
 
     let pathArray = editor.path.split(".");
     let name = pathArray.pop();

@@ -33,6 +33,17 @@
         	<input type="text" class="form-control" id="inputFormat" />
         </div>
 
+        <div class="form-group" id="inputEnumFormGroup">
+          <label for="inputEnum">Enum</label>
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Enum value" id="inputEnum" />
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" onclick="component.Designer.clickAddEnum();">Add</button>
+            </span>
+          </div>
+          <div id="enumTable"></div>
+        </div>
+
         <div id="editModalPlaceForAlert">
         </div>
 
