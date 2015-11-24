@@ -39,6 +39,7 @@ function sendEmailVerification (host,email,hash,code,callback) {
         if (callback) {
           callback(err);
         }
+        return;
     }
 
     console.log('Message sent: ' + info.response);
