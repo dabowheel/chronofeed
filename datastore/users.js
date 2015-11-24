@@ -194,6 +194,7 @@ function notifyPreviousEmailAddress(host,email,callback) {
         if (callback) {
           callback(err);
         }
+        return;
     }
 
     console.log('Message sent: ' + info.response);

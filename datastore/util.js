@@ -23,7 +23,8 @@ var smtpConfig = {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS
   },
-  secure: false
+  secure: false,
+  requireTLS: true
 };
 
 exports.transporter = nodemailer.createTransport(smtpTransport(smtpConfig));
