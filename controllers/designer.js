@@ -141,12 +141,24 @@ class Designer extends Component {
   getInitialValue(schema) {
     switch (schema.type) {
       case "string":
+        if (schema.default) {
+          return schema.default;
+        }
         return "";
       case "integer":
+        if (schema.default) {
+          return schema.default;
+        }
         return 0;
       case "number":
-       return 0;
+        if (schema.default) {
+          return schema.default;
+        }
+        return 0;
       case "boolean":
+        if (schema.default) {
+          return schema.default;
+        }
         return false;
       case "array":
         if (schema.items) {
@@ -539,8 +551,23 @@ class Designer extends Component {
       document.getElementById("inputEnumFormGroup").style.display="none";
     }
 
+    // default
+    switch (editor.schema.type) {
+      case "string":
+      case "boolean":
+      case "number":
+      case "integer":
+        let inputDefault = document.getElementById("inputDefault");
+        inputDefault.value = editor.schema.default ? editor.schema.default : "";
+        inputDefault.style.display = "";
+        break;
+      default:
+        document.getElementById("inputDefault").style.display = "none";
+        break;
+    }
+
     validate.listenToFields(["inputPropertyName"], "editAccept");
-    validate.addReturnPressListener(["inputTitle", "inputPropertyName", "inputDescription", "inputFormat"], function (event) {
+    validate.addReturnPressListener(["inputTitle", "inputPropertyName", "inputDescription", "inputFormat", "inputDefault"], function (event) {
       this.clickAcceptEdit(editor);
     }.bind(this));
     document.getElementById("editAccept").onclick = function (event) {
@@ -630,7 +657,8 @@ class Designer extends Component {
       title: document.getElementById("inputTitle").value,
       propertyName: document.getElementById("inputPropertyName").value,
       description: document.getElementById("inputDescription").value,
-      format: document.getElementById("inputFormat").value
+      format: document.getElementById("inputFormat").value,
+      default: document.getElementById("inputDefault").value
     };
   }
   editModalValidate(values,path,schema) {
@@ -655,12 +683,33 @@ class Designer extends Component {
     if (!this.editModalValidate(values, editor.path, schema)) {
       return;
     }
-    schema.title = values.title;
-    schema.description = values.description;
-    schema.format = values.format;
+
+    if (values.title) {
+      schema.title = values.title;
+    }
+
+    if (values.description) {
+      schema.description = values.description;
+    }
+
+    if (values.format) {
+      schema.format = values.format;
+    }
+
     if (schema.type == "string") {
       if (this.editEnumList.length) {
         schema.enum = this.editEnumList;
+      }
+    }
+
+    if (values.default) {
+      switch (schema.type) {
+        case "string":
+        case "integer":
+        case "number":
+        case "boolean":
+          schema.default = values.default;
+          break;
       }
     }
 
