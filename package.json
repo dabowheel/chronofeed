@@ -1,5 +1,5 @@
 {
-  "name": "Grackle",
+  "name": "ChronoFeed",
   "version": "1.0.0",
   "description": "Fitness and Health",
   "main": "app.js",
@@ -16,7 +16,7 @@
     "test:copy": "node_modules/.bin/n-copy --source public/bower_components/moment --destination build/public/bower_components/moment '*.js'",
     "test:build": "node_modules/.bin/babel --presets es2015 model -d build/model",
     "webpack": "node_modules/.bin/webpack",
-    "uglify": "node_modules/.bin/uglifyjs public/scripts/grackle.js -o public/scripts/grackle.min.js",
+    "uglify": "node_modules/.bin/uglifyjs public/scripts/chronofeed.js -o public/scripts/chronofeed.min.js",
     "jasmine": "node_modules/.bin/jasmine",
     "jshint-node": "node_modules/.bin/jshint --config .jshintrc-node app.js model datastore",
     "jshint-browser": "node_modules/.bin/jshint --config .jshintrc-browser controllers scripts",
@@ -25,14 +25,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dabowheel/grackle.git"
+    "url": "https://github.com/dabowheel/chronofeed.git"
   },
   "author": "Miguel Provencio",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dabowheel/grackle/issues"
+    "url": "https://github.com/dabowheel/chronofeed/issues"
   },
-  "homepage": "https://github.com/dabowheel/grackle",
+  "homepage": "https://github.com/dabowheel/chronofeed",
   "dependencies": {
     "babel-polyfill": "^6.0.14",
     "bootstrap": "^3.3.5",

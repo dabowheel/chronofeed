@@ -4,7 +4,7 @@ module.exports = {
   ],
   output: {
     path: "public/scripts",
-    filename: "grackle.js"
+    filename: "chronofeed.js"
   },
   module: {
     loaders: [
