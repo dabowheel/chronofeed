@@ -8,13 +8,13 @@ var sha256 = require("../vendor/sha256");
 
 class ResetPassword extends Component {
   constructor(containerID,hash,code) {
-    super(containerID, "Grackle | ResetPassword");
+    super(containerID, "ChronoFeed | ResetPassword");
     this.hash = hash;
     this.code = code;
     this.global();
   }
   render(callback) {
-    document.title = "Grackle | Reset Password";
+    document.title = "ChronoFeed | Reset Password";
     callback(null, view);
   }
   afterLoad() {

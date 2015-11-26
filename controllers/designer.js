@@ -18,7 +18,7 @@ const DATA_TRANSFER_TYPE_IE = "Text";
 
 class Designer extends Component {
 	constructor(containerID) {
-		super(containerID, "Grackle | Designer");
+		super(containerID, "ChronoFeed | Designer");
 		this.global();
     this.schema = {
       type: "object",
@@ -72,7 +72,7 @@ class Designer extends Component {
     if (this.tab == visualTabEnum) {
       var form = document.getElementById("formTarget");
       var options = {
-        theme: "grackle",
+        theme: "chronofeed",
         schema: this.schema,
         startval: this.value,
         disable_edit_json: true,
@@ -98,7 +98,7 @@ class Designer extends Component {
     }
   }
   extendEditorTheme() {
-    JSONEditor.defaults.themes.grackle = JSONEditor.defaults.themes.bootstrap3.extend({
+    JSONEditor.defaults.themes.chronofeed = JSONEditor.defaults.themes.bootstrap3.extend({
       getTextareaInput: function () {
         let el = this._super();
         el.style.height = "300px";

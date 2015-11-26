@@ -4,7 +4,7 @@ var view = require("./forgotPasswordResult.html");
 
 class ForgotPasswordResult extends Component {
   constructor(containerID) {
-    super(containerID, "Grackle | Forgot Password Result");
+    super(containerID, "ChronoFeed | Forgot Password Result");
   }
   render(callback) {
     callback(null, view);

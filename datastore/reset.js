@@ -52,9 +52,9 @@ exports.forgotPassword = function (req,res,next) {
 function sendResetEmail(host,email,hash,code) {
   var link = "http://" + host + "/resetPassword/" + hash + "/" + code;
   var mailOptions = {
-      from: "Grackle <" + process.env.NODEMAILER_USER + ">", // sender address
+      from: "ChronoFeed <" + process.env.NODEMAILER_USER + ">", // sender address
       to: email, // list of receivers
-      subject: "Grackle - Reset Password", // Subject line
+      subject: "ChronoFeed - Reset Password", // Subject line
       text: 'Reset your password by following this link: ' + link, // plaintext body
       html: 'Reset your password by following this link: <a href="' + link + '">Reset</a>' // html body
   };

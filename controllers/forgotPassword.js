@@ -7,7 +7,7 @@ var Component = require("./component");
 
 class ForgotPassword extends Component {
   constructor (containerID) {
-    super(containerID, "Grackle | Forgot Password");
+    super(containerID, "ChronoFeed | Forgot Password");
     this.global();
   }
   render(callback) {

@@ -8,7 +8,7 @@ var sha256 = require("../vendor/sha256");
 
 class Login extends Component {
   constructor(containerID) {
-    super(containerID, "Grackle | Login");
+    super(containerID, "ChronoFeed | Login");
     this.global();
   }
   render(callback) {

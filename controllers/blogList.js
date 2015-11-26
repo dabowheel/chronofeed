@@ -10,7 +10,7 @@ import route from "./route";
 
 class ctlBlogList extends Component {
   constructor(containerID) {
-    super(containerID, "Grackle");
+    super(containerID, "ChronoFeed");
     this.global();
   }
   getBlogList(callback) {

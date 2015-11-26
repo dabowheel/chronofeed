@@ -8,7 +8,7 @@ var LoadError = require("./loadError");
 
 class Admin extends Component {
   constructor(containerID) {
-    super(containerID, "Grackle | Admin");
+    super(containerID, "ChronoFeed | Admin");
     this.global();
   }
   getAdmin(callback) {

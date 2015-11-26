@@ -26,9 +26,9 @@ exports.createVerifyInfo = function (host,userID,email,db,callback) {
 function sendEmailVerification (host,email,hash,code,callback) {
   var link = "http://" + host + "/verifyEmail/" + hash + "/" + code;
   var mailOptions = {
-      from: "Grackle <" + process.env.NODEMAILER_USER + ">", // sender address
+      from: "ChronoFeed <" + process.env.NODEMAILER_USER + ">", // sender address
       to: email, // list of receivers
-      subject: "Grackle - Verify Email Address", // Subject line
+      subject: "ChronoFeed - Verify Email Address", // Subject line
       text: 'Please verify your email address by following this link: ' + link, // plaintext body
       html: 'Please verify your email address by following this link: <a href="' + link + '">Verify</a>' // html body
   };

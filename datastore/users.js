@@ -181,11 +181,11 @@ exports.saveProfile = function (req,res,next) {
 
 function notifyPreviousEmailAddress(host,email,callback) {
   var mailOptions = {
-      from: "Grackle <" + process.env.NODEMAILER_USER + ">",
+      from: "ChronoFeed <" + process.env.NODEMAILER_USER + ">",
       to: email,
-      subject: "Grackle - Email Address Changed",
+      subject: "ChronoFeed - Email Address Changed",
       text: "This is a notification that your email address was changed.\n\nhttp://" + host,
-      html: "<p>This is a notification that your email address was changed.</p><p><a href=\"" + host + "\">Visit Grackle</a></p>"
+      html: "<p>This is a notification that your email address was changed.</p><p><a href=\"" + host + "\">Visit ChronoFeed</a></p>"
   };
 
   util.transporter.sendMail(mailOptions, function(err, info) {

@@ -10,7 +10,7 @@ var sha256 = require("../vendor/sha256");
 
 class Profile extends Component {
   constructor(containerID) {
-    super(containerID, "Grackle | Profile");
+    super(containerID, "ChronoFeed | Profile");
     this.global();
   }
   getProfile(callback) {
@@ -44,7 +44,7 @@ class Profile extends Component {
     }.bind(this));
   }
   afterLoad() {
-    document.title = "Grackle | Profile";
+    document.title = "ChronoFeed | Profile";
     validate.listenToFields(["inputEmail"], "saveButton");
     validate.addReturnPressListener(["inputEmail", "inputPassword"], this.clickSave.bind(this));
   }

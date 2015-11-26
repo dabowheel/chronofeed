@@ -5,7 +5,7 @@ import route from "./route";
 
 class Splash extends Component {
   constructor(containerID) {
-    super(containerID, "Grackle");
+    super(containerID, "ChronoFeed");
     this.global();
   }
   render(callback) {

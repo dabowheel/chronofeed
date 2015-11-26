@@ -13,7 +13,7 @@ import moment from "moment";
 
 class ctlBlog extends Component {
   constructor(containerID,title) {
-    super(containerID, "Grackle | " + title);
+    super(containerID, "ChronoFeed | " + title);
     this.title = title;
     this.global();
   }
@@ -58,7 +58,7 @@ class ctlBlog extends Component {
     }.bind(this));
   }
   afterLoad() {
-    document.title = "Grackle Blog | " + this.blog.title;
+    document.title = "ChronoFeed Blog | " + this.blog.title;
     if (this.blog.editBlogTitle) {
       validate.addReturnPressListener(["inputTitle"], this.saveBlogTitleChange.bind(this));
       validate.listenToFields(["inputTitle"], "blogTitleAcceptButton");
@@ -100,7 +100,7 @@ class ctlBlog extends Component {
       if (global.component.ctlBlogList) {
         global.component.ctlBlogList.blogList.updateTitle(this.blog._id, title);
       }
-      setURL("/blog/" + title, "Grackle | " + title, true);
+      setURL("/blog/" + title, "ChronoFeed | " + title, true);
       this.cancelBlogTitleChange();
     }.bind(this));
   }
