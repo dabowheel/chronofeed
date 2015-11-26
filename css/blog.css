@@ -184,3 +184,7 @@
 .gr-designer-separator {
   pointer-events: none;
 }
+
+.gr-margin-bottom-15px {
+  margin-bottom: 15px;
+}

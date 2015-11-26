@@ -17,12 +17,13 @@ const DATA_TRANSFER_TYPE_DEFAULT = "text/plain";
 const DATA_TRANSFER_TYPE_IE = "Text";
 
 class Designer extends Component {
-	constructor(containerID) {
+	constructor(containerID,title) {
 		super(containerID, "ChronoFeed | Designer");
+    this.title = title;
 		this.global();
     this.schema = {
       type: "object",
-      title: "Form"
+      title: "Entry"
     };
     this.value = this.getInitialValue(this.schema);
     this.tab = visualTabEnum;

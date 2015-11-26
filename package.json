@@ -53,7 +53,8 @@
     "mongodb": "^2.0.35",
     "nodemailer": "^1.8.0",
     "nodemailer-smtp-transport": "^1.0.3",
-    "url-loader": "^0.5.6"
+    "url-loader": "^0.5.6",
+    "vue": "^1.0.10"
   },
   "devDependencies": {
     "babel-core": "^6.2.1",

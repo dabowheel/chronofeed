@@ -17,13 +17,18 @@
     <div class="col-mid-12 col-lg-12">
       <div class="form-group" id="inputTitleFormGroup">
         <span class="gr-blog-title">{{title}}</span>
-        <button class="btn btn-primary" onclick="component.ctlBlog.editBlogTitle();">Edit Name</button>
+        <button class="btn btn-default" onclick="component.ctlBlog.editBlogTitle();">
+          <span class="glyphicon glyphicon-pencil" title="edit name"></span>
+        </button>
+        <button class="btn btn-default" onclick="component.ctlBlog.clickConfigure();">
+          <span class="glyphicon glyphicon-cog" title="configure"></span>
+        </button>
       </div>
     </div>
   </div>
   {{/if}}
 
-  <button class="btn btn-primary" onclick="component.ctlBlog.addPost();">Add Post</button>
+  <button class="btn btn-primary" onclick="component.ctlBlog.addPost();">Add Entry</button>
   <table class="table table-hover">
     <tbody>
       {{#each postList}}

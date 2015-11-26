@@ -60,7 +60,7 @@ class ctlBlogList extends Component {
   }
   editBlog(domID) {
     var blogInfo = this.blogList.getBlogInfo(domID);
-    route("/blog/" + blogInfo.title);
+    route("/log/" + blogInfo.title + "/");
   }
   confirmDeleteBlog(domID) {
     var blogInfo = this.blogList.getBlogInfo(domID);

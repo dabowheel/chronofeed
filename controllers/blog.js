@@ -10,6 +10,7 @@ var validate = require("../scripts/validate");
 var Component = require("./component");
 import {setURL} from "./route";
 import moment from "moment";
+import route from "./route";
 
 class ctlBlog extends Component {
   constructor(containerID,title) {
@@ -202,6 +203,9 @@ class ctlBlog extends Component {
         return;
       }
     });
+  }
+  clickConfigure() {
+    route("/log/" + this.title + "/designer/");
   }
 }
 

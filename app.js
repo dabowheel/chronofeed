@@ -37,7 +37,7 @@ MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
     res.sendFile(__dirname + "/public/index.html");
   }
 
-  app.get("/blog/*", sendPage);
+  app.get("/log/*/", sendPage);
   app.get("/admin", sendPage);
   app.get("/profile", sendPage);
   app.get("/signup", sendPage);
@@ -48,6 +48,7 @@ MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
   app.get("/resetPassword/*", sendPage);
   app.get("/resetPasswordResult", sendPage);
   app.get("/designer", sendPage);
+  app.get("/loglist", sendPage);
 
   app.use("/datastore", function (req,res,next) {
     req.db = db;

@@ -11,6 +11,7 @@ var ForgotPassword = require("./forgotPassword");
 var ResetPassword = require("./resetPassword");
 var ResetPasswordResult = require("./resetPasswordResult");
 var Designer = require("./designer");
+var LogList = require("./loglist");
 
 export default function (pathname, replace) {
   getComponent(pathname, function (c) {
@@ -48,7 +49,8 @@ function getComponent(pathname, callback) {
     }
 
     if (global.component.All.username) {
-      var blogRE = /^\/blog\/(.*)$/;
+      var designerRE = /^\/log\/(.*)\/designer\/$/;
+      var blogRE = /^\/log\/(.*)\/$/;
       if (pathname == "/admin") {
         let c = new Admin("main");
         return callback(c);
@@ -58,8 +60,15 @@ function getComponent(pathname, callback) {
       } else if (pathname == "/designer") {
         let c = new Designer("main");
         return callback(c);
+      } else if (pathname == "/loglist") {
+        let c = new LogList("main");
+        return callback(c);
+      } else if (pathname.match(designerRE)) {
+        let title = decodeURI(pathname.match(designerRE)[1]);
+        let c = new Designer("main", title);
+        return callback(c);
       } else if (pathname.match(blogRE)) {
-        var title = decodeURI(pathname.match(blogRE)[1]);
+        let title = decodeURI(pathname.match(blogRE)[1]);
         let c = new ctlBlog("main", title);
         return callback(c);
       } else {
