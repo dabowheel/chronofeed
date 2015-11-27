@@ -14,7 +14,7 @@ import route from "./route";
 
 class ctlBlog extends Component {
   constructor(containerID,title) {
-    super(containerID, "ChronoFeed | " + title);
+    super(containerID, title + " | ChronoFeed");
     this.title = title;
     this.global();
   }
@@ -59,12 +59,16 @@ class ctlBlog extends Component {
     }.bind(this));
   }
   afterLoad() {
-    document.title = "ChronoFeed Blog | " + this.blog.title;
+    global.component.Menu.setLogLink(this.title);
+
     if (this.blog.editBlogTitle) {
       validate.addReturnPressListener(["inputTitle"], this.saveBlogTitleChange.bind(this));
       validate.listenToFields(["inputTitle"], "blogTitleAcceptButton");
       document.getElementById("inputTitle").select();
     }
+  }
+  leave() {
+    global.component.Menu.setLogLink();
   }
   editBlogTitle() {
     this.blog.editBlogTitle = true;
@@ -96,12 +100,13 @@ class ctlBlog extends Component {
         $("#placeForAlert").html(err);
         return;
       }
+      this.title = title;
       this.blog.title = title;
       this.blogList.updateTitle(this.blog._id, title);
       if (global.component.ctlBlogList) {
         global.component.ctlBlogList.blogList.updateTitle(this.blog._id, title);
       }
-      setURL("/blog/" + title, "ChronoFeed | " + title, true);
+      setURL("/log/" + title, title + " | ChronoFeed", true);
       this.cancelBlogTitleChange();
     }.bind(this));
   }

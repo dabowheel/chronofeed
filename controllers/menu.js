@@ -44,6 +44,62 @@ class Menu extends Component {
   clickDesigner() {
     route("/designer");
   }
+  setLogLink(title,inDesigner) {
+    if (title) {
+      let logLink = document.getElementById("logLink");
+      let link;
+      if (logLink.firstChild) {
+        link = logLink.firstChild;
+      } else {
+        link = document.createElement("a");
+      }
+      let url = "/log/" + title + "/";
+      link.setAttribute("href",url);
+      link.onclick = function () {
+        route(url);
+        return false;
+      };
+      link.textContent = title;
+      if (!logLink.firstChild) {
+        logLink.appendChild(link);
+      }
+      if (!inDesigner) {
+        logLink.classList.add("active");
+        let configLink = document.getElementById("configLink");
+        while (configLink.firstChild) {
+          configLink.removeChild(configLink.firstChild);
+        }
+      } else {
+        let configLink = document.getElementById("configLink");
+        let link;
+        if (configLink.firstChild) {
+          link = configLink.firstChild;
+        } else {
+          link = document.createElement("a");
+        }
+        let url = "/log/" + title + "/designer/";
+        link.setAttribute("href",url);
+        link.onclick = function () {
+          route(url);
+          return false;
+        };
+        link.textContent = "Designer";
+        if (!configLink.firstChild) {
+          configLink.appendChild(link);
+        }
+        configLink.classList.add("active");
+      }
+    } else {
+      let configLink = document.getElementById("configLink");
+      while(configLink.firstChild) {
+        configLink.removeChild(configLink.firstChild);
+      }
+      let logLink = document.getElementById("logLink");
+      while(logLink.firstChild) {
+        logLink.removeChild(logLink.firstChild);
+      }
+    }
+  }
 }
 
 module.exports = Menu;

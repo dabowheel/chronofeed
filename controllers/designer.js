@@ -18,7 +18,7 @@ const DATA_TRANSFER_TYPE_IE = "Text";
 
 class Designer extends Component {
 	constructor(containerID,title) {
-		super(containerID, "ChronoFeed | Designer");
+		super(containerID);
     this.title = title;
 		this.global();
     this.schema = {
@@ -70,6 +70,8 @@ class Designer extends Component {
   }
   afterLoad() {
     $("#main").addClass("gr-fill-parent");
+    document.title = this.title + " Designer | ChronoFeed";
+    global.component.Menu.setLogLink(this.title, true);
     if (this.tab == visualTabEnum) {
       var form = document.getElementById("formTarget");
       var options = {
@@ -97,6 +99,9 @@ class Designer extends Component {
     } else if (this.tab == schemaTabEnum) {
       document.getElementById("schemaText").value = JSON.stringify(this.schema, null, 2);
     }
+  }
+  leave() {
+    global.component.Menu.setLogLink();
   }
   extendEditorTheme() {
     JSONEditor.defaults.themes.chronofeed = JSONEditor.defaults.themes.bootstrap3.extend({

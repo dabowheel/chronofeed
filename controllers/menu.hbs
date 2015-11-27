@@ -13,8 +13,11 @@
         <a class="navbar-brand" href="javascript:void(0)" onclick="component.Menu.clickBlogList();">ChronoFeed</a>
       </div>
       <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav" id="navBar">
+          <li id="logLink"></li>
+          <li id="configLink"></li>
+        </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li {{#if isDesigner}}class="active"{{/if}}><a href="/designer" onclick="component.Menu.clickDesigner(); return false;">Designer</a></li>
           <li {{#if isProfile}}class="active"{{/if}}><a href="javascript:void(0)" onclick="component.Menu.clickProfile();" title="profile"><span class="glyphicon glyphicon-user"> Profile<span></a></li>
           <li {{#if isAdmin}}class="active"{{/if}}><a href="javascript:void(0)" onclick="component.Menu.clickAdmin();">Admin</a></li>
           <li><a href="javascript:void(0)" onclick="component.Menu.clickLogout();"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
