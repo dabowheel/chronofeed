@@ -3,3 +3,4 @@ public/scripts/chronofeed*.js*
 npm-debug.log
 bower_components
 build
+manifest.json
