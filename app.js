@@ -13,6 +13,7 @@ var datastore_posts = require("./datastore/posts");
 var datastore_verify = require("./datastore/verify");
 var datastore_reset = require("./datastore/reset");
 var datastore_expiringDocs = require("./datastore/expiringDocs");
+var compression = require("compression");
 
 MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
   if (error) {
@@ -20,7 +21,17 @@ MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
     process.exit(1);
   }
 
-
+  app.use(compression({filter: shouldCompress}))
+   
+  function shouldCompress(req, res) {
+    if (req.headers['x-no-compression']) {
+      // don't compress responses with this request header 
+      return false
+    }
+   
+    // fallback to standard filter function 
+    return compression.filter(req, res)
+  }
   app.use(cookieParser(process.env.SESSION_SECRET));
   app.use(session({
     secret: process.env.SESSION_SECRET,
