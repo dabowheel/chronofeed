@@ -21,16 +21,16 @@ MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
     process.exit(1);
   }
 
-  app.use(compression({filter: shouldCompress}))
+  app.use(compression({filter: shouldCompress}));
    
   function shouldCompress(req, res) {
     if (req.headers['x-no-compression']) {
       // don't compress responses with this request header 
-      return false
+      return false;
     }
    
     // fallback to standard filter function 
-    return compression.filter(req, res)
+    return compression.filter(req, res);
   }
   app.use(cookieParser(process.env.SESSION_SECRET));
   app.use(session({
