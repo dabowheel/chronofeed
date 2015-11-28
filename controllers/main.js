@@ -2,9 +2,10 @@
 
 global.jQuery = require("jquery");
 global.$ = global.jQuery;
-require("../node_modules/bootstrap/dist/js/bootstrap");
 require("../bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker");
+require("../bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css");
 require("../assets/css/blog.css");
+require("../bower_components/json-editor/dist/jsoneditor.js");
 require("babel-polyfill");
 import route from "./route";
 

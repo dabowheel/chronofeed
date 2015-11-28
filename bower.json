@@ -1,12 +1,12 @@
 {
-  "name": "Grackle",
+  "name": "ChronoFeed",
   "description": "Fitness and Health",
   "main": "app.js",
   "authors": [
     "Miguel Provencio"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/dabowheel/grackle",
+  "homepage": "https://github.com/dabowheel/chronofeed",
   "moduleType": [
     "es6",
     "node"
@@ -20,8 +20,7 @@
   ],
   "dependencies": {
     "eonasdan-bootstrap-datetimepicker": "~4.17.37",
-    "json-editor": "~0.7.23",
-    "bootstrap": "~3.3.5"
+    "json-editor": "~0.7.23"
   },
   "devDependencies": {}
 }
