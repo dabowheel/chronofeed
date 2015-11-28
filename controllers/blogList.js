@@ -60,6 +60,10 @@ class ctlBlogList extends Component {
   }
   editBlog(domID) {
     var blogInfo = this.blogList.getBlogInfo(domID);
+    let editSpin = document.getElementById("editSpin"+domID);
+    editSpin.classList.add("fa");
+    editSpin.classList.add("fa-refresh");
+    editSpin.classList.add("fa-spin");
     route("/log/" + blogInfo.title + "/");
   }
   confirmDeleteBlog(domID) {

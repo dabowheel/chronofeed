@@ -3,7 +3,7 @@ module.exports = {
     "./controllers/main.js"
   ],
   output: {
-    path: "public/scripts",
+    path: "build/scripts",
     filename: "chronofeed.js"
   },
   module: {
