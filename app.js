@@ -1,3 +1,4 @@
+"use strict";
 var fs = require("fs");
 var express = require('express');
 var app = express();
@@ -41,6 +42,21 @@ MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
       db: db
     })
   }));
+
+  app.use(function (req,res,next) {
+    let m = req.originalUrl.match(/.*\.(.*)/);
+    if (m) {
+      let ext = m[1];
+      switch (ext) {
+        case "css":
+        case "js":
+        case "ico":
+          res.set("Cache-Control", "max-age=31536000");
+          break;
+      }
+    }
+    next();
+  });
 
   app.use(express.static('public'));
 
