@@ -8,7 +8,7 @@
     "live-reload": "live-reload app.js datastore public --port=1009",
     "build-watch": "npm run build && watch-spawn -p webpack.config.js -p controllers/**/* -p model/*.js -p scripts/*.js npm run build",
     "test-watch": "npm run test && watch-spawn -p .jshintrc -p *.js -p controllers/**/*.js -p model/**/*.js -p datastore/**/*.js -p scripts/**/*.js npm run test",
-    "build": "npm run webpack && npm run uglify && npm run fp-chronofeed-js",
+    "build": "npm run clean-bundle && npm run webpack && npm run uglify && npm run fp-chronofeed-js && npm run copy-assets && npm run sub-html",
     "test": "npm run lint && npm run jasmine",
     "lint": "npm run eslint && npm run jshint",
     "jshint": "npm run jshint-node && npm run jshint-browser",
@@ -34,7 +34,8 @@
     "sub-fonts": "node assetfp-sub public/css/manifest.json public/css/icomoon.css",
     "install-fonts": "npm run fp-fonts && npm run sub-fonts",
     "install-all": "npm install && bower install && npm run build && npm run copy && npm run install-fonts && npm run install-assets",
-    "clean": "node_modules/.bin/remy public/*"
+    "clean": "node_modules/.bin/remy public/*",
+    "clean-bundle": "node_modules/.bin/remy public/scripts"
   },
   "repository": {
     "type": "git",

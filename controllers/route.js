@@ -12,6 +12,7 @@ var ResetPassword = require("./resetPassword");
 var ResetPasswordResult = require("./resetPasswordResult");
 var Designer = require("./designer");
 var LogList = require("./loglist");
+let session = require("./session");
 
 export default function (pathname, replace) {
   getComponent(pathname, function (c) {
@@ -48,7 +49,7 @@ function getComponent(pathname, callback) {
       return callback(c);
     }
 
-    if (global.component.All.username) {
+    if (session.getUsername()) {
       var designerRE = /^\/log\/(.*)\/designer\/$/;
       var blogRE = /^\/log\/(.*)\/$/;
       if (pathname == "/admin") {
@@ -94,7 +95,7 @@ function getComponent(pathname, callback) {
 }
 
 function getUsername(callback) {
-  if (global.component.All.username) {
+  if (session.hasInfo()) {
     return callback();
   }
 
@@ -103,7 +104,7 @@ function getUsername(callback) {
       return callback(err);
     }
 
-    global.component.All.username = res.username;
+    session.setUsername(res.username);
     callback();
   });
 }

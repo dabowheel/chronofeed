@@ -5,6 +5,7 @@ var validate = require("../scripts/validate");
 var Component = require("./component");
 import route from "./route";
 var sha256 = require("../vendor/sha256");
+let session = require("./session");
 
 class Login extends Component {
   constructor(containerID) {
@@ -60,7 +61,7 @@ class Login extends Component {
         return;
       }
       if (res.success) {
-        global.component.All.username = res.username;
+        session.setUsername(res.username);
         route("/");
       } else {
         $("#placeForAlert").addClass("alert alert-warning");
