@@ -23,7 +23,7 @@
     "eslint": "node_modules/.bin/eslint *.js controllers model scripts datastore",
     "wc": "git ls-files | grep .js | xargs wc -l",
     "copy": "npm run copy-assets",
-    "copy-assets": "node_modules/.bin/cpx assets/**/* public",
+    "copy-assets": "node_modules/.bin/cpx \"assets/**/*\" public",
     "fp-css": "node assetfp -w public css/icomoon.css -o manifest.json -a",
     "fp-images": "node assetfp -w public images -o manifest.json -a",
     "fp-chronofeed-js": "node assetfp -w public scripts/chronofeed.min.js -o manifest.json -a",
