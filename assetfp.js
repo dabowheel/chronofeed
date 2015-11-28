@@ -139,11 +139,13 @@ function transformManifest(manifest,workingDir) {
 			val = removeBasePath(workingDir, val);
 		}
 		ret[filename.replace(/\\/g, "/")] = val.replace(/\\/g, "/");
-	};
+	}
 	return ret;
 }
 
 function removeBasePath(base,filename) {
+	base = path.normalize(base);
+	filename = path.normalize(filename);
 	let filenameArray = filename.split(path.sep);
 	let baseArray = base.split(path.sep);
 	let ret = filenameArray.splice(baseArray.length).join(path.sep);
@@ -183,7 +185,7 @@ function getPackageVersion(command,packageName) {
 		});
 		npm.on("close", function (code) {
 			if (!code) {
-				let reText = packageName + sep + "(\\d*\\.\\d*\\.\\d*)"
+				let reText = packageName + sep + "(\\d*\\.\\d*\\.\\d*)";
 				let re = new RegExp(reText);
 				let m = output.match(re);
 				if (m) {
@@ -259,7 +261,7 @@ if (workingDir) {
 getFiles(fileList, list, errorList).then(function (val) {
 	if (errorList.length) {
 		fsp.writeErrors(errorList);
-		return;
+		process.exit(1);
 	}
 
 	let manifest = {};

@@ -7,22 +7,23 @@ let argv = minimist(process.argv.splice(2));
 let fileList = argv._;
 let manifestFileName = fileList.shift();
 
-let usage = "Usage: assetfp-sub <manifest-file> <sub-file>..."
+let usage = "Usage: assetfp-sub <manifest-file> <sub-file>...";
 
 if (!manifestFileName) {
-	console.error(usage)
+	console.error(usage);
 }
 
 if (fileList.length < 1) {
 	console.error(usage);
 }
 
-function replaceFiles(manifest,fileList) {
+function replaceFiles(manifest,fileList,errorList) {
 	return fileList.map(function (filename) {
 		return fsp.readFile(filename).then(function (data) {
 			data = data.toString();
 			for (let str1 in manifest) {
-				data = data.replace(str1, manifest[str1]);
+				let strRE = new RegExp(str1,"g");
+				data = data.replace(strRE, manifest[str1]);
 			}
 			return fsp.writeFile(filename, data).then(function (val) {
 				console.log("wrote", filename);
@@ -46,7 +47,7 @@ function writeResults(promiseList,errorList) {
 
 let errorList = [];
 fsp.readJSON(manifestFileName).then(function (manifest) {
-	let promiseList = replaceFiles(manifest, fileList);
+	let promiseList = replaceFiles(manifest, fileList,errorList);
 	writeResults(promiseList, errorList);
 });
 
