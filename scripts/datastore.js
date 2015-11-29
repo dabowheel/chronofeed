@@ -1,10 +1,13 @@
 "use strict";
+let timelog = require("../controllers/timelog");
 
 function datastore(method,path,obj,callback) {
+  timelog.addEvent("request " + method + " " + path);
   console.log("send",method,path,obj);
   var request = new XMLHttpRequest();
   request.onreadystatechange = function() {
     if (request.readyState==4) {
+      timelog.addEvent("request done");
       if (request.status==200) {
         var res;
         if (request.responseText === "") {

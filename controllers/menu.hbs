@@ -18,6 +18,7 @@
           <li id="configLink"></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
+          <li><a href="/timelog/" onclick="component.Menu.clickTimeLog(); return false;">Time Log</a></li>
           <li {{#if isProfile}}class="active"{{/if}}><a href="javascript:void(0)" onclick="component.Menu.clickProfile();" title="profile"><span class="glyphicon glyphicon-user"> Profile<span></a></li>
           <li {{#if isAdmin}}class="active"{{/if}}><a href="javascript:void(0)" onclick="component.Menu.clickAdmin();">Admin</a></li>
           <li><a href="javascript:void(0)" onclick="component.Menu.clickLogout();"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>

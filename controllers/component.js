@@ -1,4 +1,5 @@
 "use strict";
+let timelog = require("./timelog");
 
 class Component {
   constructor (containerID,documentTitle) {
@@ -12,6 +13,7 @@ class Component {
   afterLoad() {}
   show () {
     if (this.containerID) {
+      timelog.addEvent("before render");
       this.render(function (err,view) {
         if (err) {
           if (view) {
@@ -20,8 +22,11 @@ class Component {
           return;
         }
         this.beforeLoad();
+        timelog.addEvent("before insert HTML");
         document.getElementById(this.containerID).innerHTML = view;
+        timelog.addEvent("after insert HTML");
         this.afterLoad();
+        timelog.addEvent("after afterLoad");
       }.bind(this));
     }
   }

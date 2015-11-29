@@ -100,6 +100,11 @@ class Menu extends Component {
       }
     }
   }
+  clickTimeLog() {
+    console.log("before route");
+    route("/timelog/");
+    console.log("after route");
+  }
 }
 
 module.exports = Menu;

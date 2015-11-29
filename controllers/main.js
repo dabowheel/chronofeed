@@ -8,12 +8,14 @@ require("../assets/css/blog.css");
 require("../bower_components/json-editor/dist/jsoneditor.js");
 require("babel-polyfill");
 import route from "./route";
+let timelog = require("./timelog");
 
 global.clearComponents = function() {
   global.component = {};
   global.component.All = {};
   global.component.All.blogs = [];
   global.compPath = {};
+  timelog.init();
 };
 global.clearComponents();
 

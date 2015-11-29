@@ -13,8 +13,11 @@ var ResetPasswordResult = require("./resetPasswordResult");
 var Designer = require("./designer");
 var LogList = require("./loglist");
 let session = require("./session");
+var timelog = require("./timelog");
+var TimeLogTable = require("./timeLogTable");
 
 export default function (pathname, replace) {
+  timelog.addEvent("request route " + pathname);
   getComponent(pathname, function (c) {
     if (global.component.current) {
       global.component.current.leave();
@@ -71,6 +74,9 @@ function getComponent(pathname, callback) {
       } else if (pathname.match(blogRE)) {
         let title = decodeURI(pathname.match(blogRE)[1]);
         let c = new ctlBlog("main", title);
+        return callback(c);
+      } else if (pathname == "/timelog/") {
+        let c = new TimeLogTable("main");
         return callback(c);
       } else {
         let c = new ctlBlogList("main");
