@@ -18,7 +18,7 @@
     "webpack": "node_modules/.bin/webpack",
     "uglify": "node_modules/.bin/uglifyjs build/scripts/chronofeed.js -o build/scripts/chronofeed.min.js",
     "jasmine": "node_modules/.bin/jasmine",
-    "mocha": "node_modules/.bin/mocha mongodb/spec",
+    "mocha": "node_modules/.bin/mocha mongodb/spec api/spec",
     "jshint-node": "node_modules/.bin/jshint --config .jshintrc-node app.js assetfp.js assetfp-sub.js model datastore",
     "jshint-browser": "node_modules/.bin/jshint --config .jshintrc-browser controllers scripts",
     "eslint": "node_modules/.bin/eslint *.js controllers model scripts datastore",

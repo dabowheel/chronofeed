@@ -2,7 +2,7 @@
 let logs = require("../logs");
 let assert = require("assert");
 
-describe("logs", function () {
+describe("logs DB collection", function () {
 	let userID = 1;
 	let log = {
 		title: "Food Journal"

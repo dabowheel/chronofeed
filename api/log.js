@@ -19,7 +19,9 @@ exports.updateLog = function (req,res,next) {
 
 exports.readLogList = function (req,res,next) {
 	logs.readLogList(req.db, req.session.userID).then(function (list) {
-		res.json(list);
+		res.json({
+			list: list
+		});
 	}).catch(function (err) {
 		next(err);
 	});

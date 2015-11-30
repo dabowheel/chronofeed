@@ -11,9 +11,9 @@ module.exports = function (app,db) {
   });
 
 	app.put("/api/log/", log.createLog);
+  app.get("/api/log/", log.readLogList);
+  app.get("/api/log/:id/", log.readLog);
 	app.post("/api/log/:id/", log.updateLog);
-	app.get("/api/log/", log.readLogList);
-	app.get("/api/log/:id/", log.readLog);
 	app.delete("/api/log/", log.deleteLogList);
 	app.delete("/api/log/:id/", log.deleteLog);
 
