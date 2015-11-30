@@ -2,6 +2,7 @@
 var fs = require("fs");
 var express = require('express');
 var app = express();
+//var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 var session = require("express-session");
 var MongoStore = require('connect-mongo')(session);
@@ -15,6 +16,7 @@ var datastore_verify = require("./datastore/verify");
 var datastore_reset = require("./datastore/reset");
 var datastore_expiringDocs = require("./datastore/expiringDocs");
 var compression = require("compression");
+//var apiRoute = require("./api/route");
 
 MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
   if (error) {
@@ -22,6 +24,7 @@ MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
     process.exit(1);
   }
 
+  //app.use(bodyParser.json());
   app.use(compression({filter: shouldCompress}));
    
   function shouldCompress(req, res) {
@@ -127,6 +130,8 @@ MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
     };
     next();
   });
+
+  //apiRoute(app,db);
 
   app.use(function(req,res,next) {
     res.status(404).send("Not Found.");
