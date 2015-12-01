@@ -1,6 +1,6 @@
 "use strict";
 
-function appRequest(method,path,obj) {
+function request(method,path,obj) {
   console.log("send",method,path,obj);
   return new Promise(function (resolve,reject) {
     var request = new XMLHttpRequest();
@@ -37,3 +37,5 @@ function appRequest(method,path,obj) {
     }
   });
 }
+
+module.exports = request;

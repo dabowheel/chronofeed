@@ -3,7 +3,7 @@
     <div class="col-md-8 col-lg-8" id="placeForAlert">
     </div>
   </div>
-  <button class="btn btn-primary" onclick="addBlog();">Add Blog</button>
+  <button class="btn btn-primary" v-on:click="clickAdd();">Add Blog</button>
   <table class="table table-hover">
     <tbody v-for="log in logList">
       <tr>
@@ -12,8 +12,8 @@
         </td>
         <td>
           <span style="float:right;">
-            <button class="btn btn-primary" onclick="editBlog('{{log.domID}}');"><span id="editSpin{{log.domID}}"></span> Edit</button>
-            <button class="btn btn-primary" onclick="confirmDeleteBlog('{{log.domID}}')">Delete</button>
+            <button class="btn btn-primary" v-on:click="clickEdit($index);">Edit</button>
+            <button class="btn btn-primary" v-on:click="clickConfirmDelete($index)">Delete</button>
           </span>
         </td>
       </tr>
