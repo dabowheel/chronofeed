@@ -19,7 +19,7 @@ function request(method,path,obj) {
         }
 
         if (request.responseText === "") {
-          return reject(new Error("no response"));
+          return resolve(null);
         }
         let res = JSON.parse(request.responseText);
         console.log("response",JSON.stringify(res));
