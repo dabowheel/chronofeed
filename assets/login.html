@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Login | ChronoFeed</title>
+    <link href="/images/cf.ico" rel="shortcut icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <style>
+      .cf-forgot-password-link {
+        position: relative;
+        top: -11px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>ChronoFeed Login</h1>
+
+      <form>
+        <p><a href="/signup.html">Not registered yet?</a></p>
+        <div class="row">
+          <div class="col-sm-5 col-md-4 col-lg-3">
+            <div class="form-group" id="inputUsernameFormGroup">
+              <label class="control-label" for="inputUsername">Username</label>
+              <input class="form-control" id="inputUsername" type="text" placeholder="Enter your username"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-5 col-md-4 col-lg-3">
+            <div class="form-group" id="inputPasswordFormGroup">
+              <label class="control-label" for="inputPassword">Password</label>
+              <input class="form-control" id="inputPassword" type="password" />
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-8 col-md-7 col-lg-6 gr-alert" id="placeForAlert"></div>
+        </div>
+
+        <div class="cf-forgot-password-link" id="forgotPasswordLink">
+          <a href="/forgotPassword.html">Did you forget your password?</a>
+        </div>
+
+        <button class="btn btn-primary" type="button" onclick="clickLogin();" id="loginButton">Login</button>
+      </form>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="/scripts/login.js"></script>
+  </body>
+</html>

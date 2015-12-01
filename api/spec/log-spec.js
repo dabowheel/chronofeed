@@ -53,7 +53,7 @@ describe("Log API", function () {
 		let req = http.request(options, function (res) {
 			assert.equal(res.statusCode, 200);
 			done();
-		})
+		});
 		req.on("error", function (err) {
 			throw err;
 		});

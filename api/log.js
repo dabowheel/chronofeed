@@ -49,4 +49,4 @@ exports.deleteLogList = function (req,res,next) {
 	}).catch(function (err) {
 		next(err);
 	});
-}
+};

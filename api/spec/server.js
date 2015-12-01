@@ -26,8 +26,8 @@ before(function (done) {
 
 		global.port = 3000;
 	  global.server = app.listen(global.port, function () {
-	    var host = server.address().address;
-	    var port = server.address().port;
+	    var host = global.server.address().address;
+	    var port = global.server.address().port;
 	    done();
 	  });
 	});

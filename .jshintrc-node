@@ -1,5 +1,5 @@
 {
   "esnext": true,
   "node": true,
-  "predef": ["describe", "it", "expect"]
+  "predef": ["describe", "it", "expect", "before", "after"]
 }

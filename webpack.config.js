@@ -1,10 +1,10 @@
 module.exports = {
-  entry: [
-    "./controllers/main.js"
-  ],
+  entry: {
+    loglist: "./components/loglist/loglist.js"
+  },
   output: {
     path: "build/scripts",
-    filename: "chronofeed.js"
+    filename: "[name].js"
   },
   module: {
     loaders: [

@@ -9,6 +9,7 @@ require("../bower_components/json-editor/dist/jsoneditor.js");
 require("babel-polyfill");
 import route from "./route";
 let timelog = require("./timelog");
+global.Vue = require("../node_modules/vue/dist/vue");
 
 global.clearComponents = function() {
   global.component = {};

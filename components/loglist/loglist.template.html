@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-lg-8" id="placeForAlert">
+    </div>
+  </div>
+  <button class="btn btn-primary" onclick="addBlog();">Add Blog</button>
+  <table class="table table-hover">
+    <tbody v-for="log in logList">
+      <tr>
+        <td>
+          <strong>{{log.title}}</strong>
+        </td>
+        <td>
+          <span style="float:right;">
+            <button class="btn btn-primary" onclick="editBlog('{{log.domID}}');"><span id="editSpin{{log.domID}}"></span> Edit</button>
+            <button class="btn btn-primary" onclick="confirmDeleteBlog('{{log.domID}}')">Delete</button>
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" id="deleteHeader"></div>
+        <div class="modal-body">
+          Are you sure that you want to delete the blog?
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default" data-dismiss="modal">Don't Delete</button>
+          <button class="btn btn-primary" data-dismiss="modal" id="deleteButton">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

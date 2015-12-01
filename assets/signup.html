@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Login | ChronoFeed</title>
+    <link href="/images/cf.ico" rel="shortcut icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>ChronoFeed Signup</h1>
+
+      <p><a href="/login.html">Already have an account?</a>
+
+      <div class="row">
+        <div class="col-mid-3 col-lg-3">
+          <div class="form-group" id="inputUsernameFormGroup">
+            <label class="control-label" for="inputUsername">Username</label>
+            <input class="form-control" id="inputUsername" type="text" placeholder="Enter an username"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-mid-3 col-lg-3">
+          <div class="form-group" id="inputEmailFormGroup">
+            <label class="control-label" for="inputEmail">Email Address</label>
+            <input id="inputEmail" type="email" class="form-control" placeholder="Enter your email address"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-mid-3 col-lg-3">
+          <div class="form-group" id="inputPasswordFormGroup">
+            <label class="control-label" for="inputPassword">Password</label>
+            <input id="inputPassword" type="password" class="form-control"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-mid-6 col-lg-6 gr-alert" id="placeForAlert"></div>
+      </div>
+
+      <button class="btn btn-primary" onclick="clickSignup();" id="signupButton">Sign Up</button>
+    </div>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="/scripts/signup.js"></script>
+  </body>
+</html>

@@ -7,12 +7,14 @@ let child_process = require("child_process");
 let fsp = require("./fsp");
 
 let argv = minimist(process.argv.splice(2));
-let destDir = argv.dest || argv.d || "";
 let workingDir = argv["working-dir"] || argv.w || "";
 let manifestFilename = argv.output || argv.o || "";
 let appendManifest = argv["append-manifest"] || argv.a || false;
 let npmVersion = argv["npm-version"] || argv.n || false;
 let bowerVersion = argv["bower-version"] || argv.b || false;
+let destDir = argv.destination || argv.d || "";
+let extList = argv.extensions || argv.e || "";
+let copy = argv.copy || argv.c || "";
 let fileList = argv._;
 
 
@@ -25,53 +27,34 @@ Copy files to and put a fingerprint in the name
 */
 function createFiles(fileList,manifest,errorList) {
 	return fileList.map(function (filename) {
-		let p = new Promise(function (resolve,reject) {
-			fs.readFile(filename, function (err, data) {
-				if (err) {
-					return reject(err);
-				}
+		return fsp.readFile(filename).then(function (data) {
+			let p;
+			if (npmVersion) {
+				p = getPackageVersion("npm", npmVersion);
+			} else if (bowerVersion) {
+				p = getPackageVersion("bower", bowerVersion);
+			} else {
+				let md5 = crypto.createHash("md5");
+				md5.update(data);
+				p = Promise.resolve(md5.digest("hex"));
+			}
 
-				let p;
-				if (npmVersion) {
-					p = getPackageVersion("npm", npmVersion);
-				} else if (bowerVersion) {
-					p = getPackageVersion("bower", bowerVersion);
+			return p.then(function (val) {
+				let m = filename.match(/([^.]*)\.(.*)/);
+				let newFilename;
+				if (m) {
+					newFilename = m[1] + "-" + val + "." + m[2];
 				} else {
-					let md5 = crypto.createHash("md5");
-					md5.update(data);
-					p = Promise.resolve(md5.digest("hex"));
+					newFilename = filename + "-" + val;
 				}
 
-				p.then(function (val) {
-					let m = filename.match(/([^.]*)\.(.*)/);
-					let newFilename;
-					if (m) {
-						newFilename = m[1] + "-" + val + "." + m[2];
-					} else {
-						newFilename = filename + "-" + val;
-					}
-
-					manifest[filename] = newFilename;
-					resolve(new Promise(function (resolve, reject) {
-						fs.writeFile(newFilename, data, function (err) {
-							if (err) {
-								return reject(err);
-							}
-
-							console.log("wrote", newFilename);
-							resolve();
-						});
-					}));
-				}, function(val) {
-					reject(val);
+				manifest[filename] = newFilename;
+				return fsp.writeFile(newFilename, data).then(function () {
+					console.log("wrote", newFilename);
 				});
 			});
-		});
-		return p.then(function (val) {
-			return true;
-		}, function (val) {
-			errorList.push(val);
-			return false;
+		}).catch(function (err) {
+			errorList.push(err);
 		});
 	});
 }
