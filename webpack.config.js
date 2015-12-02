@@ -1,7 +1,8 @@
 module.exports = {
   entry: {
     chronofeed: "./bundle/main.js",
-    loglist: "./components/loglist/loglist.js"
+    loglist: "./components/loglist/loglist.js",
+    app: "./components/app/main.js"
   },
   output: {
     path: "build/scripts",
@@ -10,23 +11,22 @@ module.exports = {
   module: {
     loaders: [
       {
+        test: /\.vue$/,
+        loader: "vue"
+      },
+      {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         loader: "babel-loader",
         query: {
-          presets: ['es2015']
+          presets: ['es2015'],
+          plugins: ["transform-runtime"]
         }
       },
       {
         test: /\.html$/,
         loader: "html"
-      },
-      {
-        test: /\.css$/,
-        loader: "style!css"
-      },
-      { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' },
-      { test: /\.hbs$/, loader: "handlebars-loader" }
+      }
     ]
   }
 }
