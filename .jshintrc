@@ -1,0 +1,7 @@
+{
+  "browser": true,
+  "browserify": true,
+  "esnext": true,
+  "devel": true,
+  "predef": ["$","JSONEditor","Vue","chronofeed"]
+}
