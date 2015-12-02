@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
 	  <div class="row">
-	    <div class="col-md-8 col-lg-8" id="placeForAlert">{{err}}</div>
+	    <div v-if="err" class="col-md-8 col-lg-8 alert alert-warning" id="placeForAlert">{{err}}</div>
 	  </div>
 	  <div class="row">
 	    <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
@@ -48,8 +48,7 @@
 		data() {
 			return {
 				logList: [],
-				err: "",
-				edit: -1
+				err: ""
 			};
 		},
 		asyncData: function () {
@@ -65,6 +64,11 @@
 		},
 		created: function () {
 			this.sort();
+		},
+		events: {
+			"async-data": function () {
+				this.sort();
+			}
 		},
 		methods: {
 			clickAdd: function () {
@@ -90,8 +94,8 @@
 
 				document.getElementById("deleteHeader").innerHTML = "<strong>" + this.logList[index].title + "</strong>";
 				document.getElementById("deleteButton").onclick = function () {
-					global.vm.clickDelete(index);
-				};
+					this.clickDelete(index);
+				}.bind(this);
 				$("#deleteModal").modal();
 			},
 			clickDelete: function (index) {
