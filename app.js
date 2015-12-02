@@ -65,6 +65,10 @@ MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
 
   apiRoute(app,db);
 
+  app.get("/log/:id/", function (req,res,next) {
+    res.sendFile(__dirname + "/public/log.html");
+  });
+
   app.use(function(req,res,next) {
     res.status(404).send("Not Found.");
   });

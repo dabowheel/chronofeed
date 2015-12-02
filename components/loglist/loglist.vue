@@ -85,7 +85,8 @@
 				});
 			},
 			clickEdit: function (index) {
-				console.log("edit",index);
+				let log = this.logList[index];
+				location.assign("/log/" + log.title + "/");
 			},
 			clickConfirmDelete: function (event,index) {
 				if (event.ctrlKey) {

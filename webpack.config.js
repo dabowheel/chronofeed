@@ -2,6 +2,7 @@ module.exports = {
   entry: {
     chronofeed: "./bundle/main.js",
     loglist: "./components/loglist/loglist.js",
+    log: "./components/log/log.js",
     app: "./components/app/main.js"
   },
   output: {
