@@ -356,8 +356,8 @@
 
 	<div v-if="tab == 'visual'" class="container">
 		<div id="designerButtons">
-			<button class="btn btn-primary">Save</button>
-			<button class="btn btn-default">Cancel</button>
+			<button class="btn btn-primary" v-on:click="saveSchema">Save</button>
+			<button class="btn btn-default" v-on:click="cancelSchemaChange">Cancel</button>
 		</div>
 	</div>
 
@@ -1364,7 +1364,18 @@
 		    for (let name in schema.properties) {
 		      this.objectNames[name] = true;
 		    }
-		  }
+		  },
+		 	saveSchema() {
+		 		this.log.schema = this.schema;
+		 		chronofeed.request("POST", "/api/log/" + this.log._id + "/", this.log).then(function () {
+		 			location.assign("/log/" + encodeURI(this.title) + "/");
+		 		}.bind(this)).catch(function (err) {
+		 			this.err = err.message ? err.message : err;
+		 		}.bind(this));
+		 	},
+		 	cancelSchemaChange() {
+		 		location.assign("/log/" + encodeURI(this.title) + "/");
+		 	}
 		}
 	};
 </script>
