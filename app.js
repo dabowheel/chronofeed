@@ -69,6 +69,10 @@ MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
     res.sendFile(__dirname + "/public/log.html");
   });
 
+  app.get("/log/:id/designer/", function (req,res,next) {
+    res.sendFile(__dirname + "/public/designer.html");
+  });
+
   app.use(function(req,res,next) {
     res.status(404).send("Not Found.");
   });
@@ -79,11 +83,8 @@ MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
   });
 
   var server = app.listen(80, function () {
-
     var host = server.address().address;
     var port = server.address().port;
-
     console.log('Example app listening at http://%s:%s', host, port);
-
   });
 });
