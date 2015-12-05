@@ -7,6 +7,11 @@
     <title>Login | ChronoFeed</title>
     <link href="/images/cf.ico" rel="shortcut icon">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <style>
+      .cf-alert {
+        float: none;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
@@ -41,14 +46,49 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-mid-6 col-lg-6 gr-alert" id="placeForAlert"></div>
+      <div>
+        <div class="col-mid-6 col-lg-6 cf-alert" id="placeForAlert"></div>
       </div>
 
       <button class="btn btn-primary" onclick="clickSignup();" id="signupButton">Sign Up</button>
     </div>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="/scripts/signup.js"></script>
+    <script src="/scripts/chronofeed.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        document.getElementById("inputUsername").focus();
+        chronofeed.requireFields(["inputUsername", "inputEmail", "inputPassword"], "signupButton");
+        chronofeed.triggerOnEnter(["inputUsername", "inputEmail", "inputPassword"], clickSignup);
+      })();
+      function clickSignup() {
+        "use strict";
+        var sha256 = chronofeed.createHash("sha256");
+        var passwordPlain = document.getElementById("inputPassword").value;
+        if (passwordPlain.length < 8) {
+          $("#inputPasswordFormGroup").addClass("has-error");
+          $("#placeForAlert").addClass("alert alert-danger");
+          $("#placeForAlert").html("Password should be at least 8 characters");
+          return;
+        }
+
+        $("#inputPasswordFormGroup").removeClass("has-error");
+        $("#placeForAlert").removeClass("alert alert-danger");
+        $("#placeForAlert").html("");
+        var obj = {
+          username: document.getElementById("inputUsername").value,
+          email: document.getElementById("inputEmail").value,
+          password: sha256.update(document.getElementById("inputPassword").value, "utf8").digest("hex")
+        };
+        console.log("obj",obj);
+        chronofeed.request("POST", "/api/signup/", obj).then(function (result) {
+          location.assign("/loglist.html");
+        }).catch(function (err) {
+          $("#placeForAlert").addClass("alert alert-danger");
+          $("#placeForAlert").html(err);
+        });
+      }
+    </script>
   </body>
 </html>

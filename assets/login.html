@@ -64,11 +64,11 @@
       function clickLogin() {
         var sha256 = chronofeed.createHash("sha256");
         var cred = {
-          username: document.getElementById("inputUsername"),
-          password: sha256.update(document.getElementById("inputPassword"),"utf8").digest("hex")
+          username: document.getElementById("inputUsername").value,
+          password: sha256.update(document.getElementById("inputPassword").value,"utf8").digest("hex")
         };
         chronofeed.request("POST", "/api/login/", cred).then(function (result) {
-          if (!result.sucess) {
+          if (!result.success) {
             throw new Error("username and password do not match");
           }
 
