@@ -48,7 +48,6 @@ exports.readLogList = function (db,userID) {
     logs.find({userID:userID},function (err,result) {
       if (err) {
         return reject(err);
-        return;
       }
 
       result.toArray(function (err,list) {

@@ -22,6 +22,7 @@ before(function (done) {
 			next();
 		});
 		route(app,db);
+		global.db = db;
 		routeErrors(app);
 
 		global.port = 3000;

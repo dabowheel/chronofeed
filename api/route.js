@@ -1,7 +1,10 @@
 "use strict";
 let log = require("./log");
+let session = require("./session");
+let user = require("./user");
 
 module.exports = function (app,db) {
+  // caching
   app.use("/api/", function (req,res,next) {
     req.db = db;
     res.set("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -10,6 +13,7 @@ module.exports = function (app,db) {
     next();
   });
 
+  // log
 	app.put("/api/log/", log.createLog);
   app.get("/api/log/", log.readLogList);
   app.get("/api/log/:id/", log.readLog);
@@ -17,6 +21,14 @@ module.exports = function (app,db) {
 	app.delete("/api/log/", log.deleteLogList);
 	app.delete("/api/log/:id/", log.deleteLog);
 
+  // session
+  app.post("/api/signup/", session.signup);
+  app.post("/api/login/", session.login);
+
+  // user
+  app.delete("/api/user/:id/", user.deleteUser);
+
+  // params
   app.param(["id"], function (req,res,next,value) {
     req.api = {
       id: value

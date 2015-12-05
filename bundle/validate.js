@@ -21,7 +21,7 @@ function makeEventHandler(fieldList,buttonID) {
   };
 }
 
-function listenToFields(fieldList,buttonID) {
+exports.requireFields = function (fieldList,buttonID) {
   setButton(fieldList, buttonID);
   var handler = makeEventHandler(fieldList, buttonID);
   for (var id of fieldList) {
@@ -29,7 +29,7 @@ function listenToFields(fieldList,buttonID) {
   }
 }
 
-exports.addReturnPressListener = function (fieldList,callback) {
+exports.triggerOnEnter = function (fieldList,callback) {
   function handler (e) {
     if (e.keyCode == 13) {
       callback();
@@ -40,5 +40,3 @@ exports.addReturnPressListener = function (fieldList,callback) {
     document.getElementById(id).onkeypress = handler;
   }
 };
-
-exports.listenToFields = listenToFields;

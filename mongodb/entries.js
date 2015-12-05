@@ -67,5 +67,5 @@ exports.deleteEntry = function (db,userID,_id) {
 
       resolve();
     });
-  })
+  });
 };

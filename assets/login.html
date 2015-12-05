@@ -12,6 +12,9 @@
         position: relative;
         top: -11px;
       }
+      .cf-alert {
+        float: none;
+      }
     </style>
   </head>
   <body>
@@ -38,8 +41,8 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-sm-8 col-md-7 col-lg-6 gr-alert" id="placeForAlert"></div>
+        <div>
+          <div class="col-sm-8 col-md-7 col-lg-6 cf-alert" id="placeForAlert"></div>
         </div>
 
         <div class="cf-forgot-password-link" id="forgotPasswordLink">
@@ -52,6 +55,29 @@
     </div>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="/scripts/login.js"></script>
+    <script src="/scripts/chronofeed.js"></script>
+    <script>
+      document.getElementById("inputUsername").focus();
+      chronofeed.requireFields(["inputUsername", "inputPassword"], "loginButton");
+      chronofeed.triggerOnEnter(["inputUsername", "inputPassword"], clickLogin);
+
+      function clickLogin() {
+        var sha256 = chronofeed.createHash("sha256");
+        var cred = {
+          username: document.getElementById("inputUsername"),
+          password: sha256.update(document.getElementById("inputPassword"),"utf8").digest("hex")
+        };
+        chronofeed.request("POST", "/api/login/", cred).then(function (result) {
+          if (!result.sucess) {
+            throw new Error("username and password do not match");
+          }
+
+          location.assign("/loglist.html");
+        }).catch(function (err) {
+          $("#placeForAlert").addClass("alert alert-danger");
+          $("#placeForAlert").html(err.message ? err.message : err);
+        });
+      }
+    </script>
   </body>
 </html>
