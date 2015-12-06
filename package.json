@@ -16,7 +16,7 @@
     "jshint-node": "node_modules/.bin/jshint --config .jshintrc-node app.js assetfp.js assetfp-sub.js api mongodb",
     "jshint-vue": "node_modules/.bin/jshint -c .jshintrc-browser --extract always components -e vue",
     "jshint-html": "node_modules/.bin/jshint -c .jshintrc-browser --extract always assets -e html",
-    "jshint-browser": "node_modules/.bin/jshint --config .jshintrc-browser components assets/scripts",
+    "jshint-browser": "node_modules/.bin/jshint --config .jshintrc-browser components",
     "eslint": "node_modules/.bin/eslint *.js api components assets/scripts",
     "wc": "git ls-files | grep .js | xargs wc -l",
     "copy": "npm run copy-assets && npm run copy-json-editor",

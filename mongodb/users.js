@@ -36,21 +36,15 @@ exports.signup = function (db, username, email, password) {
 exports.login = function (db, username, password) {
   let users = db.collection("users");
   let filter = {
-    $and: [
+    $or: [
       {
-        $or: [
-          {
-            username: username
-          },
-          {
-            email: username
-          }
-        ]
+        username: username
       },
       {
-        password: password
+        email: username
       }
-    ]
+    ],
+    password: password
   };
   return users.find(filter).limit(1).next().then(function (user) {
     if (!user) {
