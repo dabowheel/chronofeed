@@ -36,12 +36,19 @@ exports.signup = function (db, username, email, password) {
 exports.login = function (db, username, password) {
   let users = db.collection("users");
   let filter = {
-    $or: [
+    $and: [
       {
-        username: username
+        $or: [
+          {
+            username: username
+          },
+          {
+            email: username
+          }
+        ]
       },
       {
-        email: username
+        password: password
       }
     ]
   };

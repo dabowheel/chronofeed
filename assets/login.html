@@ -15,41 +15,59 @@
       .cf-alert {
         float: none;
       }
+      .cf-text-align-center {
+        text-align: center;
+      }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>ChronoFeed Login</h1>
 
-      <form>
-        <p><a href="/signup.html">Not registered yet?</a></p>
-        <div class="row">
-          <div class="col-sm-5 col-md-4 col-lg-3">
-            <div class="form-group" id="inputUsernameFormGroup">
-              <label class="control-label" for="inputUsername">Username</label>
-              <input class="form-control" id="inputUsername" type="text" placeholder="Enter your username"/>
-            </div>
+
+      <form class="form-horizontal">
+
+        <div class="form-group cf-text-align-center">
+            <h1>ChronoFeed Login</h1>
+        </div>
+
+        <div class="form-group">
+          <div class="col-lg-offset-2 col-lg-10">
+            <a href="/signup.html">Not registered yet?</a>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-sm-5 col-md-4 col-lg-3">
-            <div class="form-group" id="inputPasswordFormGroup">
-              <label class="control-label" for="inputPassword">Password</label>
-              <input class="form-control" id="inputPassword" type="password" />
-            </div>
+        <div class="form-group" id="inputUsernameFormGroup">
+          <label class="col-lg-2 control-label" for="inputUsername">Username</label>
+          <div class="col-lg-10">
+            <input class="form-control" id="inputUsername" type="text" placeholder="Enter your username"/>
           </div>
         </div>
 
-        <div>
-          <div class="col-sm-8 col-md-7 col-lg-6 cf-alert" id="placeForAlert"></div>
+        <div class="form-group" id="inputPasswordFormGroup">
+          <label class="col-lg-2 control-label" for="inputPassword">Password</label>
+          <div class="col-lg-10">
+            <input class="form-control" id="inputPassword" type="password" />
+          </div>
         </div>
 
-        <div class="cf-forgot-password-link" id="forgotPasswordLink">
-          <a href="/forgotPassword.html">Did you forget your password?</a>
+        <div class="form-group">
+          <div class="col-lg-offset-2 col-lg-10">
+            <div class="cf-alert" id="placeForAlert"></div>
+          </div>
         </div>
 
-        <button class="btn btn-primary" type="button" onclick="clickLogin();" id="loginButton">Login</button>
+        <div class="form-group">
+          <div class="col-lg-offset-2 col-lg-10 cf-forgot-password-link" id="forgotPasswordLink">
+            <a href="/forgotPassword.html">Did you forget your password?</a>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-lg-offset-2 col-lg-10">
+            <button class="btn btn-primary" type="button" onclick="clickLogin();" id="loginButton">Login</button>
+          </div>
+        </div>
+
       </form>
 
     </div>
