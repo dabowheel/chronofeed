@@ -1,5 +1,8 @@
 <template>
 	<div class="container">
+
+		<menu></menu>
+
 	  <div class="row">
 	    <div v-if="err" class="col-md-8 col-lg-8 alert alert-warning" id="placeForAlert">{{err}}</div>
 	  </div>
@@ -44,6 +47,8 @@
 </template>
 
 <script>
+	import menu from "../menu/menu.vue";
+
 	export default {
 		data() {
 			return {
@@ -136,6 +141,9 @@
 			    return 0;
 			  });
 			}
+		},
+		components: {
+			menu: menu
 		}
 	};
 </script>

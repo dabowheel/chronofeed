@@ -61,17 +61,33 @@ MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
     next();
   });
 
-  app.use(express.static('public'));
-
   apiRoute(app,db);
 
   app.get("/log/:id/", function (req,res,next) {
+    if (!req.session.userID) {
+      return res.redirect("/login.html");
+    }
+
     res.sendFile(__dirname + "/public/log.html");
   });
 
   app.get("/log/:id/designer/", function (req,res,next) {
+    if (!req.session.userID) {
+      return res.redirect("/login.html");
+    }
+
     res.sendFile(__dirname + "/public/designer.html");
   });
+
+  app.get("/loglist.html", function (req,res,next) {
+    if (!req.session.userID) {
+      return res.redirect("/login.html");
+    }
+    
+    next();
+  });
+
+  app.use(express.static('public'));
 
   app.use(function(req,res,next) {
     res.status(404).send("Not Found.");

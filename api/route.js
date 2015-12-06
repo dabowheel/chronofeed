@@ -14,6 +14,13 @@ module.exports = function (app,db) {
   });
 
   // log
+  app.use("/api/log/*", function (req,res,next) {
+    if (!req.session.userID) {
+      return res.redirect("/login.html");
+    }
+    next();
+  });
+
 	app.put("/api/log/", log.createLog);
   app.get("/api/log/", log.readLogList);
   app.get("/api/log/:id/", log.readLog);
@@ -24,6 +31,7 @@ module.exports = function (app,db) {
   // session
   app.post("/api/signup/", session.signup);
   app.post("/api/login/", session.login);
+  app.get("/api/logout/", session.logout);
 
   // user
   app.delete("/api/user/:id/", user.deleteUser);
