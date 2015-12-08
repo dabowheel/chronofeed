@@ -35,6 +35,8 @@
 
 <template>
 	<div class="container">
+		<menu islog="true" v-bind:logtitle="title"></menu>
+
 	  <div v-if="err" class="col-md-6 col-lg-6 alert alert-warning" id="placeForAlert">{{err}}</div>
 
 	  <div v-if="editTitle" class="row">
@@ -112,7 +114,13 @@
 </template>
 
 <script>
+	import menu from "../menu/menu.vue";
+	global.menu = menu;
+
 	export default {
+		components: {
+			menu: menu
+		},
 		data: function () {
 			let m = location.pathname.match(/^\/log\/(.*)\/$/);
 			if (!m) {
@@ -125,7 +133,11 @@
 				log: null,
 				err: "",
 				editTitle: false,
-				entryList: []
+				entryList: [],
+				menuData: {
+					isLog: true,
+					logTitle: title
+				}
 			};
 		},
 		asyncData: function () {

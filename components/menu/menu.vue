@@ -8,12 +8,12 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="javascript:void(0)" onclick="component.Menu.clickBlogList();">ChronoFeed</a>
+        <a class="navbar-brand" href="/loglist.html">ChronoFeed</a>
       </div>
       <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav" id="navBar">
-          <li v-if="isLog || isDesigner" v-bind:class="{'active': isLog}"><a href="/log/{{title}}/">{{title}}</a></li>
-          <li v-if="isDesigner" v-bind:class="{'active': isDesigner}"><a href="/log/{{title}}/designer/">Designer</a></li>
+          <li v-if="islog || isdesigner" v-bind:class="{'active': islog}"><a href="/log/{{encodeURI(logtitle)}}/">{{logtitle}}</a></li>
+          <li v-if="isdesigner" v-bind:class="{'active': isdesigner}"><a href="/log/{{encodeURI(logtitle)}}/designer/">Designer</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li v-bind:class="{'active': isProfile}"><a href="/profile.html" title="profile"><span class="glyphicon glyphicon-user"> Profile<span></a></li>
@@ -32,13 +32,14 @@
 
 <script>
   module.exports = {
-    data: {
-      isProfile: false,
-      isAdmin: false,
-      isLog: false,
-      isDesigner: false,
-      logTitle: "",
-      err: ""
+    data: function () {
+      return {
+        err: ""
+      };
+    },
+    props: ["islog","logtitle","isdesigner"],
+    ready: function () {
+      global.menuVM = this;
     },
     methods: {
       clickLogout() {

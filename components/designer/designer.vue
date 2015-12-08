@@ -212,6 +212,9 @@
 </style>
 
 <template>
+	<div class="container">
+		<menu isdesigner="true" v-bind:logtitle="title"></menu>
+	</div>
 
 	<div v-if="err" class="container">
 	  <div class="row">
@@ -377,7 +380,12 @@
 	const DATA_TRANSFER_TYPE_DEFAULT = "text/plain";
 	const DATA_TRANSFER_TYPE_IE = "Text";
 
+	import menu from "../menu/menu.vue";
+
 	export default {
+		components: {
+			menu: menu
+		},
 		data: function () {
 			let m = location.pathname.match(/^\/log\/(.*)\/designer\/$/);
 			if (!m) {
