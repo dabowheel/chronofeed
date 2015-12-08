@@ -928,7 +928,7 @@
 		        this.editEnumList = [];
 		      }
 		      this.setEnumTable();
-		      chronofeed.addReturnPressListener(["inputEnum"], function () {
+		      chronofeed.triggerOnEnter(["inputEnum"], function () {
 		        this.clickAddEnum();
 		      }.bind(this));
 		    } else {
@@ -950,8 +950,8 @@
 		        break;
 		    }
 
-		    chronofeed.listenToFields(["inputPropertyName"], "editAccept");
-		    chronofeed.addReturnPressListener(["inputTitle", "inputPropertyName", "inputDescription", "inputFormat", "inputDefault"], function (event) {
+		    chronofeed.requireFields(["inputPropertyName"], "editAccept");
+		    chronofeed.triggerOnEnter(["inputTitle", "inputPropertyName", "inputDescription", "inputFormat", "inputDefault"], function (event) {
 		      this.clickAcceptEdit(editor);
 		    }.bind(this));
 		    document.getElementById("editAccept").onclick = function (event) {
