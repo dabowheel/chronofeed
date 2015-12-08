@@ -14,7 +14,7 @@ before(function (done) {
 
 		let app = express();
 		app.use(bodyParser.json());
-		global.userID = 1;
+		global.userID = "userid1";
 		app.use(function (req,res,next) {
 			req.session = {
 				userID: global.userID

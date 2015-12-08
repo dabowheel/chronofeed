@@ -2,6 +2,7 @@
 let log = require("./log");
 let session = require("./session");
 let user = require("./user");
+let entry = require("./entry");
 
 module.exports = function (app,db) {
   // caching
@@ -36,11 +37,23 @@ module.exports = function (app,db) {
   // user
   app.delete("/api/user/:id/", user.deleteUser);
 
+  // entry
+  app.put("/api/entry/:logID/", entry.createEntry);
+  app.get("/api/entry/:logID/:id/", entry.readEntry);
+  // app.get("/api/entry/:logID/", entry.readEntryList);
+  // app.post("/api/entry/:logID/:id/", entry.updateEntry);
+  // app.delete("/api/entry/:logID/:id", entry.deleteEntry);
+
   // params
   app.param(["id"], function (req,res,next,value) {
-    req.api = {
-      id: value
-    };
+    if (!req.api) req.api = {};
+    req.api.id = value;
+    next();
+  });
+
+  app.param(["logID"], function (req,res,next,value) {
+    if (!req.api) req.api = {};
+    req.api.logID = value;
     next();
   });
 };

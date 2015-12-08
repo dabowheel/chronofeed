@@ -932,7 +932,7 @@
 		    if (editor.schema.type == "string") {
 		      document.getElementById("inputEnumFormGroup").style.display = "";
 		      this.editEnumList = editor.schema.enum;
-		      if (!this.editEnumList || !this.editEnumList.push) {
+		      if (!this.editEnumList || !this.editEnumList.push || !this.editEnumList.length || !this.editEnumList.splice) {
 		        this.editEnumList = [];
 		      }
 		      this.setEnumTable();
@@ -1076,34 +1076,32 @@
 		      return;
 		    }
 
-		    if (values.title) {
-		      schema.title = values.title;
-		    }
+	      schema.title = values.title;
+	      if (!schema.title) delete schema.title;
 
-		    if (values.description) {
-		      schema.description = values.description;
-		    }
+	      schema.description = values.description;
+	      if (!schema.description) delete schema.description;
 
-		    if (values.format) {
-		      schema.format = values.format;
-		    }
+	      schema.format = values.format;
+	      if (!schema.format) delete schema.format;
 
 		    if (schema.type == "string") {
-		      if (this.editEnumList.length) {
-		        schema.enum = this.editEnumList;
-		      }
+	        schema.enum = this.editEnumList;
+	        if (schema.enum.length === 0) delete schema.enum;
 		    }
 
-		    if (values.default) {
-		      switch (schema.type) {
-		        case "string":
-		        case "integer":
-		        case "number":
-		        case "boolean":
-		          schema.default = values.default;
-		          break;
-		      }
-		    }
+	      switch (schema.type) {
+	        case "string":
+	        case "integer":
+	        case "number":
+	        case "boolean":
+	          schema.default = values.default;
+	          break;
+	        default:
+	        	schema.default = schema.default || "";
+	        	break;
+	      }
+	      if (!schema.default) delete schema.default;
 
 		    let pathArray = editor.path.split(".");
 		    let name = pathArray.pop();
