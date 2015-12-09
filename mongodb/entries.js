@@ -43,10 +43,8 @@ exports.updateEntry = function (db,userID,logID,_id,entry) {
     userID: userID,
     logID: logID
   };
-  let obj = {
-    $set: entry
-  };
-  return entries.updateOne({_id:new ObjectID(_id),userID:userID}, obj).then(function (result) {
+  delete entry._id;
+  return entries.updateOne({_id:new ObjectID(_id),userID:userID}, entry).then(function (result) {
     if (result.matchedCount < 1) {
       throw new Error("entry not found");
     }

@@ -1,5 +1,5 @@
 <template>
-  <div><strong>Edit</strong></div>
+  <div id="form"></div>
 
   <div class="form-group">
     <div class='input-group date cf-input-group' id='datetimepicker'>
@@ -24,9 +24,94 @@
         this.initDateTimePicker();
       }
     },
+    ready: function () {
+      this.extendEditorTheme();
+      this.createJSONEditor();
+    },
     methods: {
+      createJSONEditor() {
+        let form = document.getElementById("form");
+        let options = {
+          theme: "chronofeed",
+          schema: this.log.schema,
+          startval: this.getInitialValue(this.log.schema, this.entry.data),
+          disable_edit_json: true,
+          disable_properties: true,
+          disable_array_add: true,
+          disable_array_delete: true,
+          disable_array_reorder: true,
+          disable_collapse: true
+        };
+        try {
+          this.editor = new JSONEditor(form,options);
+        } catch (err) {
+          this.$dispatch("error", err);
+        }
+      },
+      extendEditorTheme() {
+        JSONEditor.defaults.themes.chronofeed = JSONEditor.defaults.themes.bootstrap3.extend({
+          getTextareaInput: function () {
+            let el = this._super();
+            el.style.height = "300px";
+            el.style.resize = "none";
+            return el;
+          }
+        });
+      },
+      getInitialValue(schema, value) {
+        switch (schema.type) {
+          case "string":
+            if (value) {
+              return value;
+            } else if (schema.default) {
+              return schema.default;
+            }
+            return "";
+          case "integer":
+            if (value) {
+              return value;
+            } else if (schema.default) {
+              return schema.default;
+            }
+            return 0;
+          case "number":
+            if (value) {
+              return value;
+            } else if (schema.default) {
+              return schema.default;
+            }
+            return 0;
+          case "boolean":
+            if (value) {
+              return value;
+            } else if (schema.default) {
+              return schema.default;
+            }
+            return false;
+          case "array":
+            if (value && schema.items) {
+              let ret = [];
+              for (let i = 0; i < value.length; i++) {
+                ret[i] = this.getInitialValue(schema.items, value[i]);
+              }
+              return ret;
+            } else if (schema.items) {
+              return [this.getInitialValue(schema.items)];
+            } else {
+              return [];
+            }
+            break;
+          case "object":
+            let ret = {};
+            for (let key in schema.properties) {
+              ret[key] = this.getInitialValue(schema.properties[key], value ? value[key] : undefined);
+            }
+            return ret;
+        }
+      },
       saveEntryChanges() {
         this.getDateTime(this.entry);
+        this.entry.data = this.editor.getValue();
         this.entry.edit = false;
         if (this.entry._id) {
           chronofeed.request("POST", "/api/entry/" + this.log._id + "/" + this.entry._id + "/", this.cleanupEntry(this.entry)).then(function () {
