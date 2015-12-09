@@ -70,26 +70,9 @@
 
 	      <tr v-if="entry.edit">
 	        <td colspan="2">
-	          <div><strong>Edit</strong></div>
 
-	          <!-- <div class="container"> -->
-	            <!-- <div class="row"> -->
-	                <div class="form-group">
-	                  <div class='input-group date cf-input-group' id='datetimepicker'>
-	                    <input type='text' class="form-control cf-form-group" />
-	                    <span class="input-group-addon cf-input-group-addon">
-	                      <span class="glyphicon glyphicon-calendar"></span>
-	                    </span>
-	                  </div>
-	                </div>
-	              </div>
-	            <!-- </div> -->
-	          <!-- </div> -->
+	        <entryedit v-bind:log="log" v-bind:entry="entry"></entryedit>
 
-	          <div class="cf-row-buttons">
-	            <button class="btn btn-primary cf-hotkey" v-on:click="saveEntryChanges($index);" accesskey="a">Accept</button>
-	            <button class="btn btn-primary cf-hotkey" v-on:click="cancelEntryChanges($index);" accesskey="c">Cancel</button>
-	          </div>
 	        </td>
 	      </tr>
 
@@ -112,14 +95,16 @@
 
 <script>
 	import menu from "../menu/menu.vue";
-	global.menu = menu;
+	import entryedit from "./entryEdit.vue";
+
 	Vue.filter("moment", function (value) {
 		return moment(value).format("MM/DD/YYYY h:mm A");
 	});
 
 	export default {
 		components: {
-			menu: menu
+			menu: menu,
+			entryedit: entryedit
 		},
 		data: function () {
 			let m = location.pathname.match(/^\/log\/(.*)\/$/);
@@ -173,6 +158,11 @@
 		},
 		created: function () {
 			document.title = this.title + " | Chronofeed";
+		},
+		events: {
+			error: function (err) {
+				this.err = err;
+			}
 		},
 		methods: {
 			convertDates(entryList) {
@@ -229,15 +219,8 @@
 		    this.closeEntries();
 		    this.entryList.push(entry);
 		    Vue.nextTick(function () {
-			    this.initDateTimePicker(entry);
+			    this.$broadcast("initDateTimePicker");
 			  }.bind(this));
-		  },
-		  initDateTimePicker(entry) {
-			  $('#datetimepicker').datetimepicker();
-			  $("#datetimepicker").data("DateTimePicker").date(entry.date);
-		  },
-		  getDateTime(entry) {
-		  	entry.date = $("#datetimepicker").data("DateTimePicker").date();
 		  },
 		  closeEntries() {
 		  	for (let entry of this.entryList) {
@@ -251,31 +234,11 @@
 		  	delete entry.edit;
 		  	return entry;
 		  },
-		  saveEntryChanges(index) {
-		  	let entry = this.entryList[index];
-		  	this.getDateTime(entry);
-		  	entry.edit = false;
-		    if (entry._id) {
-		      chronofeed.request("POST", "/api/entry/" + this.log._id + "/" + entry._id + "/", this.cleanupEntry(entry)).then(function () {
-		      }).catch(function (err) {
-		      	this.err = err;
-		      });
-		    } else {
-		      chronofeed.request("PUT", "/api/entry/" + this.log._id + "/", this.cleanupEntry(entry)).then(function (result) {
-		      	entry._id = result._id;
-		      }).catch(function (err) {
-		      	this.err = err;
-		      }.bind(this));
-		    }
-		  },
-		  cancelEntryChanges(index) {
-		  	this.entryList[index].edit = false;
-		  },
 		  editEntry(index) {
 		  	let entry = this.entryList[index];
 		  	Vue.set(entry, "edit", true);
 		  	Vue.nextTick(function () {
-			  	this.initDateTimePicker(entry);
+			  	this.$broadcast("initDateTimePicker");
 			  }.bind(this));
 		  },
 		  deleteEntry(index) {
