@@ -37,7 +37,7 @@
 	<div class="container">
 		<menu islog="true" v-bind:logtitle="title"></menu>
 
-	  <div v-if="err" class="col-md-6 col-lg-6 alert alert-warning" id="placeForAlert">{{err}}</div>
+	  <div v-if="err" class="col-md-6 col-lg-6 alert alert-warning" id="placeForAlert">{{err.message ? err.message : err}}</div>
 
 	  <div v-if="editTitle" class="row">
 	    <div class="col-md-6 col-lg-6">
@@ -67,14 +67,13 @@
 
 	  <table class="table table-hover">
 	    <tbody v-for="entry in entryList">
+
 	      <tr v-if="entry.edit">
 	        <td colspan="2">
 	          <div><strong>Edit</strong></div>
-	          <div><input class="form-control" id="posttitle" type="text" v-model="entry.title"/></div>
-	          <div><textarea class="form-control" id="posttext" rows="5" v-model="entry.text"></textarea></div>
 
-	          <div class="container">
-	            <div class="row">
+	          <!-- <div class="container"> -->
+	            <!-- <div class="row"> -->
 	                <div class="form-group">
 	                  <div class='input-group date cf-input-group' id='datetimepicker'>
 	                    <input type='text' class="form-control cf-form-group" />
@@ -84,26 +83,24 @@
 	                  </div>
 	                </div>
 	              </div>
-	            </div>
-	          </div>
+	            <!-- </div> -->
+	          <!-- </div> -->
 
 	          <div class="cf-row-buttons">
-	            <button class="btn btn-primary cf-hotkey" v-on:click="savePostChanges($index);" accesskey="a">Accept</button>
-	            <button class="btn btn-primary cf-hotkey" v-on:click="cancelPostChanges($index);" accesskey="c">Cancel</button>
+	            <button class="btn btn-primary cf-hotkey" v-on:click="saveEntryChanges($index);" accesskey="a">Accept</button>
+	            <button class="btn btn-primary cf-hotkey" v-on:click="cancelEntryChanges($index);" accesskey="c">Cancel</button>
 	          </div>
 	        </td>
 	      </tr>
 
 	      <tr v-if="!entry.edit">
 	        <td>
-	          <div><strong>{{entry.title}}</strong></div>
-	          <div>{{{entry.text}}}</div>
-	          <div>{{moment(entry.date).format()}}</div>
+	          <div>{{entry.date | moment}}</div>
 	        </td>
 	        <td>
 	          <span class="cf-row-buttons">
-	            <button class="btn btn-primary" v-on:click="editPost($index);">Edit</button>
-	            <button class="btn btn-primary" v-on:click="deletePost($index);">Delete</button>
+	            <button class="btn btn-primary" v-on:click="editEntry($index);">Edit</button>
+	            <button class="btn btn-primary" v-on:click="deleteEntry($index);">Delete</button>
 	          </span>
 	        </td>
 	      </tr>
@@ -116,6 +113,9 @@
 <script>
 	import menu from "../menu/menu.vue";
 	global.menu = menu;
+	Vue.filter("moment", function (value) {
+		return moment(value).format("MM/DD/YYYY h:mm A");
+	});
 
 	export default {
 		components: {
@@ -156,12 +156,16 @@
 					throw new Error("could not find log");
 				}
 
-				return {
-					log: log,
-					logList: logList,
-					err: err
-				};
-			}).catch(function (err) {
+				return chronofeed.request("GET", "/api/entry/" + log._id + "/").then(function (result) {
+					let entryList = result.list;
+					this.convertDates(entryList);
+					return {
+						log: log,
+						logList: logList,
+						entryList: result.list
+					};
+				}.bind(this));
+			}.bind(this)).catch(function (err) {
 				return {
 					err: err.message ? err.message : err
 				};
@@ -171,6 +175,13 @@
 			document.title = this.title + " | Chronofeed";
 		},
 		methods: {
+			convertDates(entryList) {
+				for (let entry of entryList) {
+					if (entry.date) {
+						entry.date = new Date(entry.date);
+					}
+				}
+			},
 			clickEditTitle() {
 				this.editTitle = true;
 			},
@@ -214,33 +225,65 @@
 		    	date: new Date(),
 		    	edit: true
 		    };
+
+		    this.closeEntries();
 		    this.entryList.push(entry);
+		    Vue.nextTick(function () {
+			    this.initDateTimePicker(entry);
+			  }.bind(this));
+		  },
+		  initDateTimePicker(entry) {
+			  $('#datetimepicker').datetimepicker();
+			  $("#datetimepicker").data("DateTimePicker").date(entry.date);
+		  },
+		  getDateTime(entry) {
+		  	entry.date = $("#datetimepicker").data("DateTimePicker").date();
+		  },
+		  closeEntries() {
+		  	for (let entry of this.entryList) {
+		  		if (entry.edit) {
+		  			entry.edit = false;
+		  		}
+		  	}
+		  },
+		  cleanupEntry(entry) {
+		  	entry = Object.assign({}, entry);
+		  	delete entry.edit;
+		  	return entry;
 		  },
 		  saveEntryChanges(index) {
 		  	let entry = this.entryList[index];
+		  	this.getDateTime(entry);
 		  	entry.edit = false;
 		    if (entry._id) {
-		      chronofeed.request("POST", "/api/entry/" + entry._id + "/", entry).then(function () {
+		      chronofeed.request("POST", "/api/entry/" + this.log._id + "/" + entry._id + "/", this.cleanupEntry(entry)).then(function () {
 		      }).catch(function (err) {
-		      	this.err = err.message;
+		      	this.err = err;
 		      });
 		    } else {
-		      chronofeed.request("PUT", "/api/entry/", entry).then(function (newEntry) {
-		      	entry._id = newEntry._id;
+		      chronofeed.request("PUT", "/api/entry/" + this.log._id + "/", this.cleanupEntry(entry)).then(function (result) {
+		      	entry._id = result._id;
 		      }).catch(function (err) {
-		      	this.err = err.message;
-		      });
+		      	this.err = err;
+		      }.bind(this));
 		    }
 		  },
 		  cancelEntryChanges(index) {
 		  	this.entryList[index].edit = false;
 		  },
+		  editEntry(index) {
+		  	let entry = this.entryList[index];
+		  	Vue.set(entry, "edit", true);
+		  	Vue.nextTick(function () {
+			  	this.initDateTimePicker(entry);
+			  }.bind(this));
+		  },
 		  deleteEntry(index) {
-		  	let entry = entryList[index];
+		  	let entry = this.entryList[index];
 		    this.entryList.splice(index,1);
-		    chronofeed.request("DELETE", "/api/entry/" + entry._id + "/", null).catch(function (err) {
-		    	this.err = err.message;
-		    });
+		    chronofeed.request("DELETE", "/api/entry/" + this.log._id + "/" + entry._id + "/", null).catch(function (err) {
+		    	this.err = err;
+		    }.bind(this));
 		  }
 		}
 	};

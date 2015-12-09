@@ -28,12 +28,12 @@ function request(method,path,obj) {
     };
 
     request.open(method, path, true);
-    if (method == "GET") {
-      request.send();
-    } else {
+    if (obj) {
       request.setRequestHeader("Content-type","application/json");
       var body = JSON.stringify(obj);
       request.send(body);
+    } else {
+      request.send();
     }
   });
 }

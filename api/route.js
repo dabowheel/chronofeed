@@ -40,9 +40,10 @@ module.exports = function (app,db) {
   // entry
   app.put("/api/entry/:logID/", entry.createEntry);
   app.get("/api/entry/:logID/:id/", entry.readEntry);
-  // app.get("/api/entry/:logID/", entry.readEntryList);
-  // app.post("/api/entry/:logID/:id/", entry.updateEntry);
-  // app.delete("/api/entry/:logID/:id", entry.deleteEntry);
+  app.get("/api/entry/:logID/", entry.readEntryList);
+  app.post("/api/entry/:logID/:id/", entry.updateEntry);
+  app.delete("/api/entry/:logID/:id", entry.deleteEntry);
+  app.delete("/api/entry/:logID/", entry.deleteEntryList);
 
   // params
   app.param(["id"], function (req,res,next,value) {
