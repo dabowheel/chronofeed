@@ -78,7 +78,7 @@
 
 	      <tr v-if="!entry.edit">
 	        <td>
-	          <div>{{entry.date | moment}}</div>
+	        	<entry v-bind:log="log" v-bind:index="$index" v-bind:entry="entry"></entry>
 	        </td>
 	        <td>
 	          <span class="cf-row-buttons">
@@ -95,7 +95,8 @@
 
 <script>
 	import menu from "../menu/menu.vue";
-	import entryedit from "./entryEdit.vue";
+	import entryedit from "../entry/entryEdit.vue";
+	import entry from "../entry/entry.vue";
 
 	Vue.filter("moment", function (value) {
 		return moment(value).format("MM/DD/YYYY h:mm A");
@@ -104,7 +105,8 @@
 	export default {
 		components: {
 			menu: menu,
-			entryedit: entryedit
+			entryedit: entryedit,
+			entry: entry
 		},
 		data: function () {
 			let m = location.pathname.match(/^\/log\/(.*)\/$/);
