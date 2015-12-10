@@ -10,7 +10,7 @@
     </div>
   </div>
 
-  <div class="cf-row-buttons">
+  <div class="cf-save-buttons">
     <button class="btn btn-primary cf-hotkey" v-on:click="saveEntryChanges();" accesskey="a">Accept</button>
     <button class="btn btn-primary cf-hotkey" v-on:click="cancelEntryChanges();" accesskey="c">Cancel</button>
   </div>

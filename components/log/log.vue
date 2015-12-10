@@ -28,7 +28,17 @@
 	}
 
 	.cf-row-buttons {
-	  float: right;
+	  float: left;
+	  vertical-align: middle;
+	}
+
+	.cf-save-buttons {
+		float: right;
+	}
+
+	.cf-button-td {
+		vertical-align: middle !important;
+		width: 65px;
 	}
 
 </style>
@@ -77,14 +87,18 @@
 	      </tr>
 
 	      <tr v-if="!entry.edit">
-	        <td>
-	        	<entry v-bind:log="log" v-bind:index="$index" v-bind:entry="entry"></entry>
+	        <td class="cf-button-td">
+	          <div class="btn-group btn-group-xs cf-row-buttons" role="group">
+	            <button class="btn btn-default btn" v-on:click="editEntry($index);" title="edit">
+	            	<span class="glyphicon glyphicon-pencil"></span>
+            	</button>
+	            <button class="btn btn-default" v-on:click="deleteEntry($index);" title="delete">
+	            	<span class="glyphicon glyphicon-remove"></span>
+            	</button>
+	          </div>
 	        </td>
 	        <td>
-	          <span class="cf-row-buttons">
-	            <button class="btn btn-primary" v-on:click="editEntry($index);">Edit</button>
-	            <button class="btn btn-primary" v-on:click="deleteEntry($index);">Delete</button>
-	          </span>
+	        	<entry v-bind:log="log" v-bind:index="$index" v-bind:entry="entry"></entry>
 	        </td>
 	      </tr>
 
@@ -241,7 +255,7 @@
 		    };
 
 		    this.closeEntries();
-		    this.entryList.push(entry);
+		    this.entryList.unshift(entry);
 		    Vue.nextTick(function () {
 			    this.$broadcast("initDateTimePicker");
 			  }.bind(this));
