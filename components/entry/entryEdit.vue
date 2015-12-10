@@ -18,7 +18,7 @@
 
 <script>
   export default {
-    props: ["log", "entry"],
+    props: ["log", "entryList", "index", "entry"],
     events: {
       initDateTimePicker: function () {
         this.initDateTimePicker();
@@ -112,22 +112,29 @@
       saveEntryChanges() {
         this.getDateTime(this.entry);
         this.entry.data = this.editor.getValue();
-        this.entry.edit = false;
         if (this.entry._id) {
           chronofeed.request("POST", "/api/entry/" + this.log._id + "/" + this.entry._id + "/", this.cleanupEntry(this.entry)).then(function () {
-          }).catch(function (err) {
+            this.entry.edit = false;
+          }.bind(this)).catch(function (err) {
             this.$dispatch("error", err);
-          });
+            this.entry.edit = false;
+          }.bind(this));
         } else {
           chronofeed.request("PUT", "/api/entry/" + this.log._id + "/", this.cleanupEntry(this.entry)).then(function (result) {
-            entry._id = result._id;
-          }).catch(function (err) {
+            this.entry._id = result._id;
+            this.entry.edit = false;
+          }.bind(this)).catch(function (err) {
             this.$dispatch("error", err);
+            this.entry.edit = false;
           }.bind(this));
         }
       },
       cancelEntryChanges() {
-        this.entry.edit = false;
+        if (this.entry._id) {
+          this.entry.edit = false;
+        } else {
+          this.entryList.splice(this.index, 1);
+        }
       },
       cleanupEntry() {
         let newEntry = Object.assign({}, this.entry);

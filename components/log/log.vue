@@ -63,7 +63,7 @@
 	    </div>
 	  </div>
 
-	  <button v-if="log" class="btn btn-primary" v-on:click="addEntry();">Add Entry</button>
+	  <button v-if="log && log.schema" class="btn btn-primary" v-on:click="addEntry();">Add Entry</button>
 
 	  <table class="table table-hover">
 	    <tbody v-for="entry in entryList">
@@ -71,7 +71,7 @@
 	      <tr v-if="entry.edit">
 	        <td colspan="2">
 
-	        <entryedit v-bind:log="log" v-bind:entry="entry"></entryedit>
+	        <entryedit v-bind:log="log" v-bind:entry-list="entryList" v-bind:index="$index" v-bind:entry="entry"></entryedit>
 
 	        </td>
 	      </tr>
@@ -163,6 +163,7 @@
 		},
 		events: {
 			error: function (err) {
+				console.log("event error", err);
 				this.err = err;
 			}
 		},

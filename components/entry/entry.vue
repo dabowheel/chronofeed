@@ -15,6 +15,8 @@
     },
     methods: {
       addType: function (summary,propName,schema,value) {
+        if (!value) return;
+        
         switch (schema.type) {
           case "string":
           case "integer":
