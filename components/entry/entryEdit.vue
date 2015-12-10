@@ -114,16 +114,20 @@
         this.entry.data = this.editor.getValue();
         if (this.entry._id) {
           chronofeed.request("POST", "/api/entry/" + this.log._id + "/" + this.entry._id + "/", this.cleanupEntry(this.entry)).then(function () {
+            this.$dispatch("save");
             this.entry.edit = false;
           }.bind(this)).catch(function (err) {
+            this.$dispatch("save");
             this.$dispatch("error", err);
             this.entry.edit = false;
           }.bind(this));
         } else {
           chronofeed.request("PUT", "/api/entry/" + this.log._id + "/", this.cleanupEntry(this.entry)).then(function (result) {
             this.entry._id = result._id;
+            this.$dispatch("save");
             this.entry.edit = false;
           }.bind(this)).catch(function (err) {
+            this.$dispatch("save");
             this.$dispatch("error", err);
             this.entry.edit = false;
           }.bind(this));

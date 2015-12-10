@@ -146,6 +146,7 @@
 				return chronofeed.request("GET", "/api/entry/" + log._id + "/").then(function (result) {
 					let entryList = result.list;
 					this.convertDates(entryList);
+					this.sort(entryList, true);
 					return {
 						log: log,
 						logList: logList,
@@ -165,6 +166,9 @@
 			error: function (err) {
 				console.log("event error", err);
 				this.err = err;
+			},
+			save: function () {
+				this.sort(this.entryList, true);
 			}
 		},
 		methods: {
@@ -174,6 +178,19 @@
 						entry.date = new Date(entry.date);
 					}
 				}
+			},
+			sort(entryList,reverse) {
+				entryList.sort(function (a,b) {
+					if (reverse) {
+						if (a.date < b.date) return 1;
+						if (a.date > b.date) return -1;
+						return 0;
+					} else {
+						if (a.date < b.date) return -1;
+						if (a.date > b.date) return 1;
+						return 0;
+					}
+				});
 			},
 			clickEditTitle() {
 				this.editTitle = true;

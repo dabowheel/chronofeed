@@ -219,7 +219,7 @@
 	<div v-if="err" class="container">
 	  <div class="row">
 		  <div class="col-md-6 col-lg-6">
-				<div class="alert alert-warning">{{err}}</div>
+				<div class="alert alert-warning">{{err}} {{err.stack ? err.stack : ""}}</div>
 			</div>
 		</div>
 	</div>
@@ -461,6 +461,9 @@
 		      while (form.firstChild) {
 		      	form.removeChild(form.firstChild);
 		      }
+
+		      if (!this.schema) return;
+
 		      var options = {
 		        theme: "chronofeed",
 		        schema: this.schema,
@@ -475,7 +478,7 @@
 		      try {
 		        this.editor = new JSONEditor(form,options);
 		      } catch (err) {
-		      	this.err = err.message ? err.message : err;
+		      	this.err = err;
 		      }
 		      if (this.editor) {
 		        this.addControlListeners(this.editor.root);
@@ -509,7 +512,7 @@
 		      this.schema = JSON.parse(this.schemaText);
 		    }
 		    catch (err) {
-		    	this.err = err.message;
+		    	this.err = err;
 		    }
 		    this.tab = visualTabEnum;
 		    Vue.nextTick(function () {
@@ -529,6 +532,10 @@
 		    el.style.height = el.parentElement.offsetHeight - 6 + "px";
 		  },
 		  getInitialValue(schema) {
+		  	if (!schema) {
+		  		return null;
+		  	}
+
 		    switch (schema.type) {
 		      case "string":
 		        if (schema.default) {
@@ -581,9 +588,9 @@
 		  },
 		  // add drag and drop listeners
 		  addControlListeners(editor) {
-		    if (editor.path != "root") {
+		    // if (editor.path != "root") {
 		      this.addEditControl(editor, editor.schema, editor.path, editor.container);
-		    }
+		    // }
 
 		    this.makeDraggable(editor);
 
@@ -898,9 +905,9 @@
 		    let pathArray = editor.path.split(".");
 		    let propertyName = pathArray.pop();
 		    let parentPath = pathArray.join(".");
-		    let parentEditor = this.editor.editors[parentPath];
+		    let parentEditor = parentPath ? this.editor.editors[parentPath] : null;
 
-		    if (parentEditor.schema.type == "array") {
+		    if (parentEditor && (parentEditor.schema.type == "array")) {
 		      title = title.match(/(.*) 1/)[1];
 		    }
 
@@ -913,7 +920,7 @@
 		      this.onTitleInput(editor);
 		    }.bind(this);
 
-		    if (parentEditor.schema.type == "object") {
+		    if (parentEditor && (parentEditor.schema.type == "object")) {
 		      let inputPropertyName = document.getElementById("inputPropertyName");
 		      inputPropertyName.value = propertyName;
 		      inputPropertyName.onchange = function (event) {
@@ -981,8 +988,8 @@
 		    let pathArray = editor.path.split(".");
 		    let propertyName = pathArray.pop();
 		    let parentPath = pathArray.join(".");
-		    let parentEditor = this.editor.editors[parentPath];
-		    if (parentEditor.schema.type == "object" && !this.propertyNameChanged) {
+		    let parentEditor = parentPath ? this.editor.editors[parentPath] : null;
+		    if (parentEditor && (parentEditor.schema.type == "object" && !this.propertyNameChanged)) {
 		      document.getElementById("inputPropertyName").value = title.toLowerCase().replace(/ /g,"");
 		    }
 		  },
@@ -1055,17 +1062,19 @@
 		  },
 		  editModalValidate(values,path,schema) {
 		    let [parentPath, propertyName] = this.pathPop(path);
-		    let parentSchema = this.getSchema(this.schema, parentPath);
+		    if (parentPath) {
+			    let parentSchema = this.getSchema(this.schema, parentPath);
 
-		    if (parentSchema.type == "object") {
-		      if (values.propertyName != propertyName) {
-		        if (parentSchema.properties.hasOwnProperty(values.propertyName)) {
-		          $("#editModalPlaceForAlert").addClass("alert alert-danger");
-		          $("#editModalPlaceForAlert").html("Another item with this property name already exists.");
-		          return false;
-		        }
-		      }
-		    }
+			    if (parentSchema.type == "object") {
+			      if (values.propertyName != propertyName) {
+			        if (parentSchema.properties.hasOwnProperty(values.propertyName)) {
+			          $("#editModalPlaceForAlert").addClass("alert alert-danger");
+			          $("#editModalPlaceForAlert").html("Another item with this property name already exists.");
+			          return false;
+			        }
+			      }
+			    }
+			  }
 		    return true;
 		  },
 		  clickAcceptEdit(editor) {
@@ -1103,28 +1112,36 @@
 	      }
 	      if (!schema.default) delete schema.default;
 
-		    let pathArray = editor.path.split(".");
-		    let name = pathArray.pop();
-		    let parentPath = pathArray.join(".");
-		    let parentSchema = this.getSchema(this.schema, parentPath);
-		    if (parentSchema.type == "object") {
-		      delete parentSchema.properties[name];
-		      parentSchema.properties[values.propertyName] = schema;
-		    }
+	      if (editor.path == "root") {
+	      	this.schema = schema;
+	      } else {
+			    let pathArray = editor.path.split(".");
+			    let name = pathArray.pop();
+			    let parentPath = pathArray.join(".");
+			    let parentSchema = this.getSchema(this.schema, parentPath);
+			    if (parentSchema.type == "object") {
+			      delete parentSchema.properties[name];
+			      parentSchema.properties[values.propertyName] = schema;
+			    }
+			  }
 
 		    $("#editModal").modal("hide");
 		    this.createJSONEditor();
 		  },
 		  clickDeleteControl(path) {
-		    let pathArray = path.split(".");
-		    let name = pathArray.pop();
-		    let parentPath = pathArray.join(".");
-		    let schema = this.getSchema(this.schema, parentPath);
-		    if (schema.type == "object") {
-		      delete schema.properties[name];
-		    } else if (schema.type == "array") {
-		      delete schema.items;
-		    }
+		  	if (path == "root") {
+		  		this.schema = null;
+		  	} else {
+			    let pathArray = path.split(".");
+			    let name = pathArray.pop();
+			    let parentPath = pathArray.join(".");
+			    let schema = this.getSchema(this.schema, parentPath);
+			    if (schema.type == "object") {
+			      delete schema.properties[name];
+			    } else if (schema.type == "array") {
+			      delete schema.items;
+			    }
+			  }
 		    this.createJSONEditor();
 		  },
 		  // gives an area in container where the use can drop an item
@@ -1376,7 +1393,7 @@
 		 		chronofeed.request("POST", "/api/log/" + this.log._id + "/", this.log).then(function () {
 		 			location.assign("/log/" + encodeURI(this.title) + "/");
 		 		}.bind(this)).catch(function (err) {
-		 			this.err = err.message ? err.message : err;
+		 			this.err = err;
 		 		}.bind(this));
 		 	},
 		 	cancelSchemaChange() {
