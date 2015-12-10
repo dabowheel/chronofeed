@@ -33,8 +33,8 @@ exports.updateLog = function (db,userID,_id,log) {
         return reject(err);
       }
 
-      if (result.modifiedCount < 1) {
-        return reject("could not find blog");
+      if (result.matchedCount < 1) {
+        return reject("could not find log");
       }
 
       resolve();

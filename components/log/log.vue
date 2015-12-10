@@ -43,7 +43,7 @@
 	    <div class="col-md-6 col-lg-6">
 	      <div class="form-group" id="inputTitleFormGroup">
 	        <input class="form-control cf-form-control" id="inputTitle" type="text" v-model="title" />
-	        <button class="btn btn-primary cf-hotkey" v-on:click="saveTitleChange();" accesskey="a" id="blogTitleAcceptButton">Accept</button>
+	        <button class="btn btn-primary cf-hotkey" v-on:click="saveTitleChange();" accesskey="a" id="logTitleAccept">Accept</button>
 	        <button class="btn btn-primary cf-hotkey" v-on:click="cancelTitleChange()" accesskey="c">Cancel</button>
 	      </div>
 	    </div>
@@ -177,6 +177,10 @@
 			},
 			clickEditTitle() {
 				this.editTitle = true;
+				Vue.nextTick(function () {
+					chronofeed.triggerOnEnter(["inputTitle"], this.saveTitleChange.bind(this));
+					document.getElementById("inputTitle").select();
+				}.bind(this));
 			},
 		  clickConfigure() {
 		    location.assign("designer/");
@@ -188,7 +192,7 @@
 		    }
 
 		    let dupList = this.logList.filter(function (log) {
-		    	return (log.title == this.title) && (log._id != this._id);
+		    	return (log.title == this.title) && (log._id != this.log._id);
 		    }.bind(this));
 		    if (dupList.length) {
 		      this.err = "A log with this title already exists";
@@ -206,8 +210,8 @@
 	      this.cancelTitleChange();
 		    chronofeed.request("POST", "/api/log/" + this.log._id + "/", this.log).then(function () {
 		    }).catch(function (err) {
-		    	this.err = err.message;
-		    });
+		    	this.err = err;
+		    }.bind(this));
 		  },
 		  cancelTitleChange() {
 		  	this.err = "";
