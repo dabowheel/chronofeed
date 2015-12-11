@@ -1392,13 +1392,13 @@
 		 	saveSchema() {
 		 		this.log.schema = this.schema;
 		 		chronofeed.request("POST", "/api/log/" + this.log._id + "/", this.log).then(function () {
-		 			location.assign("/log/" + encodeURI(this.title) + "/");
+		 			location.assign("/log/" + encodeURIComponent(this.title) + "/");
 		 		}.bind(this)).catch(function (err) {
 		 			this.err = err;
 		 		}.bind(this));
 		 	},
 		 	cancelSchemaChange() {
-		 		location.assign("/log/" + encodeURI(this.title) + "/");
+		 		location.assign("/log/" + encodeURIComponent(this.title) + "/");
 		 	}
 		}
 	};
