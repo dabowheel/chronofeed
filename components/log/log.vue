@@ -98,7 +98,7 @@
 	          </div>
 	        </td>
 	        <td>
-	        	<entry v-bind:log="log" v-bind:index="$index" v-bind:entry="entry"></entry>
+	        	<entry v-bind:log.sync="log" v-bind:index.sync="$index" v-bind:entry.sync="entry"></entry>
 	        </td>
 	      </tr>
 
@@ -183,7 +183,9 @@
 				this.err = err;
 			},
 			save: function () {
-				this.sort(this.entryList, true);
+				Vue.nextTick(function () {
+					this.sort(this.entryList, true);
+				}.bind(this));
 			}
 		},
 		methods: {
