@@ -12,8 +12,8 @@
       </div>
       <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav" id="navBar">
-          <li v-if="islog || isdesigner" v-bind:class="{'active': islog}"><a href="/log/{{encodeURI(logtitle)}}/">{{logtitle}}</a></li>
-          <li v-if="isdesigner" v-bind:class="{'active': isdesigner}"><a href="/log/{{encodeURI(logtitle)}}/designer/">Designer</a></li>
+          <li v-if="islog || isdesigner" v-bind:class="{'active': islog}"><a href="/log/{{encodeURIComponent(logtitle)}}/">{{logtitle}}</a></li>
+          <li v-if="isdesigner" v-bind:class="{'active': isdesigner}"><a href="/log/{{encodeURIComponent(logtitle)}}/designer/">Designer</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li v-bind:class="{'active': isProfile}"><a href="/profile.html" title="profile"><span class="glyphicon glyphicon-user"> Profile<span></a></li>

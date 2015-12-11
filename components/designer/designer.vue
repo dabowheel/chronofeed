@@ -387,11 +387,12 @@
 			menu: menu
 		},
 		data: function () {
-			let m = location.pathname.match(/^\/log\/(.*)\/designer\/$/);
+			let uri = decodeURI(location.pathname);
+			let m = uri.match(/^\/log\/(.*)\/designer\/$/);
 			if (!m) {
 				throw new Error("invalid path " + location.pathname);
 			}
-			let title = decodeURI(m[1]);
+			let title = decodeURIComponent(m[1]);
 			return {
 				title: title,
 				log: null,

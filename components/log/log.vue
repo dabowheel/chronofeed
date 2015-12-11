@@ -123,11 +123,12 @@
 			entry: entry
 		},
 		data: function () {
-			let m = location.pathname.match(/^\/log\/(.*)\/$/);
+			let uri = decodeURI(location.pathname);
+			let m = uri.match(/^\/log\/(.*)\/$/);
 			if (!m) {
 				throw new Error("invalid path " + location.pathname);
 			}
-			let title = decodeURI(m[1]);
+			let title = decodeURIComponent(m[1]);
 			return {
 				title: title,
 				logList: [],
@@ -237,7 +238,7 @@
 	      	}
 	      }
 	      document.title = this.title + " | Chronofeed";
-	      chronofeed.setURL("/log/" + this.title + "/", this.title + " | ChronoFeed", true);
+	      chronofeed.setURL("/log/" + encodeURIComponent(this.title) + "/", this.title + " | ChronoFeed", true);
 	      this.cancelTitleChange();
 		    chronofeed.request("POST", "/api/log/" + this.log._id + "/", this.log).then(function () {
 		    }).catch(function (err) {

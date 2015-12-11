@@ -91,7 +91,7 @@
 			},
 			clickEdit: function (index) {
 				let log = this.logList[index];
-				location.assign("/log/" + log.title + "/");
+				location.assign("/log/" + encodeURIComponent(log.title) + "/");
 			},
 			clickConfirmDelete: function (event,index) {
 				if (event.ctrlKey) {
