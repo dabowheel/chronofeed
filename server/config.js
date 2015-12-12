@@ -3,7 +3,12 @@ let assert = require("assert");
 
 let list = [
   "MONGODB_URL",
-  "SESSION_SECRET"
+  "SESSION_SECRET",
+  "CF_EMAIL_FROM",
+  "SMTP_HOST",
+  "SMTP_PORT",
+  "SMTP_USER",
+  "SMTP_PASS"
 ];
 
 let config = {};
