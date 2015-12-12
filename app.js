@@ -17,8 +17,9 @@ var datastore_reset = require("./datastore/reset");
 var datastore_expiringDocs = require("./datastore/expiringDocs");
 var compression = require("compression");
 var apiRoute = require("./api/route");
+var config = require("./server/config");
 
-MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
+MongoClient.connect(config.MONGODB_URL, function (error,db) {
   if (error) {
     console.log(error);
     process.exit(1);
@@ -38,7 +39,7 @@ MongoClient.connect(process.env.MONGODB_URL, function (error,db) {
   }
   app.use(cookieParser(process.env.SESSION_SECRET));
   app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: config.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({
