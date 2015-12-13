@@ -3,7 +3,6 @@ var fs = require("fs");
 var express = require('express');
 var app = express();
 var bodyParser = require("body-parser");
-var cookieParser = require("cookie-parser");
 var session = require("express-session");
 var MongoStore = require('connect-mongo')(session);
 var mongodb = require("mongodb");
@@ -18,7 +17,7 @@ var datastore_expiringDocs = require("./datastore/expiringDocs");
 var compression = require("compression");
 var apiRoute = require("./api/route");
 var config = require("./server/config");
-
+  
 MongoClient.connect(config.MONGODB_URL, function (error,db) {
   if (error) {
     console.log(error);
@@ -37,11 +36,13 @@ MongoClient.connect(config.MONGODB_URL, function (error,db) {
     // fallback to standard filter function 
     return compression.filter(req, res);
   }
-  app.use(cookieParser(process.env.SESSION_SECRET));
   app.use(session({
     secret: config.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      maxAge: 1000*60*60*24*14
+    },
     store: new MongoStore({
       db: db
     })
@@ -85,6 +86,14 @@ MongoClient.connect(config.MONGODB_URL, function (error,db) {
       return res.redirect("/login.html");
     }
     
+    next();
+  });
+
+  app.get("/login.html", function (req,res,next) {
+    if (req.session.userID) {
+      return res.redirect("/loglist.html");
+    }
+
     next();
   });
 
