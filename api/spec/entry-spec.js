@@ -1,5 +1,5 @@
 "use strict";
-let $http = require("../../$http");
+let $http = require("http-client-promise");
 let assert = require("assert");
 
 describe("entry API", function () {

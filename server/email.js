@@ -18,7 +18,6 @@ let transporter = nodemailer.createTransport(smtpTransport(smtpConfig));
 
 exports.sendMail = function (mailOptions) {
   return new Promise(function (resolve,reject) {
-    console.log(new Error().stack);
     transporter.sendMail(mailOptions, function(err, info) {
       if(err){
         return reject(err);
