@@ -26,7 +26,7 @@
     "fp-js": "node assetfp -w public scripts -o manifest.json -a",
     "fp-assets": "npm run fp-images && npm run fp-js",
     "fp-json-editor": "node assetfp -w public vendor/jsoneditor.min.js -o manifest.json -a -b json-editor",
-    "sub-html": "node assetfp-sub.js public/manifest.json public/index.html public/login.html public/signup.html public/loglist.html public/log.html public/designer.html",
+    "sub-html": "node assetfp-sub.js public/manifest.json public/index.html public/login.html public/signup.html public/loglist.html public/log.html public/designer.html public/profile.html",
     "clean-assets": "node_modules/.bin/n-clean public",
     "build-assets": "npm run copy && npm run fp-assets && npm run fp-json-editor && npm run sub-html",
     "build": "npm run clean-assets && npm run webpack && npm run copy-webpack && npm run build-assets",
