@@ -2,6 +2,10 @@
 let entries = require("../mongodb/entries");
 
 exports.createEntry = function(req,res,next) {
+  if (!req.session.userID) {
+    return next(new Error("user is not logged in"));
+  }
+
   let entry = req.body;
   if (entry.date) {
     entry.date = new Date(entry.date);
@@ -16,12 +20,20 @@ exports.createEntry = function(req,res,next) {
 };
 
 exports.readEntry = function (req,res,next) {
+  if (!req.session.userID) {
+    return next(new Error("user is not logged in"));
+  }
+
   entries.readEntry(req.db, req.session.userID, req.api.logID, req.api.id).then(function (entry) {
     res.json(entry);
   });
 };
 
 exports.readEntryList = function (req,res,next) {
+  if (!req.session.userID) {
+    return next(new Error("user is not logged in"));
+  }
+
   entries.readEntryList(req.db, req.session.userID, req.api.logID).then(function (list) {
     let obj = {
       list: list
@@ -31,18 +43,30 @@ exports.readEntryList = function (req,res,next) {
 };
 
 exports.updateEntry = function (req,res,next) {
+  if (!req.session.userID) {
+    return next(new Error("user is not logged in"));
+  }
+
   entries.updateEntry(req.db, req.session.userID, req.api.logID, req.api.id, req.body).then(function () {
     res.end();
   });
 };
 
 exports.deleteEntry = function (req,res,next) {
+  if (!req.session.userID) {
+    return next(new Error("user is not logged in"));
+  }
+
   entries.deleteEntry(req.db, req.session.userID, req.api.logID, req.api.id).then(function () {
     res.end();
   });
 };
 
 exports.deleteEntryList = function (req,res,next) {
+  if (!req.session.userID) {
+    return next(new Error("user is not logged in"));
+  }
+
   entries.deleteEntryList(req.db, req.session.userID, req.api.logID).then(function (deletedCount) {
     let obj = {
       deletedCount: deletedCount

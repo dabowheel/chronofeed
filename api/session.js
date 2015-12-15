@@ -33,6 +33,18 @@ exports.login = function (req,res,next) {
   });
 };
 
+exports.profile = function (req,res,next) {
+  if (!req.session.userID) {
+    return next(new Error("user not logged in"));
+  }
+  
+  users.profile(req.db, req.session.userID).then((result) => {
+    res.json(result);
+  }).catch((err) => {
+    next(err);
+  });
+};
+
 exports.logout = function (req,res,next) {
   delete req.session.userID;
   delete req.session.username;

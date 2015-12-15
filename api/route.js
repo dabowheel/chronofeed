@@ -17,7 +17,7 @@ module.exports = function (app,db) {
   // log
   app.use("/api/log/*", function (req,res,next) {
     if (!req.session.userID) {
-      return res.redirect("/login.html");
+      return next(new Error("user not logged in"));
     }
     next();
   });
@@ -33,6 +33,7 @@ module.exports = function (app,db) {
   app.post("/api/signup/", session.signup);
   app.post("/api/login/", session.login);
   app.get("/api/logout/", session.logout);
+  app.get("/api/profile/", session.profile);
 
   // user
   app.delete("/api/user/:id/", user.deleteUser);

@@ -22,6 +22,15 @@ describe("users", function () {
     });
   });
 
+  it("should get the user profile", function () {
+    return users.profile(global.db, _id).then(function (result) {
+      assert.equal(result.username, username);
+      assert.equal(result.email, email);
+      assert.equal(result.emailVerify, false);
+      assert(result.joined);
+    });
+  });
+
   it("should delete a user", function () {
     return users.deleteUser(global.db, _id);
   });

@@ -19,7 +19,8 @@ describe("entry API", function () {
       method: "PUT",
       path: "/api/entry/" + logID + "/",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Cookie: global.cookie
       }
     };
     let entry = {
@@ -41,7 +42,10 @@ describe("entry API", function () {
       hostname: "localhost",
       port: global.port,
       method: "GET",
-      path: "/api/entry/" + logID + "/" + entryID + "/"
+      path: "/api/entry/" + logID + "/" + entryID + "/",
+      headers: {
+        Cookie: global.cookie
+      }
     };
 
     return $http.request(options).then(function (res) {
@@ -65,7 +69,10 @@ describe("entry API", function () {
       hostname: "localhost",
       port: global.port,
       method: "GET",
-      path: "/api/entry/" + logID + "/"
+      path: "/api/entry/" + logID + "/",
+      headers: {
+        Cookie: global.cookie
+      }
     };
 
     return $http.request(options).then(function (res) {
@@ -94,7 +101,8 @@ describe("entry API", function () {
       method: "POST",
       path: "/api/entry/" + logID + "/" + entryID + "/",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Cookie: global.cookie
       }
     };
 
@@ -117,7 +125,10 @@ describe("entry API", function () {
       hostname: "localhost",
       port: global.port,
       method: "DELETE",
-      path: "/api/entry/" + logID + "/" + entryID + "/"
+      path: "/api/entry/" + logID + "/" + entryID + "/",
+      headers: {
+        Cookie: global.cookie
+      }
     };
 
     return $http.request(options).then(function (res) {
@@ -134,7 +145,8 @@ describe("entry API", function () {
       method: "PUT",
       path: "/api/entry/" + logID + "/",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Cookie: global.cookie
       }
     };
     let entry = {
@@ -149,7 +161,10 @@ describe("entry API", function () {
           hostname: "localhost",
           port: global.port,
           method: "DELETE",
-          path: "/api/entry/" + logID + "/"
+          path: "/api/entry/" + logID + "/",
+          headers: {
+            Cookie: global.cookie
+          }
         };
         return $http.request(options).then(function (res) {
           return res.getData().then(function (body) {

@@ -11,7 +11,7 @@ exports.signup = function (db, username, email, password) {
     email: email,
     password: password,
     emailVerify: false,
-    joinedDate: new Date()
+    joined: new Date()
   };
 
   return users.insert(obj).then(function (result) {
@@ -82,9 +82,25 @@ exports.deleteUser = function (db,_id) {
   var filter = {
     _id: new ObjectID(_id)
   };
-  users.deleteOne(filter).then(function (result) {
+  return users.deleteOne(filter).then(function (result) {
     if (!result.result.ok) {
       throw new Error("could not find user");
     }
+  });
+};
+
+exports.profile = function (db, _id) {
+  var users = db.collection("users");
+  var filter = {
+    _id: new ObjectID(_id)
+  };
+  return users.find(filter).limit(1).next().then(function (result) {
+    if (!result) {
+      throw new Error("could not be found");
+    }
+
+    delete result._id;
+    delete result.password;
+    return result;
   });
 };

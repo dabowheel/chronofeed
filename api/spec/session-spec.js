@@ -1,38 +1,9 @@
 "use strict";
 let assert = require("assert");
-let $http = require("es-promise-http");
+let $http = require("http-client-promise");
 let users = require("../../mongodb/users");
 
-describe("session", function () {
-  let username = "miguel";
-  let email = "miguel@me.com";
-  let password = "abc";
-
-  it("should sign up a user", function () {
-    let options = {
-      hostname: "localhost",
-      port: global.port,
-      method: "POST",
-      path: "/api/signup/",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    };
-
-    let obj = {
-      username: username,
-      email: email,
-      password: password
-    };
-    return $http(options, JSON.stringify(obj)).then(function (val) {
-      let res = val.response;
-      let data = val.data.toString();
-      assert.equal(res.statusCode, 200, data);
-      let obj = JSON.parse(data);
-      assert.equal(obj.username, username);
-    });
-  });
-
+describe("session API", function () {
   it("should login a user", function () {
     let options = {
       hostname: "localhost",
@@ -45,23 +16,41 @@ describe("session", function () {
     };
 
     let obj = {
-      username: username,
-      password: password
+      username: global.username,
+      password: global.password
     };
 
-    $http(options, JSON.stringify(obj)).then(function (val) {
-      let res = val.response;
-      let data = val.date.toString();
-      assert.equal(res.statusCode, 200, data);
-      let obj = JSON.parse(data);
-      assert.equal(obj.username, username);
-      assert(obj.success);
+    return $http.request(options, JSON.stringify(obj)).then(function (res) {
+      return res.getData().then(function (body) {
+        assert.equal(res.statusCode, 200, body);
+        let obj = JSON.parse(body);
+        assert.equal(obj.username, global.username);
+        assert(obj.success, "login success");
+      });
     });
   });
 
-  after(function () {
-    return users.getUserID(global.db, username).then(function (_id) {
-      return users.deleteUser(global.db, _id);
+  it("should get the user profile", function () {
+    let options = {
+      hostname: "localhost",
+      port: global.port,
+      method: "GET",
+      path: "/api/profile/",
+      headers: {
+        Cookie: global.cookie
+      }
+    };
+
+    return $http.request(options).then(function (res) {
+      return res.getData().then(function (body) {
+        assert.equal(res.statusCode, 200, body);
+        let obj = JSON.parse(body);
+        assert.equal(obj.username, global.username);
+        assert.equal(obj.email, global.email);
+        assert.equal(obj.emailVerify, false);
+        assert(obj.joined, "joined");
+      });
     });
   });
+
 });
