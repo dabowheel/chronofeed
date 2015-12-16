@@ -37,7 +37,7 @@
         err: ""
       };
     },
-    props: ["islog","logtitle","isdesigner"],
+    props: ["islog","logtitle","isdesigner","isProfile"],
     ready: function () {
       global.menuVM = this;
     },

@@ -1,14 +1,20 @@
+<style>
+  .gr-not-verified {
+    color: orange;
+  }
+  .gr-verify-email {
+    position: relative;
+    top: -5px;
+  }
+</style>
+
 <template>
   <div class="container">
+    <menu is-profile="true"></menu>
+
     <h1>{{username}}</h1>
 
-    <div v-if="err" class="row">
-      <div class="col-lg-6">
-        <div class="alert alert-danger">
-          {{err.message ? err.message : err}}
-        </div>
-      </div>
-    </div>
+
 
     <p>Joined: {{joined | moment}}</p>
 
@@ -43,7 +49,21 @@
       </div>
     </div>
 
-    <div class="col-mid-8 col-lg-8 gr-alert" id="placeForAlert"></div>
+    <div v-if="err" class="row">
+      <div class="col-lg-6">
+        <div class="alert alert-danger">
+          {{err.message ? err.message : err}}
+        </div>
+      </div>
+    </div>
+
+    <div v-if="success" class="row">
+      <div class="col-lg-6">
+        <div class="alert alert-success">
+          {{success}}
+        </div>
+      </div>
+    </div>
 
     <button class="btn btn-primary" tabindex="4" type="button" v-on:click="clickSave();" id="saveButton">Save</button>
   </div>
@@ -55,13 +75,17 @@
   });
 
   export default {
+    components: {
+      menu: require("../menu/menu.vue")
+    },
     data: function () {
       return {
         username: "",
         email: "",
         joined: null,
         emailVerified: false,
-        err: ""
+        err: "",
+        success: ""
       };
     },
     asyncData: function () {
@@ -107,13 +131,10 @@
 
         if (passwordPlain.length > 0 && passwordPlain.length < 8) {
           $("#inputPasswordFormGroup").addClass("has-error");
-          $("#placeForAlert").addClass("alert alert-warning");
-          $("#placeForAlert").html("Password length must be at least 8 characters.");
+          this.err = "Password length must be at least 8 characters.";
           valid = false;
         } else {
           $("#inputPasswordFormGroup").removeClass("has-error");
-          $("#placeForAlert").removeClass("alert alert-warning");
-          $("#placeForAlert").html("");
         }
 
         return valid;
@@ -124,41 +145,23 @@
           return;
         }
 
-        datastore("PUT", "Profile", values, function (err,res) {
-          if (err) {
-            $("#placeForAlert").addClass("alert alert-warning");
-            $("#placeForAlert").html(err);
-            return;
-          }
-
-          for (let name in values) {
-            this.profile[name] = values[name];
-          }
-          let message;
-          if (res.checkEmail) {
-            this.profile.emailVerified = false;
-            this.show();
-            message = "Saved. Check your email for a message to verify your email address.";
+        chronofeed.request("POST", "Profile", values).then(function (result) {
+          if (result.checkEmail) {
+            this.emailVerified = false;
+            this.success = "Saved. Check your email for a message to verify your email address.";
           } else {
-            message = "Saved.";
+            this.success = "Saved.";
           }
-          $("#placeForAlert").removeClass("alert alert-warning");
-          $("#placeForAlert").addClass("alert alert-success");
-          $("#placeForAlert").html(message);
+        }.bind(this)).catch(function (err) {
+          this.err = err;
         }.bind(this));
       },
       clickResendVerification() {
-        datastore("GET", "resendVerification", null, function (err,obj) {
-          if (err) {
-            $("#placeForAlert").addClass("alert alert-warning");
-            $("#placeForAlert").html(err);
-            return;
-          }
-
-          $("#placeForAlert").removeClass("alert-warning");
-          $("#placeForAlert").addClass("alert alert-success");
-          $("#placeForAlert").html("A verfication message was sent to your email address. Check your email to verify that you recieved it.");
-        });
+        chronofeed.request("GET", "resendVerification", null).then(function () {
+          this.success = "A verfication message was sent to your email address. Check your email to verify that you recieved it.";
+        }.bind(this)).catch(function (err) {
+          this.err = err;
+        }.bind(this));
       }
     }
   };
