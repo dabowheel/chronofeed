@@ -2,6 +2,8 @@
 let assert = require("assert");
 let $http = require("http-client-promise");
 let users = require("../../mongodb/users");
+let $request = require("request-promise");
+let request = require("request");
 
 describe("session API", function () {
   it("should login a user", function () {
@@ -50,6 +52,40 @@ describe("session API", function () {
         assert.equal(obj.emailVerify, false);
         assert(obj.joined, "joined");
       });
+    });
+  });
+
+  it("should update the user password", function () {
+    let options = {
+      uri: "http://localhost:3000/api/profile/",
+      body: {
+        email: global.email,
+        password: global.password + "2"
+      },
+      headers: {
+        Cookie: global.cookie
+      },
+      json: true
+    };
+    return $request.post(options).then(function (body) {
+      assert(!body.checkEmail, "!checkEmail");
+    });
+  });
+
+  it("should update the user email", function () {
+    let options = {
+      uri: "http://localhost:3000/api/profile/",
+      body: {
+        email: "apiuser@me2.com",
+        password: global.password
+      },
+      headers: {
+        Cookie: global.cookie
+      },
+      json: true
+    };
+    return $request.post(options).then(function (body) {
+      assert(body.checkEmail, "checkEmail");
     });
   });
 

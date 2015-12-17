@@ -33,13 +33,37 @@ exports.login = function (req,res,next) {
   });
 };
 
-exports.profile = function (req,res,next) {
+exports.getProfile = function (req,res,next) {
   if (!req.session.userID) {
     return next(new Error("user not logged in"));
   }
   
-  users.profile(req.db, req.session.userID).then((result) => {
+  users.getProfile(req.db, req.session.userID).then((result) => {
     res.json(result);
+  }).catch((err) => {
+    next(err);
+  });
+};
+
+exports.updateProfile = function (req,res,next) {
+  if (!req.session.userID) {
+    return next(new Error("user not logged in"));
+  }
+
+  users.updateProfile(req.db, req.session.userID, req.body).then((result) => {
+    let p;
+    if (result.checkEmail) {
+      p = verify.startVerify(req.db, req.session.userID, req.body.email).then(function (verifyResult) {
+        return verifyEmail.sendEmailVerification(req.hostname, req.body.email, config.CF_EMAIL_FROM, verifyResult.hash, verifyResult.code).then(function (resultText) {
+          console.log(resultText);
+        });
+      });
+    } else {
+      p = Promise.resolve();
+    }
+    return p.then(function () {
+      res.json(result);      
+    });
   }).catch((err) => {
     next(err);
   });

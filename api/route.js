@@ -33,7 +33,8 @@ module.exports = function (app,db) {
   app.post("/api/signup/", session.signup);
   app.post("/api/login/", session.login);
   app.get("/api/logout/", session.logout);
-  app.get("/api/profile/", session.profile);
+  app.get("/api/profile/", session.getProfile);
+  app.post("/api/profile/", session.updateProfile);
 
   // user
   app.delete("/api/user/:id/", user.deleteUser);

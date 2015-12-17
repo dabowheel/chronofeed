@@ -89,7 +89,7 @@ exports.deleteUser = function (db,_id) {
   });
 };
 
-exports.profile = function (db, _id) {
+exports.getProfile = function (db, _id) {
   var users = db.collection("users");
   var filter = {
     _id: new ObjectID(_id)
@@ -102,5 +102,25 @@ exports.profile = function (db, _id) {
     delete result._id;
     delete result.password;
     return result;
+  });
+};
+
+exports.updateProfile = function (db, _id, user) {
+  var users = db.collection("users");
+  var filter = {
+    _id: new ObjectID(_id)
+  };
+
+  let obj = {
+    $set: user
+  };
+  return users.findOneAndUpdate(filter, obj).then(function (result) {
+    if (!result) {
+      return new Error("could not find user");
+    }
+
+    return {
+      checkEmail: user.email != result.value.email
+    };
   });
 };
