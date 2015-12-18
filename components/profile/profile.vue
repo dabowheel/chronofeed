@@ -114,10 +114,13 @@
       },
       getValues() {
         let sha256 = chronofeed.createHash("sha256");
-        return {
-          email: document.getElementById("inputEmail").value,
-          password: this.getPasswordPlain().length > 0 ? sha256.update(this.getPasswordPlain(),"utf8").digest("hex") : ""
+        let ret = {
+          email: document.getElementById("inputEmail").value          
         };
+        if (this.getPasswordPlain().length) {
+          ret.password = sha256.update(this.getPasswordPlain(),"utf8").digest("hex");
+        }
+        return ret;
       },
       validateProfileForm(values, passwordPlain) {
         var valid = true;
@@ -145,7 +148,7 @@
           return;
         }
 
-        chronofeed.request("POST", "Profile", values).then(function (result) {
+        chronofeed.request("POST", "/api/profile/", values).then(function (result) {
           if (result.checkEmail) {
             this.emailVerified = false;
             this.success = "Saved. Check your email for a message to verify your email address.";

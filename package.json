@@ -30,7 +30,7 @@
     "clean-assets": "node_modules/.bin/n-clean public",
     "build-assets": "npm run copy && npm run fp-assets && npm run fp-json-editor && npm run sub-html",
     "build": "npm run clean-assets && npm run webpack && npm run copy-webpack && npm run build-assets",
-    "webpack": "node_modules/.bin/webpack",
+    "webpack": "node_modules/.bin/webpack --bail",
     "copy-webpack": "node_modules/.bin/cpx \"build/scripts/*\" public/scripts"
   },
   "repository": {
